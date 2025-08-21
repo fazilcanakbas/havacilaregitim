@@ -53,7 +53,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
     <div className="absolute inset-0 z-0">
-  {slides.map((slide, index) => (
+  {/* {slides.map((slide, index) => (
     <div
       key={index}
       className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -67,11 +67,24 @@ export function HeroSection() {
         className="object-cover"
         priority={index === 0}
       />
+
     </div>
-  ))}
-  <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-background/20 to-background/10" />
+  ))} */}
+
+        <video
+        
+          className="w-full h-full object-cover"
+      autoPlay
+      loop
+      muted
+      playsInline
+     
+      preload="metadata"
+        src={'/ucak.mp4'}></video>
+
+  {/* <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-background/20 to-background/10" /> */} 
   
-  <div className="absolute inset-0 bg-black/50 pointer-events-none" />
+  <div className="absolute inset-0 bg-black/50 pointer-events-none" /> 
 </div>
 
       {/* <button
@@ -141,7 +154,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+      {/* <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -149,7 +162,7 @@ export function HeroSection() {
             className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide ? "bg-white" : "bg-white/50"}`}
           />
         ))}
-      </div>
+      </div> */}
     </section>
   )
 }
