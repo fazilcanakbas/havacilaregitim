@@ -107,9 +107,14 @@ export function HeroSection() {
           {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
+              >
                 <Plane className="w-4 h-4 text-primary mr-2" />
-                <span className="text-sm font-medium text-primary">{t("hero.badge")}</span>
+                <span className="text-sm font-medium "
+                style={{
+                  color:'#0891b2'
+                }}
+                >{t("hero.badge")}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-lg">
