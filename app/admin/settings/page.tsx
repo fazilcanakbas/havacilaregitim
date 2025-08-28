@@ -16,7 +16,7 @@ const mockSettings = {
   general: {
     siteName: "HAVACILAR EĞİTİM A.Ş.",
     siteNameEn: "Aviation Education Inc.",
-    tagline: "Profesyonel Havacılık Eğitimi",
+    tagline: "Mülakat Teknikleri Eğitimi",
     taglineEn: "Professional Aviation Training",
     language: "tr",
     timezone: "Europe/Istanbul",

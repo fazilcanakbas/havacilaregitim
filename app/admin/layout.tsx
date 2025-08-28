@@ -36,7 +36,7 @@ const sidebarItems = [
   { href: "/admin/announcements", icon: Megaphone, label: "Duyurular" },
   { href: "/admin/services", icon: Wrench, label: "Hizmetler" },
   { href: "/admin/blog", icon: FileText, label: "Blog" },
-  { href: "/admin/users", icon: Users, label: "Eğitmen Kadrosu" },
+  // { href: "/admin/users", icon: Users, label: "Eğitmen Kadrosu" },
   { href: "/admin/messages", icon: MessageSquare, label: "İletişim Mesajları" },
   // { href: "/admin/media", icon: Video, label: "Medya" },
   { href: "/admin/contact", icon: Phone, label: "İletişim" },

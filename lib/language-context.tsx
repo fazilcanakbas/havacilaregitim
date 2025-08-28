@@ -15,7 +15,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const translations = {
   tr: {
     // Navigation
-    "nav.home": "Ana Sayfa",
+    "nav.home": "Anasayfa",
     "nav.corporate": "Kurumsal",
     "nav.about": "Hakkımızda",
     "nav.services": "Hizmetlerimiz",
@@ -38,7 +38,7 @@ const translations = {
 
     // Services
     "services.badge": "Eğitim Programlarımız",
-    "services.title": "Profesyonel Havacılık Eğitimleri",
+    "services.title": "Mülakat Teknikleri Eğitimi ",
     "services.subtitle":
       "Uluslararası standartlarda, deneyimli eğitmenler eşliğinde sunduğumuz kapsamlı pilot eğitimi programları ile havacılık kariyerinizi başlatın.",
     "services.cta": "Detayları İncele",

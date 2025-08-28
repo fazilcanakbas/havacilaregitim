@@ -1,91 +1,92 @@
 "use client"
 
+import { BookOpen, User, Target, Users, Award, MessageSquare } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plane, Users, Award, BookOpen, Clock, MapPin } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import Link from "next/link"
 
 export function ServicesSection() {
   const { language, t } = useLanguage()
 
   const services = [
     {
-      icon: Plane,
-      title: language === "tr" ? "Özel Pilot Lisansı (PPL)" : "Private Pilot License (PPL)",
-      description:
-        language === "tr"
-          ? "Özel uçak kullanma yetkisi veren temel pilot eğitimi programı"
-          : "Basic pilot training program that grants private aircraft operation authority",
-      duration: language === "tr" ? "6-12 Ay" : "6-12 Months",
-      features:
-        language === "tr"
-          ? ["Teorik Eğitim", "Uçuş Eğitimi", "Sınav Hazırlığı"]
-          : ["Theoretical Training", "Flight Training", "Exam Preparation"],
+      icon: BookOpen,
+      title: language === "tr" ? "Mülakat Teknikleri Eğitimi" : "Interview Techniques Training",
+      description: language === "tr" 
+        ? "Havacılık mülakatlarında başarılı olmak için gerekli teknikleri öğrenin ve kendinizi en iyi şekilde ifade etmeyi keşfedin."
+        : "Learn the necessary techniques to succeed in aviation interviews and discover how to express yourself in the best way.",
+      features: [
+        language === "tr" ? "Profesyonel mülakat teknikleri" : "Professional interview techniques",
+        language === "tr" ? "İletişim becerileri geliştirme" : "Communication skills development", 
+        language === "tr" ? "Özgüven artırma" : "Confidence building",
+        language === "tr" ? "Stres yönetimi" : "Stress management",
+      ],
     },
     {
-      icon: Award,
-      title: language === "tr" ? "Ticari Pilot Lisansı (CPL)" : "Commercial Pilot License (CPL)",
-      description:
-        language === "tr"
-          ? "Profesyonel havacılık kariyeri için gerekli ticari pilot eğitimi"
-          : "Commercial pilot training required for professional aviation career",
-      duration: language === "tr" ? "12-18 Ay" : "12-18 Months",
-      features:
-        language === "tr"
-          ? ["İleri Teorik Eğitim", "Kompleks Uçuş Eğitimi", "Sertifikasyon"]
-          : ["Advanced Theoretical Training", "Complex Flight Training", "Certification"],
+      icon: User,
+      title: language === "tr" ? "Bireysel Danışmanlık" : "Individual Consulting",
+      description: language === "tr" 
+        ? "Adayın ihtiyaç ve beklentileri doğrultusunda bireysel değerlendirme ve hedef odaklı çalışma planı oluşturma."
+        : "Individual assessment and goal-oriented work plan creation in line with the candidate's needs and expectations.",
+      features: [
+        language === "tr" ? "Kişiye özel değerlendirme" : "Personalized assessment",
+        language === "tr" ? "Gelişim alanları belirleme" : "Development areas identification",
+        language === "tr" ? "Hedef odaklı plan" : "Goal-oriented plan",
+        language === "tr" ? "Retest stratejileri" : "Retest strategies",
+      ],
+    },
+    {
+      icon: Target,
+      title: language === "tr" ? "CRM Bireysel Mülakat" : "Individual CRM Interview",
+      description: language === "tr" 
+        ? "Uzman kaptan pilotlar ve profesyonel psikologlar eşliğinde gerçek mülakat ortamı deneyimi."
+        : "Real interview environment experience with expert captain pilots and professional psychologists.",
+      features: [
+        language === "tr" ? "25-40 kapsamlı soru" : "25-40 comprehensive questions",
+        language === "tr" ? "Uzman kaptan pilotlar" : "Expert captain pilots",
+        language === "tr" ? "Profesyonel psikologlar" : "Professional psychologists",
+        language === "tr" ? "Çok boyutlu değerlendirme" : "Multi-dimensional assessment",
+      ],
     },
     {
       icon: Users,
-      title: language === "tr" ? "Havayolu Pilot Eğitimi (ATPL)" : "Airline Transport Pilot License (ATPL)",
-      description:
-        language === "tr"
-          ? "Havayolu şirketlerinde kaptan pilot olmak için gerekli eğitim"
-          : "Training required to become a captain pilot in airline companies",
-      duration: language === "tr" ? "18-24 Ay" : "18-24 Months",
-      features:
-        language === "tr"
-          ? ["Havayolu Standartları", "Jet Eğitimi", "Liderlik Becerileri"]
-          : ["Airline Standards", "Jet Training", "Leadership Skills"],
+      title: language === "tr" ? "CRM Grup Mülakatı" : "CRM Group Interview",
+      description: language === "tr" 
+        ? "4-6 kişilik gruplar halinde gerçek grup mülakat atmosferinde ekip becerilerinizi geliştirin."
+        : "Develop your teamwork skills in real group interview atmosphere with groups of 4-6 people.",
+      features: [
+        language === "tr" ? "4-6 kişilik gruplar" : "Groups of 4-6 people",
+        language === "tr" ? "Ekip içi iletişim" : "Team communication",
+        language === "tr" ? "Liderlik becerileri" : "Leadership skills",
+        language === "tr" ? "Problem çözme" : "Problem solving",
+      ],
     },
     {
-      icon: BookOpen,
-      title: language === "tr" ? "Enstrüman Uçuş Eğitimi (IFR)" : "Instrument Flight Rules (IFR)",
-      description:
-        language === "tr"
-          ? "Kötü hava koşullarında güvenli uçuş için enstrüman eğitimi"
-          : "Instrument training for safe flight in adverse weather conditions",
-      duration: language === "tr" ? "3-6 Ay" : "3-6 Months",
-      features:
-        language === "tr"
-          ? ["Enstrüman Okuma", "Radyo Navigasyon", "Yaklaşma Prosedürleri"]
-          : ["Instrument Reading", "Radio Navigation", "Approach Procedures"],
+      icon: Award,
+      title: language === "tr" ? "Kurul Mülakat" : "Board Interview",
+      description: language === "tr" 
+        ? "Türkçe ve İngilizce dillerinde gerçek kurul mülakat ortamı simülasyonu ve detaylı performans analizi."
+        : "Real board interview environment simulation in Turkish and English languages with detailed performance analysis.",
+      features: [
+        language === "tr" ? "Türkçe ve İngilizce sorular" : "Turkish and English questions",
+        language === "tr" ? "Gerçek kurul ortamı" : "Real board environment",
+        language === "tr" ? "Detaylı performans analizi" : "Detailed performance analysis",
+        language === "tr" ? "Uzman geri bildirimi" : "Expert feedback",
+      ],
     },
     {
-      icon: Clock,
-      title: language === "tr" ? "Tip Rating Eğitimi" : "Type Rating Training",
-      description:
-        language === "tr"
-          ? "Belirli uçak tiplerinde uçuş yetkisi için özel eğitim programı"
-          : "Special training program for flight authorization on specific aircraft types",
-      duration: language === "tr" ? "2-4 Ay" : "2-4 Months",
-      features:
-        language === "tr"
-          ? ["Uçak Sistemleri", "Simülatör Eğitimi", "Check Ride"]
-          : ["Aircraft Systems", "Simulator Training", "Check Ride"],
-    },
-    {
-      icon: MapPin,
-      title: language === "tr" ? "Eğitmen Pilot Eğitimi (CFI)" : "Certified Flight Instructor (CFI)",
-      description:
-        language === "tr"
-          ? "Pilot eğitmeni olmak için gerekli pedagojik ve teknik eğitim"
-          : "Pedagogical and technical training required to become a flight instructor",
-      duration: language === "tr" ? "4-8 Ay" : "4-8 Months",
-      features:
-        language === "tr"
-          ? ["Öğretim Teknikleri", "Eğitim Planlaması", "Değerlendirme Yöntemleri"]
-          : ["Teaching Techniques", "Training Planning", "Assessment Methods"],
+      icon: MessageSquare,
+      title: language === "tr" ? "Geri Bildirim ve Analiz" : "Feedback and Analysis",
+      description: language === "tr" 
+        ? "Tüm simülasyon süreçleri sonrasında kapsamlı geri bildirim ve gelişim odaklı öneriler."
+        : "Comprehensive feedback and development-focused recommendations after all simulation processes.",
+      features: [
+        language === "tr" ? "Detaylı performans raporu" : "Detailed performance report",
+        language === "tr" ? "Gelişim önerileri" : "Development suggestions",
+        language === "tr" ? "Bireysel ve grup analizi" : "Individual and group analysis",
+        language === "tr" ? "Uzman değerlendirmesi" : "Expert evaluation",
+      ],
     },
   ]
 
@@ -122,14 +123,6 @@ export function ServicesSection() {
               </CardHeader>
 
               <CardContent className="space-y-4">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <span className="font-medium">
-                    {language === "tr" ? "Süre: " : "Duration: "}
-                    {service.duration}
-                  </span>
-                </div>
-
                 <div className="space-y-2">
                   {service.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-center text-sm">
@@ -148,9 +141,13 @@ export function ServicesSection() {
         </div>
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" className="font-dm-sans bg-transparent">
+          <Link href={"/hizmetlerimiz"}>
+          <Button 
+          
+          size="lg" variant="outline" className="font-dm-sans bg-transparent">
             {t("services.viewAll")}
           </Button>
+          </Link>
         </div>
       </div>
     </section>
