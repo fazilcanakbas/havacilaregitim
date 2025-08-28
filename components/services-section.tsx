@@ -132,9 +132,9 @@ export function ServicesSection() {
                   ))}
                 </div>
 
-                <Button className="w-full mt-6 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+                {/* <Button className="w-full mt-6 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
                   {t("services.cta")}
-                </Button>
+                </Button> */}
               </CardContent>
             </Card>
           ))}
