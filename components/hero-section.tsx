@@ -1,36 +1,44 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Play, Users, Award, Plane, ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowRight, Play, Users, Award, Plane, ChevronLeft, ChevronRight, BookOpenCheck } from "lucide-react"
 import Image from "next/image"
 import { useLanguage } from "@/lib/language-context"
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 export function HeroSection() {
   const { language, t } = useLanguage()
   const [currentSlide, setCurrentSlide] = useState(0)
 
+  // Harmonized palette (derived from logo + top gradient in the screenshot)
+  const BRAND_NAVY = "#ffffffff"   // logo / deep navy
+  const BRAND_ACCENT = "rgba(11,42,87,0.85)" // CTA / teal that works with the sky background
+  const OVERLAY_LEFT = "rgba(11,42,87,0.85)"
+  const OVERLAY_MID = "rgba(11,42,87,0.25)"
+  const OVERLAY_RIGHT = "rgba(23,143,131,0.06)"
+
   const slides = [
     {
       image: "/banner1.jpg",
-      titleTr: "Pilot Eğitimi",
-      titleEn: "Pilot Training",
-      descTr: "Profesyonel pilot olmak için gereken tüm eğitimler",
-      descEn: "All training required to become a professional pilot",
+      titleTr: "Bireyselleştirilmiş Pilot Eğitimi",
+      titleEn: "Personalized Pilot Training",
+      descTr: "Uzman kaptan pilotlar ve psikologlar eşliğinde adaylara özel eğitim programları",
+      descEn: "Tailored training programs for candidates guided by expert captains and psychologists",
     },
     {
       image: "/banner2.jpg",
-      titleTr: "Simülatör Eğitimi",
-      titleEn: "Simulator Training",
-      descTr: "En son teknoloji simülatörlerle güvenli eğitim",
-      descEn: "Safe training with latest technology simulators",
+      titleTr: "Mülakat ve CRM Simülasyonları",
+      titleEn: "Interview & CRM Simulations",
+      descTr: "Gerçek mülakat ortamlarını simüle eden programlarla teknik ve davranışsal yetkinlik geliştirme",
+      descEn: "Enhancing technical and behavioral competencies through real interview simulations",
     },
     {
       image: "/banner3.jpg",
-      titleTr: "Teorik Eğitim",
-      titleEn: "Theoretical Education",
-      descTr: "Kapsamlı teorik bilgi ve sertifikasyon programları",
-      descEn: "Comprehensive theoretical knowledge and certification programs",
+      titleTr: "Profesyonellik ve Sektöre Yön Verme",
+      titleEn: "Professionalism & Industry Leadership",
+      descTr: "Havacılık standartlarını belirleyen eğitimlerle sektörde fark yaratan pilotlar yetiştiriyoruz",
+      descEn: "Training pilots who make a difference in the industry through aviation-standard programs",
     },
   ]
 
@@ -47,127 +55,143 @@ export function HeroSection() {
   const stats = [
     { icon: Users, number: "500+", labelKey: "hero.stats.graduates" },
     { icon: Award, number: "15+", labelKey: "hero.stats.experience" },
-    { icon: Plane, number: "50+", labelKey: "hero.stats.aircraft" },
+    { icon: BookOpenCheck, number: "20+", labelKey: "hero.stats.aircraft" },
   ]
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <div className="absolute inset-0 z-0">
-  {/* {slides.map((slide, index) => (
-    <div
-      key={index}
-      className={`absolute inset-0 transition-opacity duration-1000 ${
-        index === currentSlide ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <Image
-        src={slide.image || "/placeholder.svg"}
-        alt="Havacılık Eğitimi"
-        fill
-        className="object-cover"
-        priority={index === 0}
-      />
-
-    </div>
-  ))} */}
-
+      <div className="absolute inset-0 z-0">
+        {/* background video / image */}
         <video
-        
           className="w-full h-full object-cover"
-      autoPlay
-      loop
-      muted
-      playsInline
-     
-      preload="metadata"
-        src={'/ucak.mp4'}></video>
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          src={'/egitimsitevideo.mp4'}
+        />
 
-  {/* <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-background/20 to-background/10" /> */} 
-  
-  <div className="absolute inset-0 bg-black/50 pointer-events-none" /> 
-</div>
+        {/* gradient overlay tuned to the logo & top gradient */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(90deg, ${OVERLAY_LEFT} 0%, ${OVERLAY_MID} 45%, ${OVERLAY_RIGHT} 100%)`,
+            mixBlendMode: "overlay",
+          }}
+        />
 
-      {/* <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"    
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
+        {/* subtle dark veil for contrast on text */}
+        <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+      </div>
 
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button> */}
-
-      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
-              >
-                <Plane className="w-4 h-4 text-primary mr-2" />
-                <span className="text-sm font-medium "
+              <div
+                className="inline-flex items-center px-4 py-2 rounded-full"
                 style={{
-                  color:'#0891b2'
+                  backgroundColor: "rgba(255, 255, 255, 0.08)", 
+                  border: `1px solid rgba(255, 255, 255, 0.16)`,
                 }}
-                >{t("hero.badge")}</span>
+              >
+                <Plane className="w-4 h-4 mr-2" style={{ color: BRAND_NAVY }} />
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: BRAND_NAVY }}
+                >
+                  {t("hero.badge")}
+                </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-lg">
+              <h1
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg"
+                style={{ color: "#ffffff" }}
+              >
                 {language === "tr" ? slides[currentSlide].titleTr : slides[currentSlide].titleEn}
               </h1>
 
-              <p className="text-lg sm:text-xl text-white/90 max-w-2xl drop-shadow-md">
+              <p
+                className="text-lg sm:text-xl max-w-2xl drop-shadow-md"
+                style={{ color: "rgba(255,255,255,0.9)" }}
+              >
                 {language === "tr" ? slides[currentSlide].descTr : slides[currentSlide].descEn}
               </p>
             </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="group">
+              <Link href="/hizmetlerimiz">
+                <Button
+
+                size="lg"
+                className="group"
+                style={{
+                  backgroundColor: BRAND_ACCENT,
+                  color: "#fff",
+                  border: "none",
+                  boxShadow: "0 6px 18px rgba(23,143,131,0.18)",
+                }}
+              >
                 {t("hero.cta.start")}
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
-
-              <Button
-                variant="outline"
+             </Link>
+              {/* secondary action (example) */}
+              {/* <Button
                 size="lg"
-                className="group bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+                className="group"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#fff",
+                  border: `1px solid rgba(255,255,255,0.12)`,
+                  backdropFilter: "blur(6px)",
+                }}
+             
               >
                 <Play className="w-4 h-4 mr-2" />
                 {t("hero.cta.video")}
-              </Button>
+              </Button> */}
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/20">
+            {/* Optional Stats - harmonized visuals */}
+            {/* <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white mb-2">
+                  <div
+                    className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-2"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.06)",
+                      color: BRAND_NAVY,
+                    }}
+                  >
                     <stat.icon className="w-6 h-6" />
                   </div>
-                  <div className="text-2xl font-bold text-white drop-shadow-md">{stat.number}</div>
-                  <div className="text-sm text-white/80 drop-shadow-sm">{t(stat.labelKey)}</div>
+                  <div className="text-2xl font-bold drop-shadow-md" style={{ color: "#fff" }}>
+                    {stat.number}
+                  </div>
+                  <div className="text-sm drop-shadow-sm" style={{ color: "rgba(255,255,255,0.85)" }}>
+                    {t(stat.labelKey)}
+                  </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
+
+          {/* Right Column could show big logo or illustration if needed */}
+          {/* <div className="hidden lg:flex items-center justify-center">
+            
+            <div style={{ maxWidth: 520, width: "100%", opacity: 0.95 }}>
+              <Image src="/logo-large.png" alt="Logo" width={520} height={520} className="object-contain" priority />
+            </div>
+          </div> */}
         </div>
       </div>
 
-      {/* <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide ? "bg-white" : "bg-white/50"}`}
-          />
-        ))}
-      </div> */}
+      {/* pagination / nav dots (kept commented for simplicity) */}
     </section>
   )
 }

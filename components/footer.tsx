@@ -29,33 +29,40 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer
+      className="border-t"
+      style={{
+        backgroundColor: "#06142bff",
+        borderTopColor: "rgba(255,255,255,0.06)",
+      }}
+    >
+      {/* arttırılmış dikey padding -> bülten alanı ile alt çizgi arasına daha fazla boşluk koyar */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Company Info */}
+          {/* Company Info - sadece logo gösterilecek (metin kaldırıldı) */}
           <div className="lg:col-span-1 space-y-6">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="relative w-12 h-12">
+            <Link href="/" className="flex items-center">
+              <div className="relative w-70 h-20"> {/* logo için uygun boyut */}
                 <Image
-                  src="https://havacilaregitim.com/wp-content/uploads/2025/08/logoo.jpeg"
+                  src="/havacilaregitimtextwhite.png"
                   alt="HAVACILAR EĞİTİM A.Ş."
                   fill
-                  className="object-contain rounded-lg"
+                  className="object-contain"
+                  priority
                 />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg text-foreground font-inter">{t("footer.company")}</h3>
-                <p className="text-sm text-muted-foreground font-dm-sans">{t("footer.tagline")}</p>
               </div>
             </Link>
 
-            <p className="text-muted-foreground font-dm-sans">{t("footer.description")}</p>
+            {/* Açıklamayı korumak isterseniz burayı bırakabilirsiniz; isterseniz kaldırırım */}
+            <p className="text-white/70 font-dm-sans">
+              {t("footer.description")}
+            </p>
 
             <div className="flex space-x-4">
-              <Button size="sm" variant="outline" className="p-2 bg-transparent">
+              <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
                 <Instagram className="w-4 h-4" />
               </Button>
-              <Button size="sm" variant="outline" className="p-2 bg-transparent">
+              <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
                 <Linkedin className="w-4 h-4" />
               </Button>
             </div>
@@ -63,13 +70,13 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-6">
-            <h4 className="font-semibold text-foreground font-inter">{t("footer.quickLinks")}</h4>
+            <h4 className="font-semibold text-white font-inter">{t("footer.quickLinks")}</h4>
             <nav className="space-y-3">
               {quickLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block text-muted-foreground hover:text-primary transition-colors font-dm-sans"
+                  className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
                 >
                   {link.label}
                 </Link>
@@ -79,13 +86,13 @@ export function Footer() {
 
           {/* Programs */}
           <div className="space-y-6">
-            <h4 className="font-semibold text-foreground font-inter">{t("footer.programs")}</h4>
+            <h4 className="font-semibold text-white font-inter">{t("footer.programs")}</h4>
             <nav className="space-y-3">
               {programs.map((program) => (
                 <Link
                   key={program.href}
                   href={program.href}
-                  className="block text-muted-foreground hover:text-primary transition-colors font-dm-sans"
+                  className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
                 >
                   {program.label}
                 </Link>
@@ -95,28 +102,40 @@ export function Footer() {
 
           {/* Contact & Newsletter */}
           <div className="space-y-6">
-            <h4 className="font-semibold text-foreground font-inter">{t("footer.contact")}</h4>
+            <h4 className="font-semibold text-white font-inter">{t("footer.contact")}</h4>
 
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-muted-foreground">
+              <div className="flex items-center space-x-3 text-white/75">
                 <Phone className="w-4 h-4" />
                 <span className="font-dm-sans">+90 212 XXX XX XX</span>
               </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
+              <div className="flex items-center space-x-3 text-white/75">
                 <Mail className="w-4 h-4" />
                 <span className="font-dm-sans">info@havacilaregitim.com</span>
               </div>
-              <div className="flex items-start space-x-3 text-muted-foreground">
+              <div className="flex items-start space-x-3 text-white/75">
                 <MapPin className="w-4 h-4 mt-1" />
                 <span className="font-dm-sans">İstanbul, Türkiye</span>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h5 className="font-medium text-foreground font-inter">{t("footer.newsletter")}</h5>
-              <div className="flex space-x-2">
-                <Input placeholder={t("footer.newsletterPlaceholder")} className="flex-1" />
-                <Button size="sm">
+            {/* Bülten alanı: placeholder rengi beyaz olacak şekilde güncellendi */}
+            <div className="space-y-3 mb-8">
+              <h5 className="font-medium text-white font-inter">{t("footer.newsletter")}</h5>
+              <div className="flex items-center space-x-2">
+                <Input
+                     style={{ color: "white" }}
+                  placeholder={t("footer.newsletterPlaceholder")}
+                  className="flex-1 bg-white/5 placeholder-white border border-white/10 h-12"
+                  aria-label={t("footer.newsletterPlaceholder")}
+             
+                />
+                {/* Nötr beyaz/şeffaf arka planlı ikon butonu */}
+                <Button
+                  size="sm"
+                  className="bg-white/10 hover:bg-white/20 text-white rounded-md p-3 flex items-center justify-center"
+                  aria-label="Subscribe"
+                >
                   <Mail className="w-4 h-4" />
                 </Button>
               </div>
@@ -124,16 +143,19 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-muted-foreground font-dm-sans text-sm">{t("footer.copyright")}</p>
+        {/* alt bölüm: alt çizgi rengi hafif beyaz bırakıldı, logo yazısı kaldırıldığı için boşluk dengesi sağlandı */}
+        <div className="border-t" style={{ borderTopColor: "rgba(255,255,255,0.06)" }}>
+          <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-white/70 font-dm-sans text-sm">{t("footer.copyright")}</p>
 
-          <div className="flex items-center space-x-6 mt-4 md:mt-0">
-            <Link href="/gizlilik" className="text-muted-foreground hover:text-primary text-sm font-dm-sans">
-              {language === "tr" ? "Gizlilik Politikası" : "Privacy Policy"}
-            </Link>
-            <Link href="/kullanim" className="text-muted-foreground hover:text-primary text-sm font-dm-sans">
-              {language === "tr" ? "Kullanım Şartları" : "Terms of Use"}
-            </Link>
+            <div className="flex items-center space-x-6 mt-4 md:mt-0">
+              <Link href="/gizlilik" className="text-white/75 hover:text-primary text-sm font-dm-sans">
+                {language === "tr" ? "Gizlilik Politikası" : "Privacy Policy"}
+              </Link>
+              <Link href="/kullanim" className="text-white/75 hover:text-primary text-sm font-dm-sans">
+                {language === "tr" ? "Kullanım Şartları" : "Terms of Use"}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

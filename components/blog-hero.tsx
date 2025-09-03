@@ -11,7 +11,7 @@ export function BlogHero() {
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <BookOpen className="w-4 h-4 text-primary mr-2" />
-            <span className="text-sm font-medium text-primary">Havacılık Blog</span>
+            <span className="text-sm font-medium text-primary">Havacılık Eğitim Blog</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground font-inter mb-6">
@@ -24,10 +24,19 @@ export function BlogHero() {
             keşfedin.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
+         
+          >
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input placeholder="Blog yazılarında ara..." className="pl-10" />
+              <Input
+               style={{
+
+             border: "1px solid #e1e1e1ff",
+             borderRadius: "8px",
+
+          }}
+              placeholder="Blog yazılarında ara..." className="pl-10" />
             </div>
             <Button>Ara</Button>
           </div>

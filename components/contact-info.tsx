@@ -93,7 +93,7 @@ export function ContactInfo() {
       </Card>
 
       {/* Quick Stats */}
-      <Card className="border-0 shadow-lg">
+      {/* <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="text-xl font-bold text-foreground font-inter">Hızlı Bilgiler</CardTitle>
         </CardHeader>
@@ -111,9 +111,9 @@ export function ContactInfo() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
-      {/* Emergency Contact */}
+      {/* Emergency Contact
       <Card className="border-0 shadow-lg bg-accent/5">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3 mb-3">
@@ -131,7 +131,7 @@ export function ContactInfo() {
             +90 5XX XXX XX XX
           </Button>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   )
 }

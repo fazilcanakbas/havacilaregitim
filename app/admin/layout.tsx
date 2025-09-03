@@ -124,7 +124,12 @@ export default function AdminLayout({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Çıkış Yap</span>
+                    <Link href="/admin/login" onClick={() => {
+                      localStorage.removeItem("token");
+                      localStorage.removeItem("user");
+                    }}>
+                      <span>Çıkış Yap</span>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

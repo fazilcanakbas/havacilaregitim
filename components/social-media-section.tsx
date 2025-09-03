@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -30,34 +30,49 @@ export function SocialMediaSection() {
   ]
 
   return (
-    <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+    <section
+      className="py-20"
+      style={{
+        backgroundColor: "#f5f5f5",
+      }}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-4">
             Sosyal Medyada Biz
           </h2>
 
-          <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto mb-6">
             Günlük eğitim aktivitelerimizi, mezun başarı hikayelerini ve havacılık dünyasından gelişmeleri sosyal medya
             hesaplarımızdan takip edebilirsiniz.
           </p>
 
-          <div className="flex justify-center space-x-4">
-            <Button size="lg" className="group">
+          {/* Responsive buttons: stack on small screens, inline on sm+ */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 justify-center">
+            <Button
+              size="lg"
+              className="group w-full sm:w-auto flex items-center justify-center"
+              aria-label="Instagram'da Takip Et"
+            >
               <Instagram className="w-5 h-5 mr-2" />
-              Instagram'da Takip Et
+              <span>Instagram'da Takip Et</span>
               <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
             </Button>
 
-            <Button size="lg" variant="outline" className="group bg-transparent">
+            <Button
+              size="lg"
+              variant="outline"
+              className="group w-full sm:w-auto flex items-center justify-center bg-transparent"
+              aria-label="LinkedIn'de Bağlan"
+            >
               <Linkedin className="w-5 h-5 mr-2" />
-              LinkedIn'de Bağlan
+              <span>LinkedIn'de Bağlan</span>
               <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {socialPosts.map((post, index) => (
             <Card
               key={index}

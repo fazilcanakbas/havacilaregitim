@@ -61,7 +61,11 @@ export function AnnouncementsSection() {
   const regularAnnouncements = announcements.filter((a) => !a.featured)
 
   return (
-    <section className="py-20">
+    <section className="py-20"
+    style={{
+      backgroundColor: "#f5f5f5"
+    }}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">

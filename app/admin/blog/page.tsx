@@ -1,375 +1,408 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from 'react';
+
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Edit, Trash2, Eye, Calendar, MessageSquare, ThumbsUp } from "lucide-react"
+  Search,
+  Filter,
+  Plus,
+  Eye,
+  Edit,
+  Trash2,
+  ToggleRight,
+  BookOpen,
+  Clock,
+  MessageCircle
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import DeleteConfirmationModal from '../components/admin/DeleteConfirmationModal';
+import Toast from '../components/ui/toast';
+import StatusChangeModal from '../components/admin/StatusChangeModal';
 
-// Mock data for blog posts
-const mockPosts = [
-  {
-    id: 1,
-    title: "Havacılık Sektöründe Yeni Teknolojiler",
-    titleEn: "New Technologies in Aviation Industry",
-    excerpt: "Modern havacılık teknolojilerinin gelişimi ve geleceği",
-    excerptEn: "Development and future of modern aviation technologies",
-    content: "Blog içeriği burada...",
-    contentEn: "Blog content here...",
-    category: "Teknoloji",
-    status: "published",
-    author: "Ahmet Yılmaz",
-    publishDate: "2024-01-15",
-    views: 1250,
-    likes: 45,
-    comments: 12,
-    image: "/blog-tech.jpg",
-  },
-  {
-    id: 2,
-    title: "Pilot Olmak İçin Gerekli Adımlar",
-    titleEn: "Steps Required to Become a Pilot",
-    excerpt: "Pilot kariyerine başlamak isteyenler için rehber",
-    excerptEn: "Guide for those who want to start a pilot career",
-    content: "Blog içeriği burada...",
-    contentEn: "Blog content here...",
-    category: "Eğitim",
-    status: "published",
-    author: "Fatma Demir",
-    publishDate: "2024-01-10",
-    views: 2100,
-    likes: 78,
-    comments: 23,
-    image: "/blog-pilot.jpg",
-  },
-  {
-    id: 3,
-    title: "Simülatör Eğitiminin Önemi",
-    titleEn: "Importance of Simulator Training",
-    excerpt: "Neden simülatör eğitimi bu kadar önemli?",
-    excerptEn: "Why is simulator training so important?",
-    content: "Blog içeriği burada...",
-    contentEn: "Blog content here...",
-    category: "Eğitim",
-    status: "draft",
-    author: "Mehmet Kaya",
-    publishDate: "2024-01-20",
-    views: 0,
-    likes: 0,
-    comments: 0,
-    image: "/blog-simulator.jpg",
-  },
-]
+import {
+  adminListBlogs,
+  adminDeleteBlog,
+  adminUpdateBlog,
+  BlogPost as ServiceBlogPost
+} from '../../../lib/api/blogService';
 
-export default function BlogPage() {
-  const [posts, setPosts] = useState(mockPosts)
-  const [selectedPost, setSelectedPost] = useState<any>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
+export default function AdminBlogsPage() {
+  const [blogPosts, setBlogPosts] = useState<ServiceBlogPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<ServiceBlogPost[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredPosts = posts.filter(
-    (post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.category.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+  // Modal states
+  const [selectedPost, setSelectedPost] = useState<ServiceBlogPost | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [newStatus, setNewStatus] = useState(false);
 
-  const handleAddPost = () => {
-    setSelectedPost(null)
-    setIsDialogOpen(true)
-  }
+  // Toast state
+  const [toast, setToast] = useState({
+    message: '',
+    type: 'success' as 'success' | 'error' | 'warning' | 'info',
+    isVisible: false
+  });
 
-  const handleEditPost = (post: any) => {
-    setSelectedPost(post)
-    setIsDialogOpen(true)
-  }
+  // Blogları backend'den servis üzerinden çek
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setIsLoading(true);
+      try {
+        const blogs = await adminListBlogs();
+        setBlogPosts(blogs || []);
+        setFilteredPosts(blogs || []);
+      } catch (err) {
+        showToast('Bloglar alınırken hata oluştu', 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
-  const handleDeletePost = (id: number) => {
-    setPosts(posts.filter((post) => post.id !== id))
-  }
+  // Kategori listesi
+  const categories = Array.from(new Set(blogPosts.map(post => post.category)));
+
+  // Filtreleme işlevi
+  useEffect(() => {
+    const filtered = blogPosts.filter(post => {
+      const matchesSearch =
+        (post.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (post.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (post.author || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ((post.tags || []).some(tag => (tag || '').toLowerCase().includes(searchTerm.toLowerCase())));
+      const matchesCategory = filterCategory === 'all' || post.category === filterCategory;
+      const matchesStatus =
+        filterStatus === 'all' ||
+        (filterStatus === 'active' && post.isActive) ||
+        (filterStatus === 'inactive' && !post.isActive);
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+
+    setFilteredPosts(filtered);
+  }, [searchTerm, filterCategory, filterStatus, blogPosts]);
+
+  // Blog silme - artık servis kullanıyor
+  const handleDeletePost = (post: ServiceBlogPost) => {
+    setSelectedPost(post);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDeletePost = async () => {
+    if (selectedPost && selectedPost.slug) {
+      try {
+        await adminDeleteBlog(selectedPost.slug);
+        setBlogPosts(prev => prev.filter(p => p._id !== selectedPost._id));
+        setFilteredPosts(prev => prev.filter(p => p._id !== selectedPost._id));
+        showToast('Blog yazısı başarıyla silindi.', 'success');
+      } catch (err) {
+        showToast('Blog silinirken hata oluştu', 'error');
+      } finally {
+        setIsDeleteModalOpen(false);
+      }
+    }
+  };
+
+  // Blog aktif/pasif değiştir - servis üzerinden
+  const handleToggleStatus = (post: ServiceBlogPost) => {
+    setSelectedPost(post);
+    setNewStatus(!post.isActive);
+    setIsStatusModalOpen(true);
+  };
+
+  const confirmStatusChange = async () => {
+    if (selectedPost && selectedPost.slug) {
+      try {
+        await adminUpdateBlog(selectedPost.slug, { isActive: newStatus });
+        const updatedPosts = blogPosts.map(p =>
+          p._id === selectedPost._id
+            ? { ...p, isActive: newStatus }
+            : p
+        );
+        setBlogPosts(updatedPosts);
+        setFilteredPosts(prev => prev.map(p =>
+          p._id === selectedPost._id
+            ? { ...p, isActive: newStatus }
+            : p
+        ));
+        showToast(
+          `Blog yazısı başarıyla ${newStatus ? 'aktif' : 'pasif'} duruma getirildi.`,
+          'success'
+        );
+      } catch (err) {
+        showToast('Durum güncellenirken hata oluştu', 'error');
+      } finally {
+        setIsStatusModalOpen(false);
+      }
+    }
+  };
+
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return '/placeholder.png';
+    if (imagePath.startsWith('http')) return imagePath;
+    const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    return `${base}${imagePath}`;
+  };
+
+  // Toast gösterme işlevi
+  const showToast = (message: string, type: 'success' | 'error' | 'warning' | 'info') => {
+    setToast({
+      message,
+      type,
+      isVisible: true
+    });
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Blog Yönetimi</h1>
-          <p className="text-gray-600">Blog yazılarını yönetin ve düzenleyin</p>
+    <div>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Blog Yönetimi</h1>
+            <p className="text-gray-600 mt-1">Blog yazılarını yönetin</p>
+          </div>
+          <div className="mt-4 sm:mt-0">
+            <Link
+              href="/admin/blog/create"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Yeni Blog Yazısı
+            </Link>
+          </div>
         </div>
-        <Button onClick={handleAddPost} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" />
-          Yeni Yazı Ekle
-        </Button>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Toplam Yazı</p>
-                <p className="text-2xl font-bold text-gray-900">{posts.length}</p>
-              </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Edit className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="text-2xl font-bold text-gray-900">{blogPosts.length}</div>
+            <div className="text-sm text-gray-600">Toplam Yazı</div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="text-2xl font-bold text-green-600">{blogPosts.filter(p => p.isActive).length}</div>
+            <div className="text-sm text-gray-600">Aktif Yazı</div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="text-2xl font-bold text-yellow-600">{blogPosts.filter(p => !p.isActive).length}</div>
+            <div className="text-sm text-gray-600">Pasif Yazı</div>
+          </div>
+          {/* <div className="bg-white rounded-lg shadow-sm border p-4">
+            <div className="text-2xl font-bold text-blue-600">{blogPosts.reduce((sum, post) => sum + (post.comments || 0), 0)}</div>
+            <div className="text-sm text-gray-600">Toplam Yorum</div>
+          </div> */}
+        </div>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Yayınlanan</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {posts.filter((p) => p.status === "published").length}
-                </p>
-              </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <Eye className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Toplam Görüntüleme</p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {posts.reduce((sum, p) => sum + p.views, 0).toLocaleString()}
-                </p>
-              </div>
-              <div className="p-3 bg-purple-100 rounded-full">
-                <Eye className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Toplam Beğeni</p>
-                <p className="text-2xl font-bold text-red-600">{posts.reduce((sum, p) => sum + p.likes, 0)}</p>
-              </div>
-              <div className="p-3 bg-red-100 rounded-full">
-                <ThumbsUp className="w-6 h-6 text-red-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Search and Filter */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Blog yazısı ara..."
+        {/* Filters */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Blog ara..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-            <Select>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Kategori seç" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                <SelectItem value="teknoloji">Teknoloji</SelectItem>
-                <SelectItem value="egitim">Eğitim</SelectItem>
-                <SelectItem value="haberler">Haberler</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Durum seç" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm Durumlar</SelectItem>
-                <SelectItem value="published">Yayınlanan</SelectItem>
-                <SelectItem value="draft">Taslak</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center flex-wrap gap-4">
+              <div className="flex items-center space-x-2">
+                <Filter className="h-4 w-4 text-gray-500" />
+                <select
+                  value={filterCategory}
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="all">Tüm Kategoriler</option>
+                  {categories.map((category, index) => (
+                    <option key={index} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center space-x-2">
+                <ToggleRight className="h-4 w-4 text-gray-500" />
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="all">Tüm Durumlar</option>
+                  <option value="active">Aktif</option>
+                  <option value="inactive">Pasif</option>
+                </select>
+              </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Blog Posts List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Blog Yazıları</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {filteredPosts.map((post) => (
-              <div key={post.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-gray-900">{post.title}</h3>
-                      <Badge variant={post.status === "published" ? "default" : "secondary"}>
-                        {post.status === "published" ? "Yayınlandı" : "Taslak"}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">{post.excerpt}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {post.publishDate}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        {post.views.toLocaleString()}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <ThumbsUp className="w-3 h-3" />
-                        {post.likes}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MessageSquare className="w-3 h-3" />
-                        {post.comments}
-                      </span>
-                      <span>Yazar: {post.author}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleEditPost(post)}>
-                    <Edit className="w-4 h-4 mr-1" />
-                    Düzenle
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDeletePost(post.id)}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+        {/* Blog List */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full whitespace-nowrap">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Blog
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Kategori
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Yazar
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tarih
+                  </th>
+                      {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Etkileşim
+                      </th> */}
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Durum
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    İşlemler
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredPosts.length > 0 ? (
+                  filteredPosts.map((post) => (
+                    <tr key={post._id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="relative flex-shrink-0 w-16 h-12 rounded-md overflow-hidden">
+                            <Image
+                              src={getImageUrl(post.image)}
+                              alt={post.title || ''}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{post.title}</p>
+                            <p className="text-xs text-gray-500 truncate">{(post.excerpt || '').substring(0, 60)}...</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                          {post.category}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-900">{post.author}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <div className="text-sm text-gray-900">{new Date(post.date ? post.date : '-').toLocaleDateString()}</div>
+                          {/* <div className="text-xs text-gray-500 flex items-center">
+                            <Clock className="h-3 w-3 mr-1" />
+                            <span>Son güncelleme: {post.lastUpdated || '-'}</span>
+                          </div> */}
+                        </div>
+                      </td>
+                      {/* <td className="px-6 py-4">
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <div className="flex items-center">
+                            <Eye className="h-4 w-4 mr-1" />
+                            <span>{post.views || 0}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <MessageCircle className="h-4 w-4 mr-1" />
+                            <span>{post.comments || 0}</span>
+                          </div>
+                        </div>
+                      </td> */}
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            post.isActive
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
+                          {post.isActive ? 'Aktif' : 'Pasif'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                        <div className="flex justify-end space-x-2">
+                          <Link href={`/blog/${post.slug}`} target="_blank">
+                            <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          </Link>
+                          <Link href={`/admin/blog/edit/${post._id}`}>
+                            <button className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg transition-colors">
+                              <Edit className="h-4 w-4" />
+                            </button>
+                          </Link>
+                          <button
+                            onClick={() => handleToggleStatus(post)}
+                            className={`p-2 ${
+                              post.isActive
+                                ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100'
+                                : 'text-green-600 hover:text-green-800 hover:bg-green-100'
+                            } rounded-lg transition-colors`}
+                          >
+                            <ToggleRight className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeletePost(post)}
+                            className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+                      <BookOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                      <p className="text-lg font-medium">Blog yazısı bulunamadı</p>
+                      <p className="text-sm">Filtreleri değiştirerek tekrar deneyin veya yeni bir blog yazısı ekleyin.</p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Add/Edit Post Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{selectedPost ? "Blog Yazısını Düzenle" : "Yeni Blog Yazısı Ekle"}</DialogTitle>
-            <DialogDescription>Blog yazısı bilgilerini girin ve kaydedin.</DialogDescription>
-          </DialogHeader>
+      {/* Modals */}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDeletePost}
+        title="Blog Yazısını Sil"
+        message={`"${selectedPost?.title}" başlıklı blog yazısını silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`}
+      />
 
-          <Tabs defaultValue="turkish" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="turkish">Türkçe</TabsTrigger>
-              <TabsTrigger value="english">English</TabsTrigger>
-            </TabsList>
+      <StatusChangeModal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        onConfirm={confirmStatusChange}
+        title={`Blog Yazısını ${newStatus ? 'Aktif' : 'Pasif'} Yap`}
+        message={`"${selectedPost?.title}" başlıklı blog yazısını ${newStatus ? 'aktif' : 'pasif'} duruma getirmek istediğinize emin misiniz?`}
+        status={newStatus}
+      />
 
-            <TabsContent value="turkish" className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="title">Başlık</Label>
-                  <Input id="title" defaultValue={selectedPost?.title} placeholder="Blog yazısı başlığı" />
-                </div>
-                <div>
-                  <Label htmlFor="category">Kategori</Label>
-                  <Select defaultValue={selectedPost?.category}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Kategori seç" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Teknoloji">Teknoloji</SelectItem>
-                      <SelectItem value="Eğitim">Eğitim</SelectItem>
-                      <SelectItem value="Haberler">Haberler</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="excerpt">Özet</Label>
-                <Textarea id="excerpt" defaultValue={selectedPost?.excerpt} placeholder="Blog yazısı özeti" rows={2} />
-              </div>
-
-              <div>
-                <Label htmlFor="content">İçerik</Label>
-                <Textarea
-                  id="content"
-                  defaultValue={selectedPost?.content}
-                  placeholder="Blog yazısı içeriği"
-                  rows={8}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="author">Yazar</Label>
-                  <Input id="author" defaultValue={selectedPost?.author} placeholder="Yazar adı" />
-                </div>
-                <div>
-                  <Label htmlFor="publishDate">Yayın Tarihi</Label>
-                  <Input id="publishDate" type="date" defaultValue={selectedPost?.publishDate} />
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="english" className="space-y-4">
-              <div>
-                <Label htmlFor="titleEn">Title (English)</Label>
-                <Input id="titleEn" defaultValue={selectedPost?.titleEn} placeholder="Blog post title in English" />
-              </div>
-
-              <div>
-                <Label htmlFor="excerptEn">Excerpt (English)</Label>
-                <Textarea
-                  id="excerptEn"
-                  defaultValue={selectedPost?.excerptEn}
-                  placeholder="Blog post excerpt in English"
-                  rows={2}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="contentEn">Content (English)</Label>
-                <Textarea
-                  id="contentEn"
-                  defaultValue={selectedPost?.contentEn}
-                  placeholder="Blog post content in English"
-                  rows={8}
-                />
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              İptal
-            </Button>
-            <Button onClick={() => setIsDialogOpen(false)}>{selectedPost ? "Güncelle" : "Ekle"}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Toast bildirimleri */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
+      />
     </div>
-  )
+  );
 }

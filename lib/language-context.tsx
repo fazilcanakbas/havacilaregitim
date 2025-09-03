@@ -25,11 +25,11 @@ const translations = {
 
     // Hero Section
     "hero.badge": "Türkiye'nin Önde Gelen Havacılık Okulu",
-    "hero.cta.start": "Eğitime Başla",
+    "hero.cta.start": "Hizmetlerimiz",
     "hero.cta.video": "Tanıtım Videosu",
-    "hero.stats.graduates": "Mezun Pilot",
+    "hero.stats.graduates": "Kursiyer",
     "hero.stats.experience": "Yıl Deneyim",
-    "hero.stats.aircraft": "Eğitim Uçağı",
+    "hero.stats.aircraft": "Eğitmen Kadrosu",
 
     // Atatürk Quote
     "quote.text":
@@ -42,7 +42,7 @@ const translations = {
     "services.subtitle":
       "Uluslararası standartlarda, deneyimli eğitmenler eşliğinde sunduğumuz kapsamlı pilot eğitimi programları ile havacılık kariyerinizi başlatın.",
     "services.cta": "Detayları İncele",
-    "services.viewAll": "Tüm Programları Görüntüle",
+    "services.viewAll": "Tüm Hizmetleri İncele",
 
     // Contact
     "contact.badge": "İletişim",
@@ -63,12 +63,12 @@ const translations = {
     "footer.contact": "İletişim",
     "footer.newsletter": "Bülten Aboneliği",
     "footer.newsletterPlaceholder": "E-posta adresiniz",
-    "footer.copyright": "© 2024 HAVACILAR EĞİTİM A.Ş. Tüm hakları saklıdır.",
+    "footer.copyright": "© 2025 Bloomo Media Tarafından geliştirildi. Tüm hakları saklıdır.",
   },
   en: {
     // Navigation
     "nav.home": "Home",
-    "nav.corporate": "Corporate",
+    // "nav.corporate": "Corporate",
     "nav.about": "About Us",
     "nav.services": "Services",
     "nav.blog": "Blog",
@@ -77,7 +77,7 @@ const translations = {
 
     // Hero Section
     "hero.badge": "Turkey's Leading Aviation School",
-    "hero.cta.start": "Start Training",
+    "hero.cta.start": "Services",
     "hero.cta.video": "Watch Video",
     "hero.stats.graduates": "Graduate Pilots",
     "hero.stats.experience": "Years Experience",
@@ -94,7 +94,7 @@ const translations = {
     "services.subtitle":
       "Start your aviation career with our comprehensive pilot training programs offered by experienced instructors at international standards.",
     "services.cta": "View Details",
-    "services.viewAll": "View All Programs",
+    "services.viewAll": "View All Services",
 
     // Contact
     "contact.badge": "Contact",
