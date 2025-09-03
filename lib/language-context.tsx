@@ -57,7 +57,7 @@ const translations = {
     "footer.company": "HAVACILAR EĞİTİM",
     "footer.tagline": "Aviation Education",
     "footer.description":
-      "Türkiye'nin önde gelen havacılık eğitimi kurumu olarak, uluslararası standartlarda pilot yetiştirme programları sunuyoruz.",
+      "Uzman ekip tarafından verilen bireysel danışmanlık ve gerçekçi mülakat simülasyonlarıyla pilot adaylarını profesyonellere dönüştürüyoruz.",
     "footer.quickLinks": "Hızlı Bağlantılar",
     "footer.programs": "Eğitim Programları",
     "footer.contact": "İletişim",

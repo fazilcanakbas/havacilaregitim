@@ -209,9 +209,14 @@ function OurValues() {
                 initial={{ scale: 1 }}
                 whileHover={{ scale: 1.15, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="w-16 h-16 mb-6 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center"
+                className="w-16 h-16 mb-6 rounded-2xl flex items-center justify-center"
+                style={{
+                  // Lacivert-mavi tonlarında degrade arka plan (ikonların çevresini vurgular)
+                  background: "linear-gradient(135deg, #042A53 0%, #0A4C7F 50%, #2B7BBF 100%)"
+                }}
               >
-                <value.icon className="w-8 h-8 text-primary-foreground" />
+                {/* İkon rengini beyaz yaptım; degrade arka plan lacivert-mavi tonlarında */}
+                <value.icon className="w-8 h-8 text-white" />
               </motion.div>
               <h3 className="text-xl font-bold text-foreground mb-4 font-inter">{value.title}</h3>
               <p className="text-muted-foreground font-dm-sans leading-relaxed">{value.description}</p>

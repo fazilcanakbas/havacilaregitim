@@ -1,312 +1,582 @@
-"use client"
+'use client';
 
-import type React from "react"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  ArrowLeft,
+  Upload,
+  Save,
+  Plus,
+  X,
+  User,
+  Calendar,
+} from 'lucide-react';
+import Link from 'next/link';
+import Toast from '../../components/ui/toast';
+import Image from 'next/image';
+import { adminCreateAnnouncement } from '@/lib/api/announcementService';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Upload, X, Plus } from "lucide-react"
-import Link from "next/link"
+
+// TR -> EN mapping
+const categoryMap: Record<string, string> = {
+  "Eğitim": "Education",
+  "Bakım": "Maintenance",
+  "Personel": "Staff",
+  "Genel": "General"
+};
+
+interface AnnouncementFormData {
+  title: string;
+  description: string;
+  content: string;
+  category: string;
+  isActive: boolean;
+  featured: boolean;
+  images: File[];
+  author: string;
+
+  // EN optional fields
+  titleEn?: string;
+  descriptionEn?: string;
+  contentEn?: string;
+  categoryEn?: string;
+}
 
 export default function CreateAnnouncementPage() {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    content: "",
-    category: "",
-    priority: "medium",
-    publishDate: "",
-    expirationDate: "",
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeLangTab, setActiveLangTab] = useState<'tr' | 'en'>('tr');
+
+  const [formData, setFormData] = useState<AnnouncementFormData>({
+    title: '',
+    description: '',
+    content: '',
+    category: '',
+    isActive: true,
     featured: false,
-    emailNotification: true,
-    targetAudience: "all",
-    status: "draft",
-  })
+    images: [],
+    author: 'Havacılar Eğitim',
+    titleEn: '',
+    descriptionEn: '',
+    contentEn: '',
+    categoryEn: '',
+  });
 
-  const [images, setImages] = useState<string[]>([])
-  const [tags, setTags] = useState<string[]>([])
-  const [newTag, setNewTag] = useState("")
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [customCategory, setCustomCategory] = useState('');
+  const [customCategoryEn, setCustomCategoryEn] = useState('');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [toast, setToast] = useState({
+    message: '',
+    type: 'success' as 'success' | 'error' | 'warning' | 'info',
+    isVisible: false,
+  });
 
+  // Validation
+  const validate = () => {
+    const errors: Record<string, string> = {};
+    if (!formData.title.trim()) errors.title = 'Başlık gereklidir';
+    if (!formData.description.trim()) errors.description = 'Açıklama gereklidir';
+    if (!formData.content.trim()) errors.content = 'Detay gereklidir';
+    if (!formData.category) errors.category = 'Kategori seçmelisiniz';
+    if (formData.images.length === 0) errors.images = 'En az 1 görsel yüklemelisiniz';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Input change
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (formErrors[name]) setFormErrors((prev) => ({ ...prev, [name]: '' }));
+  };
+
+  // Toggle change
+  const handleToggleChange = (name: 'isActive' | 'featured', checked: boolean) => {
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  };
+
+  // Görsel yükleme
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files && images.length < 3) {
-      // Simulate image upload - in real app, upload to server
-      const newImages = Array.from(files)
-        .slice(0, 3 - images.length)
-        .map((file, index) => `/placeholder.svg?height=200&width=300&query=${file.name}`)
-      setImages((prev) => [...prev, ...newImages])
+    const files = e.target.files;
+    if (files) {
+      const newFiles = Array.from(files).slice(0, 3 - formData.images.length);
+      const updatedFiles = [...formData.images, ...newFiles].slice(0, 3);
+      setFormData((prev) => ({ ...prev, images: updatedFiles }));
+
+      const previews = newFiles.map((file) => URL.createObjectURL(file));
+      setImagePreviews((prev) => [...prev, ...previews].slice(0, 3));
+
+      if (formErrors.images) setFormErrors((prev) => ({ ...prev, images: '' }));
     }
-  }
+  };
 
   const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index))
-  }
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
 
-  const addTag = () => {
-    if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setTags((prev) => [...prev, newTag.trim()])
-      setNewTag("")
+  // Özel kategori ekleme
+  const handleAddCategory = () => {
+    if (customCategory.trim()) {
+      setFormData((prev) => ({ ...prev, category: customCategory.trim() }));
+      setCustomCategory('');
+      if (formErrors.category) setFormErrors((prev) => ({ ...prev, category: '' }));
     }
+  };
+
+  const handleAddCategoryEn = () => {
+    if (customCategoryEn.trim()) {
+      setFormData((prev) => ({ ...prev, categoryEn: customCategoryEn.trim() }));
+      setCustomCategoryEn('');
+    }
+  };
+
+  // Submit
+  const handleSubmit = async (e?: React.FormEvent) => {
+  e?.preventDefault();
+  if (!validate()) {
+    showToast('Lütfen gerekli alanları doldurun', 'error');
+    return;
   }
 
-  const removeTag = (tagToRemove: string) => {
-    setTags((prev) => prev.filter((tag) => tag !== tagToRemove))
-  }
+  setIsSubmitting(true);
+  try {
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('description', formData.description);
+    data.append('content', formData.content);
+    data.append('author', formData.author);
+    data.append('category', formData.category);
+    data.append('isActive', String(formData.isActive));
+    data.append('featured', String(formData.featured));
 
-  const handleSubmit = (status: "draft" | "active") => {
-    // Handle form submission
-    console.log({ ...formData, images, tags, status })
-    // Redirect to announcements page
+    // EN alanlar opsiyonel
+    if (formData.titleEn) data.append('titleEn', formData.titleEn);
+    if (formData.descriptionEn) data.append('descriptionEn', formData.descriptionEn);
+    if (formData.contentEn) data.append('contentEn', formData.contentEn);
+    if (formData.categoryEn) data.append('categoryEn', formData.categoryEn);
+
+    // Görseller
+    formData.images.forEach((file) => {
+      data.append('images', file);
+    });
+
+    await adminCreateAnnouncement(data);
+
+    showToast('Duyuru başarıyla oluşturuldu!', 'success');
+    setTimeout(() => router.push('/admin/announcements'), 1000);
+  } catch (error: any) {
+    console.error('[CreateAnnouncement] error', error);
+    showToast(error?.message || 'Duyuru oluşturulurken hata oluştu', 'error');
+  } finally {
+    setIsSubmitting(false);
   }
+};
+
+
+  const showToast = (
+    message: string,
+    type: 'success' | 'error' | 'warning' | 'info'
+  ) => {
+    setToast({ message, type, isVisible: true });
+  };
+
+  const formatDate = () => {
+    const date = new Date();
+    return date.toLocaleDateString('tr-TR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/announcements">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Geri Dön
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Yeni Duyuru Oluştur</h1>
-          <p className="text-gray-600 mt-1">Yeni bir duyuru oluşturmak için aşağıdaki formu doldurun</p>
+    <div>
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/admin/announcements"
+              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Yeni Duyuru</h1>
+              <p className="text-gray-600 mt-1">Yeni bir duyuru oluşturun</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => router.push('/admin/announcements')}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              İptal
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Kaydediliyor...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Kaydet ve Yayınla
+                </>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Form */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Temel Bilgiler</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Duyuru Başlığı *</Label>
-                <Input
-                  id="title"
-                  placeholder="Duyuru başlığını girin"
-                  value={formData.title}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                />
-              </div>
+        {/* TR / EN Tabs */}
+        <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => setActiveLangTab('tr')}
+            className={`px-3 py-1 rounded-md ${
+              activeLangTab === 'tr'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700'
+            }`}
+          >
+            Türkçe
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveLangTab('en')}
+            className={`px-3 py-1 rounded-md ${
+              activeLangTab === 'en'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700'
+            }`}
+          >
+            English (optional)
+          </button>
+        </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Kısa Açıklama *</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Duyuru için kısa bir açıklama yazın"
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                />
-              </div>
+        <form
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          onSubmit={handleSubmit}
+        >
+          {/* Left side */}
+          <div className="lg:col-span-2 space-y-6">
+            {activeLangTab === 'tr' ? (
+              <>
+                {/* Başlık */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Duyuru Başlığı <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="content">Detaylı İçerik *</Label>
-                <Textarea
-                  id="content"
-                  placeholder="Duyurunun detaylı içeriğini yazın"
-                  rows={8}
-                  value={formData.content}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
-                />
-              </div>
-            </CardContent>
-          </Card>
+                {/* Açıklama */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Duyuru Açıklaması <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
 
-          {/* Images Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Duyuru Görselleri (Maksimum 3)</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                {images.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={image || "/placeholder.svg"}
-                      alt={`Görsel ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-lg border"
+                {/* Detay */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Duyuru Detayı <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="content"
+                    value={formData.content}
+                    onChange={handleInputChange}
+                    rows={10}
+                    className="w-full px-4 py-3 border rounded-lg font-mono"
+                  />
+                </div>
+
+                {/* Kategori (TR) */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">Kategori</label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border rounded-lg mb-3"
+                  >
+                    <option value="">Kategori seçin</option>
+                    {Object.keys(categoryMap).map((cat, i) => (
+                      <option key={i} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                    {!Object.keys(categoryMap).includes(formData.category) &&
+                      formData.category && (
+                        <option value={formData.category}>
+                          {formData.category} (Özel)
+                        </option>
+                      )}
+                  </select>
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={customCategory}
+                      onChange={(e) => setCustomCategory(e.target.value)}
+                      placeholder="Özel kategori ekle"
+                      className="flex-1 px-3 py-2 border rounded-lg"
                     />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
-                      onClick={() => removeImage(index)}
+                    <button
+                      type="button"
+                      onClick={handleAddCategory}
+                      className="bg-gray-100 p-2 rounded-lg hover:bg-gray-200"
                     >
-                      <X className="w-3 h-3" />
-                    </Button>
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Title EN */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Title (English)
+                  </label>
+                  <input
+                    type="text"
+                    name="titleEn"
+                    value={formData.titleEn}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
+
+                {/* Description EN */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Description (English)
+                  </label>
+                  <textarea
+                    name="descriptionEn"
+                    value={formData.descriptionEn}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
+
+                {/* Content EN */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Content (English)
+                  </label>
+                  <textarea
+                    name="contentEn"
+                    value={formData.contentEn}
+                    onChange={handleInputChange}
+                    rows={10}
+                    className="w-full px-4 py-3 border rounded-lg font-mono"
+                  />
+                </div>
+
+                {/* Category EN */}
+                <div className="bg-white rounded-xl shadow-sm border p-6">
+                  <label className="block text-sm font-medium mb-2">Category (English)</label>
+                  <select
+                    name="categoryEn"
+                    value={formData.categoryEn}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border rounded-lg mb-3"
+                  >
+                    <option value="">Select category</option>
+                    {Object.values(categoryMap).map((catEn, i) => (
+                      <option key={i} value={catEn}>
+                        {catEn}
+                      </option>
+                    ))}
+                    {!Object.values(categoryMap).includes(formData.categoryEn || '') &&
+                      formData.categoryEn && (
+                        <option value={formData.categoryEn}>
+                          {formData.categoryEn} (Custom)
+                        </option>
+                      )}
+                  </select>
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={customCategoryEn}
+                      onChange={(e) => setCustomCategoryEn(e.target.value)}
+                      placeholder="Add custom category"
+                      className="flex-1 px-3 py-2 border rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCategoryEn}
+                      className="bg-gray-100 p-2 rounded-lg hover:bg-gray-200"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Right side */}
+          <div className="space-y-6">
+            {/* Yayın durumu */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold mb-4">Yayın Durumu</h2>
+              <div className="flex items-center justify-between mb-4">
+                <span>Yayında mı?</span>
+                <label className="relative inline-flex cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={formData.isActive}
+                    onChange={(e) => handleToggleChange('isActive', e.target.checked)}
+                  />
+                  <div
+                    className={`w-11 h-6 rounded-full ${
+                      formData.isActive ? 'bg-green-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 bg-white rounded-full transform transition-transform ${
+                        formData.isActive ? 'translate-x-6' : 'translate-x-1'
+                      } mt-0.5`}
+                    />
+                  </div>
+                </label>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Öne Çıkar</span>
+                <label className="relative inline-flex cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={formData.featured}
+                    onChange={(e) => handleToggleChange('featured', e.target.checked)}
+                  />
+                  <div
+                    className={`w-11 h-6 rounded-full ${
+                      formData.featured ? 'bg-yellow-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 bg-white rounded-full transform transition-transform ${
+                        formData.featured ? 'translate-x-6' : 'translate-x-1'
+                      } mt-0.5`}
+                    />
+                  </div>
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-600 mt-4">
+                <Calendar className="h-4 w-4" />
+                <span>Yayınlanma tarihi: {formatDate()}</span>
+              </div>
+            </div>
+
+            {/* Görseller */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold mb-4">Görseller (max 3)</h2>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  id="image-upload"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={formData.images.length >= 3}
+                />
+                <label
+                  htmlFor="image-upload"
+                  className="flex flex-col items-center justify-center cursor-pointer"
+                >
+                  <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                  <span className="text-sm font-medium text-gray-900">
+                    Görsel yüklemek için tıklayın
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    PNG, JPG, WEBP (max 3)
+                  </span>
+                </label>
+              </div>
+              <div className="flex gap-2 mt-4 flex-wrap">
+                {imagePreviews.map((src, i) => (
+                  <div key={i} className="relative w-24 h-24">
+                    <Image
+                      src={src}
+                      alt="preview"
+                      fill
+                      className="object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </div>
                 ))}
-
-                {images.length < 3 && (
-                  <label className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400">
-                    <Upload className="w-6 h-6 text-gray-400" />
-                    <span className="text-xs text-gray-500 mt-1">Görsel Ekle</span>
-                    <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
-                  </label>
-                )}
               </div>
-            </CardContent>
-          </Card>
+              {formErrors.images && (
+                <p className="text-sm text-red-500 mt-2">{formErrors.images}</p>
+              )}
+            </div>
 
-          {/* Tags Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Etiketler</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Etiket ekle"
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && addTag()}
-                />
-                <Button onClick={addTag} variant="outline">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                    #{tag}
-                    <X className="w-3 h-3 cursor-pointer" onClick={() => removeTag(tag)} />
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Duyuru Ayarları</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="category">Kategori *</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Kategori seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="egitim">Eğitim</SelectItem>
-                    <SelectItem value="bakim">Bakım</SelectItem>
-                    <SelectItem value="personel">Personel</SelectItem>
-                    <SelectItem value="genel">Genel</SelectItem>
-                    <SelectItem value="etkinlik">Etkinlik</SelectItem>
-                    <SelectItem value="duyuru">Duyuru</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="priority">Öncelik</Label>
-                <Select
-                  value={formData.priority}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, priority: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="high">Yüksek</SelectItem>
-                    <SelectItem value="medium">Orta</SelectItem>
-                    <SelectItem value="low">Düşük</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="targetAudience">Hedef Kitle</Label>
-                <Select
-                  value={formData.targetAudience}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, targetAudience: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Herkese</SelectItem>
-                    <SelectItem value="students">Öğrenciler</SelectItem>
-                    <SelectItem value="instructors">Eğitmenler</SelectItem>
-                    <SelectItem value="staff">Personel</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="publishDate">Yayın Tarihi</Label>
-                  <Input
-                    id="publishDate"
-                    type="date"
-                    value={formData.publishDate}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, publishDate: e.target.value }))}
-                  />
+            {/* Yazar */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold mb-4">Yazar</h2>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="h-5 w-5 text-blue-600" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="expirationDate">Bitiş Tarihi</Label>
-                  <Input
-                    id="expirationDate"
-                    type="date"
-                    value={formData.expirationDate}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, expirationDate: e.target.value }))}
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="featured">Öne Çıkan Duyuru</Label>
-                <Switch
-                  id="featured"
-                  checked={formData.featured}
-                  onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, featured: checked }))}
+                <input
+                  type="text"
+                  name="author"
+                  value={formData.author}
+                  onChange={handleInputChange}
+                  className="flex-1 px-3 py-2 border rounded-lg"
                 />
               </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="emailNotification">E-posta Bildirimi</Label>
-                <Switch
-                  id="emailNotification"
-                  checked={formData.emailNotification}
-                  onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, emailNotification: checked }))}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Action Buttons */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-3">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={() => handleSubmit("active")}>
-                  Yayınla
-                </Button>
-                <Button variant="outline" className="w-full bg-transparent" onClick={() => handleSubmit("draft")}>
-                  Taslak Olarak Kaydet
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
+        </form>
       </div>
+
+      {/* Toast */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast((prev) => ({ ...prev, isVisible: false }))}
+      />
     </div>
-  )
+  );
 }

@@ -24,7 +24,7 @@ app.use(morgan('dev'));
 
 // CORS ayarları
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000','https://6041cfa1cc3f.ngrok-free.app/','https://havacilaregitim.vercel.app/'],
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000','https://6041cfa1cc3f.ngrok-free.app','https://havacilaregitim.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'x-auth-token', 'Authorization'],
@@ -35,7 +35,9 @@ app.use(cors({
 // Uploads klasörünün varlığını kontrol et ve yoksa oluştur
 const uploadsDir = path.join(__dirname, 'uploads');
 const propertiesDir = path.join(uploadsDir, 'properties');
-
+const announcementsDir = path.join(uploadsDir, 'announcements');
+const agentsDir = path.join(uploadsDir, 'agents');
+const servicesDir = path.join(uploadsDir, 'services');
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
@@ -76,6 +78,13 @@ try {
   console.log('Service routes loaded');
 } catch (error) {
   console.error('Error loading service routes:', error);
+}
+try {
+  const announcementRoutes = require('./src/routes/announcement.routes');
+  app.use('/api/announcements', announcementRoutes);
+  console.log('Announcement routes loaded');
+} catch (error) {
+  console.error('Error loading announcement routes:', error);
 }
 // Base route
 app.get('/', (req, res) => {

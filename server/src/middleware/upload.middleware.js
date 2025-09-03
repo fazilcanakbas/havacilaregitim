@@ -22,6 +22,8 @@ const storage = multer.diskStorage({
       uploadPath = path.join(__dirname, '../..', 'uploads', 'agents');
     } else if (req.originalUrl.includes('/services')) {
       uploadPath = path.join(__dirname, '../..', 'uploads', 'services');
+    } else if (req.originalUrl.includes('/announcements')) {
+      uploadPath = path.join(__dirname, '../..', 'uploads', 'announcements');
     } else {
       uploadPath = path.join(__dirname, '../..', 'uploads', 'properties');
     }

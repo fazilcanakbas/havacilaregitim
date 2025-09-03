@@ -59,7 +59,9 @@ export default function AdminLayout({
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex items-center justify-center h-16 px-4 bg-primary">
-          <h1 className="text-xl font-bold text-white">HAVACILAR EĞİTİM</h1>
+          {/* <h1 className="text-xl font-bold text-white"></h1> */}
+
+          <img src="/havacilaregitimtext.png" alt="" />
         </div>
 
         <nav className="mt-8">

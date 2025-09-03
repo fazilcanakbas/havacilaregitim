@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import { useEffect, useState } from "react"
+import { apiFetch } from "@/lib/api/client"
 
 export function Footer() {
   const { language, t } = useLanguage()
@@ -18,13 +20,39 @@ export function Footer() {
     { href: "/iletisim", label: language === "tr" ? "İletişim" : "Contact" },
   ]
 
-  const programs = [
+  type ServiceItem = {
+    _id?: string
+    slug?: string
+    title?: string
+    titleEn?: string
+  }
+
+  const [services, setServices] = useState<ServiceItem[]>([])
+
+  useEffect(() => {
+    let mounted = true
+    async function fetchServices() {
+      try {
+        const res = (await apiFetch(`/api/services?limit=4&isActive=true`, { method: "GET" })) as ServiceItem[] | null
+        if (mounted && Array.isArray(res)) {
+          setServices(res.slice(0, 4))
+        }
+      } catch (err) {
+        console.error("Failed to fetch services for footer:", err)
+      }
+    }
+
+    fetchServices()
+
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  const fallbackPrograms = [
     { href: "/ppl", label: language === "tr" ? "Özel Pilot Lisansı (PPL)" : "Private Pilot License (PPL)" },
     { href: "/cpl", label: language === "tr" ? "Ticari Pilot Lisansı (CPL)" : "Commercial Pilot License (CPL)" },
-    {
-      href: "/atpl",
-      label: language === "tr" ? "Havayolu Pilot Eğitimi (ATPL)" : "Airline Transport Pilot License (ATPL)",
-    },
+    { href: "/atpl", label: language === "tr" ? "Havayolu Pilot Eğitimi (ATPL)" : "Airline Transport Pilot License (ATPL)" },
     { href: "/ifr", label: language === "tr" ? "Enstrüman Uçuş Eğitimi" : "Instrument Flight Rules (IFR)" },
   ]
 
@@ -84,19 +112,37 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Programs */}
+          {/* Services (daha önce Programs idi) */}
           <div className="space-y-6">
-            <h4 className="font-semibold text-white font-inter">{t("footer.programs")}</h4>
+            {/* Burayı sabit metin yaptım; çeviri anahtarınız yoksa bu en güvenilir yol */}
+            <h4 className="font-semibold text-white font-inter">
+              {language === "tr" ? "Hizmetlerimiz" : "Services"}
+            </h4>
             <nav className="space-y-3">
-              {programs.map((program) => (
-                <Link
-                  key={program.href}
-                  href={program.href}
-                  className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
-                >
-                  {program.label}
-                </Link>
-              ))}
+              {services.length > 0
+                ? services.map((srv) => {
+                    const slug = srv.slug || ""
+                    const label = language === "tr" ? (srv.title || slug) : (srv.titleEn || srv.title || slug)
+                    const href = slug ? (slug.startsWith("/") ? slug : `/${slug}`) : "#"
+                    return (
+                      <Link
+                        key={srv._id || slug || Math.random().toString(36).slice(2)}
+                        href={href}
+                        className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
+                      >
+                        {label}
+                      </Link>
+                    )
+                  })
+                : fallbackPrograms.map((program) => (
+                    <Link
+                      key={program.href}
+                      href={program.href}
+                      className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
+                    >
+                      {program.label}
+                    </Link>
+                  ))}
             </nav>
           </div>
 
@@ -148,14 +194,14 @@ export function Footer() {
           <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-white/70 font-dm-sans text-sm">{t("footer.copyright")}</p>
 
-            <div className="flex items-center space-x-6 mt-4 md:mt-0">
+            {/* <div className="flex items-center space-x-6 mt-4 md:mt-0">
               <Link href="/gizlilik" className="text-white/75 hover:text-primary text-sm font-dm-sans">
                 {language === "tr" ? "Gizlilik Politikası" : "Privacy Policy"}
               </Link>
               <Link href="/kullanim" className="text-white/75 hover:text-primary text-sm font-dm-sans">
                 {language === "tr" ? "Kullanım Şartları" : "Terms of Use"}
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

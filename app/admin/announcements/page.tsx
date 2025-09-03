@@ -1,314 +1,487 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Edit, Trash2, Plus, Search, Eye, Calendar, User, Tag } from "lucide-react"
-import Link from "next/link"
+import { useEffect, useState } from 'react';
+import {
+  Search,
+  Filter,
+  Plus,
+  Eye,
+  Edit,
+  Trash2,
+  ToggleRight,
+  BookOpen,
+  Star
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 
-export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState([
-    {
-      id: 1,
-      title: "2024 Pilot Eğitimi Başvuruları Başladı",
-      description: "2024 yılı pilot eğitimi programı için başvurular başlamıştır.",
-      content:
-        "2024 yılı pilot eğitimi programı için başvurular 15 Ocak tarihinde başlamıştır. Detaylı bilgi için iletişime geçiniz. Program kapsamında teorik ve pratik eğitimler verilecektir.",
-      category: "Eğitim",
-      status: "active",
-      priority: "high",
-      publishDate: "2024-01-15",
-      expirationDate: "2024-03-15",
-      author: "Admin",
-      views: 245,
-      featured: true,
-      tags: ["pilot", "eğitim", "başvuru"],
-      images: ["/pilot-training.png", "/aviation-school.png", "/flight-simulator.png"],
-      targetAudience: "all",
-      emailNotification: true,
-    },
-    {
-      id: 2,
-      title: "Simülatör Bakım Duyurusu",
-      description: "Flight simülatörümüz 20-25 Ocak tarihleri arasında bakım nedeniyle hizmet dışı kalacaktır.",
-      content: "Flight simülatörümüz 20-25 Ocak tarihleri arasında bakım nedeniyle hizmet dışı kalacaktır.",
-      category: "Bakım",
-      status: "active",
-      priority: "medium",
-      publishDate: "2024-01-10",
-      expirationDate: "2024-01-25",
-      author: "Admin",
-      views: 156,
-      featured: false,
-      tags: ["simülatör", "bakım"],
-      images: [],
-      targetAudience: "all",
-      emailNotification: false,
-    },
-    {
-      id: 3,
-      title: "Yeni Eğitmen Kadrosu",
-      description: "Deneyimli pilot eğitmenlerimiz kadromuza katıldı. Eğitim kalitemizi artırmaya devam ediyoruz.",
-      content: "Deneyimli pilot eğitmenlerimiz kadromuza katıldı. Eğitim kalitemizi artırmaya devam ediyoruz.",
-      category: "Personel",
-      status: "draft",
-      priority: "low",
-      publishDate: "2024-01-08",
-      expirationDate: "2024-01-31",
-      author: "Admin",
-      views: 89,
-      featured: false,
-      tags: ["eğitmen", "kadro"],
-      images: [],
-      targetAudience: "all",
-      emailNotification: false,
-    },
-  ])
+import DeleteConfirmationModal from '../components/admin/DeleteConfirmationModal';
+import StatusChangeModal from '../components/admin/StatusChangeModal';
+import Toast from '../components/ui/toast';
 
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterStatus, setFilterStatus] = useState("all")
-  const [filterCategory, setFilterCategory] = useState("all")
+import {
+  adminListAnnouncements,
+  adminDeleteAnnouncement,
+  adminUpdateAnnouncement,
+  type Announcement
+} from '@/lib/api/announcementService';
 
-  const filteredAnnouncements = announcements.filter((announcement) => {
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+
+export default function AdminAnnouncementsPage() {
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
+
+  // Modal states
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [newStatus, setNewStatus] = useState(false);
+
+  // Toast state
+  const [toast, setToast] = useState({
+    message: '',
+    type: 'success' as 'success' | 'error' | 'warning' | 'info',
+    isVisible: false
+  });
+
+  const showToast = (message: string, type: 'success' | 'error' | 'warning' | 'info') => {
+    setToast({ message, type, isVisible: true });
+  };
+
+  // 🔹 API’den listeyi çek
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        setLoading(true);
+        const data = await adminListAnnouncements();
+        setAnnouncements(data);
+      } catch (err) {
+        console.error(err);
+        showToast('Duyurular yüklenemedi', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
+
+  // Filtreleme
+  const filteredAnnouncements = announcements.filter((a) => {
     const matchesSearch =
-      announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      announcement.content.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === "all" || announcement.status === filterStatus
-    const matchesCategory = filterCategory === "all" || announcement.category === filterCategory
+      a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || a.category === filterCategory;
+    const matchesStatus =
+      filterStatus === 'all' ||
+      (filterStatus === 'active' && a.isActive) ||
+      (filterStatus === 'draft' && !a.isActive);
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
 
-    return matchesSearch && matchesStatus && matchesCategory
-  })
+  // Silme
+  const handleDelete = (announcement: Announcement) => {
+    setSelectedAnnouncement(announcement);
+    setIsDeleteModalOpen(true);
+  };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-800"
-      case "medium":
-        return "bg-yellow-100 text-yellow-800"
-      case "low":
-        return "bg-green-100 text-green-800"
-      default:
-        return "bg-gray-100 text-gray-800"
+  const confirmDelete = async () => {
+    if (!selectedAnnouncement?._id) return;
+    try {
+      await adminDeleteAnnouncement(selectedAnnouncement._id);
+      setAnnouncements((prev) => prev.filter((a) => a._id !== selectedAnnouncement._id));
+      showToast('Duyuru başarıyla silindi.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Duyuru silinirken hata oluştu.', 'error');
+    } finally {
+      setIsDeleteModalOpen(false);
     }
-  }
+  };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800"
-      case "draft":
-        return "bg-gray-100 text-gray-800"
-      case "archived":
-        return "bg-red-100 text-red-800"
-      default:
-        return "bg-gray-100 text-gray-800"
+  // Aktif / Pasif
+  const handleToggleStatus = (announcement: Announcement) => {
+    setSelectedAnnouncement(announcement);
+    setNewStatus(!announcement.isActive);
+    setIsStatusModalOpen(true);
+  };
+
+  const confirmStatusChange = async () => {
+    if (!selectedAnnouncement?._id) return;
+    try {
+      const updatePayload: Partial<Announcement> = { isActive: newStatus };
+
+      // ❌ Eğer pasif yapılırsa → featured da false olmalı
+      if (!newStatus) updatePayload.featured = false;
+
+      await adminUpdateAnnouncement(selectedAnnouncement._id, updatePayload);
+
+      setAnnouncements((prev) =>
+        prev.map((a) =>
+          a._id === selectedAnnouncement._id
+            ? { ...a, isActive: newStatus, featured: newStatus ? a.featured : false }
+            : a
+        )
+      );
+
+      showToast(
+        `Duyuru başarıyla ${newStatus ? 'aktif' : 'pasif'} duruma getirildi.`,
+        'success'
+      );
+    } catch (err) {
+      console.error(err);
+      showToast('Durum değiştirilemedi.', 'error');
+    } finally {
+      setIsStatusModalOpen(false);
     }
-  }
+  };
 
-  const toggleAnnouncementStatus = (id: number) => {
-    setAnnouncements((prev) =>
-      prev.map((announcement) =>
-        announcement.id === id
-          ? { ...announcement, status: announcement.status === "active" ? "draft" : "active" }
-          : announcement,
-      ),
-    )
-  }
+  // Öne çıkarma
+  const handleToggleFeatured = async (announcement: Announcement) => {
+    if (!announcement._id) return;
 
-  const deleteAnnouncement = (id: number) => {
-    setAnnouncements((prev) => prev.filter((announcement) => announcement.id !== id))
+    // ❌ pasif bir duyuru öne çıkarılamaz
+    if (!announcement.isActive) {
+      showToast('Pasif bir duyuru öne çıkarılamaz.', 'warning');
+      return;
+    }
+
+    try {
+      await adminUpdateAnnouncement(announcement._id, {
+        featured: !announcement.featured
+      });
+      setAnnouncements((prev) =>
+        prev.map((a) =>
+          a._id === announcement._id ? { ...a, featured: !a.featured } : a
+        )
+      );
+      showToast(
+        `Duyuru ${!announcement.featured ? 'öne çıkarıldı' : 'öne çıkarılmadan kaldırıldı'}.`,
+        'success'
+      );
+    } catch (err) {
+      console.error(err);
+      showToast('Öne çıkarma güncellenemedi.', 'error');
+    }
+  };
+
+  // Loading state
+  if (loading) {
+    return <div className="p-6 text-center">Duyurular yükleniyor...</div>;
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Duyuru Yönetimi</h1>
-          <p className="text-gray-600 mt-2">Duyuruları oluşturun, düzenleyin ve yönetin</p>
-          <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-            <span className="flex items-center gap-1">
-              <Eye className="w-4 h-4" />
-              Toplam: {announcements.length}
-            </span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              Aktif: {announcements.filter((a) => a.status === "active").length}
-            </span>
-          </div>
+          <p className="text-gray-600 mt-1">Duyurularınızı yönetin</p>
         </div>
-        <Link href="/announcements/create">
-          <Button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700">
-            <Plus className="w-4 h-4" />
+        <div className="mt-4 sm:mt-0">
+          <Link
+            href="/admin/announcements/create"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center"
+          >
+            <Plus className="h-4 w-4 mr-2" />
             Yeni Duyuru
-          </Button>
-        </Link>
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Filtreler</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-64">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Duyuru ara..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Durum" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm Durumlar</SelectItem>
-                <SelectItem value="active">Aktif</SelectItem>
-                <SelectItem value="draft">Taslak</SelectItem>
-                <SelectItem value="archived">Arşiv</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                <SelectItem value="Eğitim">Eğitim</SelectItem>
-                <SelectItem value="Bakım">Bakım</SelectItem>
-                <SelectItem value="Personel">Personel</SelectItem>
-                <SelectItem value="Genel">Genel</SelectItem>
-              </SelectContent>
-            </Select>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Duyuru ara..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-6">
-        {filteredAnnouncements.map((announcement) => (
-          <Card
-            key={announcement.id}
-            className={`transition-all duration-200 hover:shadow-lg ${announcement.featured ? "ring-2 ring-blue-200 bg-blue-50/30" : ""}`}
-          >
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <CardTitle className="text-xl font-semibold text-gray-900">{announcement.title}</CardTitle>
-                    {announcement.featured && (
-                      <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">Öne Çıkan</Badge>
-                    )}
-                    <Badge className={getPriorityColor(announcement.priority)}>
-                      {announcement.priority === "high"
-                        ? "Yüksek"
-                        : announcement.priority === "medium"
-                          ? "Orta"
-                          : "Düşük"}
-                    </Badge>
-                  </div>
-
-                  <p className="text-gray-600 mb-3 line-clamp-2">{announcement.description}</p>
-
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <Tag className="w-3 h-3" />
-                      {announcement.category}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <User className="w-3 h-3" />
-                      {announcement.author}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {announcement.publishDate}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {announcement.views} görüntüleme
-                    </span>
-                  </div>
-
-                  {announcement.tags && announcement.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-3">
-                      {announcement.tags.map((tag, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          #{tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col items-end gap-3">
-                  <div className="flex items-center gap-2">
-                    <Badge className={getStatusColor(announcement.status)}>
-                      {announcement.status === "active"
-                        ? "Aktif"
-                        : announcement.status === "draft"
-                          ? "Taslak"
-                          : "Arşiv"}
-                    </Badge>
-                    <Switch
-                      checked={announcement.status === "active"}
-                      onCheckedChange={() => toggleAnnouncementStatus(announcement.id)}
-                      className="data-[state=checked]:bg-green-600"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Link href={`/announcements/edit/${announcement.id}`}>
-                      <Button variant="outline" size="sm" className="hover:bg-blue-50 bg-transparent">
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="hover:bg-red-50 text-red-600 bg-transparent"
-                      onClick={() => deleteAnnouncement(announcement.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-
-            {announcement.images && announcement.images.length > 0 && (
-              <CardContent className="pt-0">
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {announcement.images.slice(0, 3).map((image, index) => (
-                    <img
-                      key={index}
-                      src={image || "/placeholder.svg"}
-                      alt={`${announcement.title} - Görsel ${index + 1}`}
-                      className="w-24 h-16 object-cover rounded-md border flex-shrink-0"
-                    />
-                  ))}
-                </div>
-              </CardContent>
-            )}
-          </Card>
-        ))}
+          <div className="flex items-center flex-wrap gap-4">
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4 text-gray-500" />
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2"
+              >
+                <option value="all">Tüm Kategoriler</option>
+                <option value="Eğitim">Eğitim</option>
+                <option value="Bakım">Bakım</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-2">
+              <ToggleRight className="h-4 w-4 text-gray-500" />
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2"
+              >
+                <option value="all">Tüm Durumlar</option>
+                <option value="active">Aktif</option>
+                <option value="draft">Taslak</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Empty state */}
-      {filteredAnnouncements.length === 0 && (
-        <Card>
-          <CardContent className="text-center py-8">
-            <p className="text-gray-500">Arama kriterlerinize uygun duyuru bulunamadı.</p>
-          </CardContent>
-        </Card>
-      )}
+      {/* List */}
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full whitespace-nowrap">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-6 py-3">Duyuru</th>
+              <th className="px-6 py-3">Kategori</th>
+              <th className="px-6 py-3">Yazar</th>
+              <th className="px-6 py-3">Tarih</th>
+              <th className="px-6 py-3">Durum</th>
+              <th className="px-6 py-3">İşlemler</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {filteredAnnouncements.length > 0 ? (
+              filteredAnnouncements.map((a) => (
+                <tr key={a._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 flex items-center gap-3">
+                    {a.images && a.images.length > 0 ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${a.images[0]}`}
+                        alt={a.title}
+                        width={64}
+                        height={48}
+                        className="rounded-md object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-12 rounded-md bg-gray-100 flex items-center justify-center text-gray-400">
+                        <BookOpen className="h-5 w-5" />
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm font-medium">{a.title}</p>
+                      <p className="text-xs text-gray-500">{a.description}</p>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm">{a.category}</td>
+                  <td className="px-6 py-4 text-sm">{a.author}</td>
+                  <td className="px-6 py-4 text-sm">
+                    {a.date ? new Date(a.date).toLocaleDateString('tr-TR') : '-'}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        a.isActive
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {a.isActive ? 'Aktif' : 'Pasif'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedAnnouncement(a);
+                          setIsDetailModalOpen(true);
+                        }}
+                        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </button>
+                      <Link href={`/admin/announcements/edit/${a._id}`}>
+                        <button className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg">
+                          <Edit className="h-4 w-4" />
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleToggleStatus(a)}
+                        className={`p-2 ${
+                          a.isActive
+                            ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100'
+                            : 'text-green-600 hover:text-green-800 hover:bg-green-100'
+                        } rounded-lg`}
+                      >
+                        <ToggleRight className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleToggleFeatured(a)}
+                        className={`p-2 ${
+                          a.featured
+                            ? 'text-yellow-500 hover:text-yellow-600'
+                            : 'text-gray-400 hover:text-gray-600'
+                        }`}
+                      >
+                        <Star className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(a)}
+                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                  <BookOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <p className="text-lg font-medium">Duyuru bulunamadı</p>
+                  <p className="text-sm">Filtreleri değiştirin veya yeni duyuru ekleyin.</p>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Delete Modal */}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Duyuruyu Sil"
+        message={`"${selectedAnnouncement?.title}" başlıklı duyuruyu silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`}
+      />
+
+      {/* Status Modal */}
+      <StatusChangeModal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        onConfirm={confirmStatusChange}
+        title={`Duyuruyu ${newStatus ? 'Aktif' : 'Pasif'} Yap`}
+        message={`"${selectedAnnouncement?.title}" başlıklı duyuruyu ${newStatus ? 'aktif' : 'pasif'} duruma getirmek istediğinize emin misiniz?`}
+        status={newStatus}
+      />
+
+      {/* Detail Modal */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-gray-900">
+              {selectedAnnouncement?.title}
+            </DialogTitle>
+            <DialogDescription className="text-lg text-gray-600">
+              {selectedAnnouncement?.titleEn}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedAnnouncement && (
+            <div className="space-y-6 mt-6">
+              <Badge
+                variant={selectedAnnouncement.isActive ? 'default' : 'secondary'}
+                className={selectedAnnouncement.isActive ? 'bg-green-100 text-green-800' : ''}
+              >
+                {selectedAnnouncement.isActive ? 'Aktif' : 'Pasif'}
+              </Badge>
+
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3">Açıklama</h3>
+                <p className="text-gray-700">{selectedAnnouncement.description}</p>
+              </div>
+
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900 mb-3">Detay</h3>
+                <p className="text-gray-700">{selectedAnnouncement.content}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-purple-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-2">Kategori</h3>
+                  <p className="text-gray-700">{selectedAnnouncement.category}</p>
+                </div>
+                <div className="bg-yellow-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-2">Yazar</h3>
+                  <p className="text-gray-700">{selectedAnnouncement.author}</p>
+                </div>
+              </div>
+
+              {selectedAnnouncement.images && selectedAnnouncement.images.length > 0 && (
+                <div className="bg-slate-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-4">Duyuru Görselleri</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {selectedAnnouncement.images.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${img}`}
+                        alt={`${selectedAnnouncement.title} - Görsel ${idx + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow-sm hover:shadow-md transition"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-gray-100 rounded-lg p-4">
+                <span className="text-gray-500">Tarih:</span>
+                <p className="font-medium text-gray-900">
+                  {selectedAnnouncement.date
+                    ? new Date(selectedAnnouncement.date).toLocaleDateString('tr-TR')
+                    : 'Belirtilmemiş'}
+                </p>
+              </div>
+
+              <div className="flex gap-3 pt-4 border-t">
+                <Link
+                  href={`/duyurular/${selectedAnnouncement.slug}`}
+                  className="flex-1"
+                >
+                  <Button variant="default" className="w-full">
+                    Gör
+                  </Button>
+                </Link>
+                <Link
+                  href={`/admin/announcements/edit/${selectedAnnouncement._id}`}
+                  className="flex-1"
+                >
+                  <Button variant="outline" className="w-full bg-transparent">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Düzenle
+                  </Button>
+                </Link>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setIsDetailModalOpen(false);
+                    handleDelete(selectedAnnouncement);
+                  }}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Sil
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Toast */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast((prev) => ({ ...prev, isVisible: false }))}
+      />
     </div>
-  )
+  );
 }

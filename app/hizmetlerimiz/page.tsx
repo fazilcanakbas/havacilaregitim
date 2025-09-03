@@ -13,7 +13,7 @@ function ServicesHero() {
     <section
       className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] overflow-hidden"
       style={{
-        backgroundImage: "url('/egitimbanner.jpg')",
+        backgroundImage: "url('/banner12.jpg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center bottom",

@@ -17,7 +17,7 @@ function CorporateHero() {
           </h1>
           <p className="text-xl lg:text-2xl text-muted-foreground font-dm-sans">
             {language === "tr"
-              ? "Türkiye'nin önde gelen havacılık eğitim kurumu olarak, sektörde 15 yıllık deneyimimizle hizmet veriyoruz."
+              ? "Havacılar Eğitim A.Ş., uzman kaptan pilotlar ve psikologlarla yürütülen bireysel danışmanlık, CRM grup/bireysel simülasyonları ve mülakat teknikleri eğitimiyle adayları hem teknik hem de davranışsal olarak geliştirerek havayolu şirketlerinin beklentilerini karşılayan profesyoneller haline getirir."
               : "As Turkey's leading aviation education institution, we serve with 15 years of experience in the industry."}
           </p>
         </div>
