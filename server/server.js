@@ -24,7 +24,7 @@ app.use(morgan('dev'));
 
 // CORS ayarları
 app.use(cors({
-  origin: ['*'],
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000','https://6041cfa1cc3f.ngrok-free.app/','https://havacilaregitim.vercel.app/'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'x-auth-token', 'Authorization'],
