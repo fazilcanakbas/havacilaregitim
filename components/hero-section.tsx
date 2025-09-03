@@ -29,7 +29,7 @@ export function HeroSection() {
     <section className="relative w-full">
       <div className="relative w-full">
         <video
-          className="w-full h-[90vh] object-cover"
+          className="w-full h-[115vh] object-cover"
           autoPlay
           loop={true}
           muted
@@ -60,25 +60,23 @@ export function HeroSection() {
           }}
         />
 
-        {/* Yüzen (hafif aşağı-yukarı animasyonlu) resim */}
-        <img
-          src="https://bracketweb.com/jetlywp/wp-content/uploads/2023/01/feature-one-shape-1.png"
-          alt=""
-          className="absolute z-20 left-8"
-          style={{
-            pointerEvents: "none",
-            bottom: 280,
-            animation: "float 2s ease-in-out infinite",
-            willChange: "transform",
-          }}
-        />
+        {/* Plane wrapper: yatayda her ekranda ortalanmış, bottom değeri korundu */}
+        <div className="plane-wrapper" aria-hidden>
+          <img
+            src="https://bracketweb.com/jetlywp/wp-content/uploads/2023/01/feature-one-shape-1.png"
+            alt=""
+            className="floating-plane"
+          />
+        </div>
 
-        <img
-          src="https://bracketweb.com/jetlywp/wp-content/uploads/2023/01/feature-one-shadow.png"
-          alt=""
-          className="absolute z-20 right-8 bottom-0"
-          style={{ pointerEvents: "none", mixBlendMode: "multiply",bottom: 200, }}
-        />
+        {/* Shadow wrapper: yine yatayda ortalanmış, bottom değeri korundu */}
+        <div className="shadow-wrapper" aria-hidden>
+          <img
+            src="https://bracketweb.com/jetlywp/wp-content/uploads/2023/01/feature-one-shadow.png"
+            alt=""
+            className="floating-shadow"
+          />
+        </div>
       </div>
 
       {/* component scope içinde küçük keyframes tanımı (Next.js styled-jsx kullanımı) */}
@@ -88,18 +86,50 @@ export function HeroSection() {
             transform: translateY(0);
           }
           50% {
-            transform: translateY(-12px); 
+            transform: translateY(-12px);
           }
           100% {
             transform: translateY(0);
           }
         }
 
-        /* isterseniz ekran küçüldükçe hareketi daha da küçültmek için media query ekleyebilirsiniz */
-        @media (max-width: 768px) {
-          img[alt=""] {
-            max-width: 200px;
-          }
+        /* Wrapper'lar ekran genişliğine bakmadan yatayda ortalar */
+        .plane-wrapper,
+        .shadow-wrapper {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          pointer-events: none;
+          z-index: 20;
+          display: block;
+        }
+
+        /* Orijinal bottom değerleri korunuyor (px cinsinden sabit) */
+        .plane-wrapper {
+          bottom: 280px;
+        }
+        .shadow-wrapper {
+          bottom: 200px;
+          mix-blend-mode: multiply;
+        }
+
+        /* Önemli: global img { max-width: 100% } gibi kuralların
+           bu uçak/gölge resimlerini küçültmesini engellemek için
+           natural boyutlarını zorla kullanıyoruz (öncelik için !important kullandık).
+           Böylece resim dosyalarının kendi doğal boyutları korunur. */
+        .floating-plane,
+        .floating-shadow {
+          display: block;
+          width: auto !important;
+          height: auto !important;
+          max-width: none !important;
+          max-height: none !important;
+          line-height: 0;
+        }
+
+        .floating-plane {
+          animation: float 2s ease-in-out infinite;
+          will-change: transform;
         }
       `}</style>
     </section>
