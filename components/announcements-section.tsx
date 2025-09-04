@@ -1,169 +1,203 @@
 "use client"
 
+import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, ArrowRight, Megaphone } from "lucide-react"
+import { Calendar, ArrowRight, Megaphone, User } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
+import { adminListAnnouncements, Announcement } from "@/lib/api/announcementService"
+import { useLanguage } from "@/lib/language-context" 
+
+// Tarih formatlama helper
+const formatDate = (dateString: string, lang: "tr" | "en") => {
+  try {
+    return new Date(dateString).toLocaleDateString(lang === "tr" ? "tr-TR" : "en-US", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    })
+  } catch {
+    return dateString
+  }
+}
 
 export function AnnouncementsSection() {
-  const announcements = [
-    {
-      id: 1,
-      title: "2024 Bahar Dönemi Kayıtları Başladı",
-      titleEn: "2024 Spring Term Registration Started",
-      excerpt:
-        "Yeni dönem pilot eğitimi programlarına kayıt işlemleri başlamıştır. Erken kayıt avantajlarından yararlanın.",
-      date: "15 Mart 2024",
-      category: "Kayıt",
-      categoryEn: "Registration",
-      image: "/placeholder.svg?height=200&width=400&text=Kayıt+Duyurusu",
-      featured: true,
-    },
-    {
-      id: 2,
-      title: "Yeni Simülatör Merkezi Açıldı",
-      titleEn: "New Simulator Center Opened",
-      excerpt:
-        "Son teknoloji Boeing 737 ve Airbus A320 simülatörleri ile donatılmış yeni eğitim merkezimiz hizmete girdi.",
-      date: "10 Mart 2024",
-      category: "Haber",
-      categoryEn: "News",
-      image: "/placeholder.svg?height=200&width=400&text=Simülatör+Merkezi",
-      featured: false,
-    },
-    {
-      id: 3,
-      title: "Mezuniyet Töreni 2024",
-      titleEn: "Graduation Ceremony 2024",
-      excerpt:
-        "2024 yılı mezunlarımızın diploma töreni 25 Mart'ta gerçekleştirilecektir. Ailelerin katılımı beklenmektedir.",
-      date: "8 Mart 2024",
-      category: "Etkinlik",
-      categoryEn: "Event",
-      image: "/placeholder.svg?height=200&width=400&text=Mezuniyet+Töreni",
-      featured: false,
-    },
-    {
-      id: 4,
-      title: "ICAO Denetimi Başarıyla Tamamlandı",
-      titleEn: "ICAO Audit Successfully Completed",
-      excerpt: "Uluslararası Sivil Havacılık Örgütü denetimi başarıyla tamamlanmış ve sertifikalarımız yenilenmiştir.",
-      date: "5 Mart 2024",
-      category: "Başarı",
-      categoryEn: "Achievement",
-      image: "/placeholder.svg?height=200&width=400&text=ICAO+Sertifika",
-      featured: false,
-    },
-  ]
+  const { language } = useLanguage() // ✅ aktif dil
+  const [announcements, setAnnouncements] = useState<Announcement[] | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const featuredAnnouncement = announcements.find((a) => a.featured)
-  const regularAnnouncements = announcements.filter((a) => !a.featured)
+  useEffect(() => {
+    let mounted = true
+    async function load() {
+      setLoading(true)
+      try {
+        const data = await adminListAnnouncements()
+        if (!mounted) return
+        const active = (data || []).filter((a) => a.isActive && a.featured) // sadece aktif & featured
+        setAnnouncements(active)
+      } catch (err: any) {
+        if (mounted) setError(err?.message || "Bir hata oluştu")
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    load()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  const buildImageUrl = (img?: string) => {
+    if (!img) return "/placeholder.svg"
+    if (img.startsWith("http")) return img
+    return `${process.env.NEXT_PUBLIC_API_URL ?? ""}${img}`
+  }
+
+  if (loading) return <div className="text-center py-20">Yükleniyor...</div>
+  if (error) return <div className="text-center py-20 text-red-600">Hata: {error}</div>
+  if (!announcements || announcements.length === 0) {
+    return <div className="text-center py-20">Hiç duyuru bulunamadı.</div>
+  }
+
+  const leftAnnouncement = announcements[0]
+  const rightColumnAnnouncements = announcements.slice(1, 3)
+
+  // ✅ Dil seçimine göre metinler
+  const getTitle = (a: Announcement) =>
+    language === "tr" ? a.title : a.titleEn || a.title
+  const getDescription = (a: Announcement) =>
+    language === "tr" ? a.description : a.descriptionEn || a.description
+  const getCategory = (a: Announcement) =>
+    language === "tr" ? a.category : a.categoryEn || a.category
 
   return (
-    <section className="py-20"
-    style={{
-      backgroundColor: "#f5f5f5"
-    }}
-    >
+    <section className="py-20 bg-[#f5f5f5]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
             <Megaphone className="w-4 h-4 text-accent mr-2" />
-            <span className="text-sm font-medium text-accent">Duyurular & Haberler</span>
+            <span className="text-sm font-medium text-accent">
+              {language === "tr" ? "Duyurular & Haberler" : "Announcements & News"}
+            </span>
           </div>
-
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-6">
-            Güncel Gelişmeler
+            {language === "tr" ? "Güncel Gelişmeler" : "Latest Updates"}
           </h2>
-
           <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto">
-            Eğitim programları, etkinlikler ve havacılık sektöründeki gelişmeler hakkında en güncel bilgileri takip
-            edin.
+            {language === "tr"
+              ? "Eğitim programları, etkinlikler ve havacılık sektöründeki gelişmeler hakkında en güncel bilgileri takip edin."
+              : "Stay up to date with the latest news on training programs, events, and developments in the aviation industry."}
           </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Featured Announcement */}
-          {featuredAnnouncement && (
+          {/* Sol: büyük kart */}
+          {leftAnnouncement && (
             <div className="lg:col-span-2">
-              <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
-                <div className="relative h-64 lg:h-80">
+              <Card className="group hover:shadow-xl transition-all duration-300 border shadow-lg overflow-hidden !p-0">
+                <div className="relative h-64 lg:h-80 w-full">
                   <Image
-                    src={featuredAnnouncement.image || "/placeholder.svg"}
-                    alt={featuredAnnouncement.title}
+                    src={buildImageUrl(leftAnnouncement.images?.[0])}
+                    alt={getTitle(leftAnnouncement)}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                  <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">Öne Çıkan</Badge>
                 </div>
-
                 <CardHeader className="pb-4">
-                  <div className="flex items-center text-sm text-muted-foreground mb-2">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span>{featuredAnnouncement.date}</span>
+                  <div className="flex items-center text-sm text-muted-foreground mb-2 gap-3">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(leftAnnouncement.date!, language)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <User className="w-4 h-4" />
+                      <span>{leftAnnouncement.author}</span>
+                    </div>
                     <Badge variant="outline" className="ml-auto">
-                      {featuredAnnouncement.category}
+                      {getCategory(leftAnnouncement)}
                     </Badge>
                   </div>
-
-                  <CardTitle className="text-2xl font-bold font-inter group-hover:text-primary transition-colors">
-                    {featuredAnnouncement.title}
+                  <CardTitle className="text-2xl font-bold font-inter text-[#001f4d]">
+                    {getTitle(leftAnnouncement)}
                   </CardTitle>
-
                   <CardDescription className="text-muted-foreground font-dm-sans text-base">
-                    {featuredAnnouncement.excerpt}
+                    {getDescription(leftAnnouncement)}
                   </CardDescription>
                 </CardHeader>
-
                 <CardContent>
-                  <Button className="group/btn">
-                    Devamını Oku
-                    <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
+                  <Link href={`/duyurular/${leftAnnouncement.slug}`}>
+                    <Button
+                      style={{ marginBottom: 20 }}
+                      className="bg-[#001f4d] text-white hover:bg-[#001f4d] hover:opacity-90"
+                    >
+                      {language === "tr" ? "Devamını Oku" : "Read More"}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             </div>
           )}
 
-          {/* Regular Announcements */}
+          {/* Sağ: küçük kartlar */}
           <div className="space-y-6">
-            {regularAnnouncements.map((announcement) => (
+            {rightColumnAnnouncements.map((announcement) => (
               <Card
-                key={announcement.id}
-                className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md"
+                key={announcement._id ?? announcement.slug ?? announcement.title}
+                className="group hover:shadow-lg transition-all duration-300 border shadow-md overflow-hidden !p-0"
               >
+                <div className="relative h-36 w-full">
+                  <Image
+                    src={buildImageUrl(announcement.images?.[0])}
+                    alt={getTitle(announcement)}
+                    fill
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
                 <CardHeader className="pb-3">
-                  <div className="flex items-center text-xs text-muted-foreground mb-2">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    <span>{announcement.date}</span>
+                  <div className="flex items-center text-xs text-muted-foreground mb-2 gap-2">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      <span>{formatDate(announcement.date!, language)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <User className="w-3 h-3" />
+                      <span>{announcement.author}</span>
+                    </div>
                     <Badge variant="outline" size="sm" className="ml-auto text-xs">
-                      {announcement.category}
+                      {getCategory(announcement)}
                     </Badge>
                   </div>
-
-                  <CardTitle className="text-lg font-semibold font-inter group-hover:text-primary transition-colors line-clamp-2">
-                    {announcement.title}
+                  <CardTitle className="text-lg font-semibold font-inter text-[#001f4d] line-clamp-2">
+                    {getTitle(announcement)}
                   </CardTitle>
-
                   <CardDescription className="text-sm text-muted-foreground font-dm-sans line-clamp-2">
-                    {announcement.excerpt}
+                    {getDescription(announcement)}
                   </CardDescription>
                 </CardHeader>
-
                 <CardContent className="pt-0">
-                  <Button variant="ghost" size="sm" className="p-0 h-auto font-medium text-primary hover:text-accent">
-                    Detayları Gör
-                    <ArrowRight className="w-3 h-3 ml-1" />
-                  </Button>
+                  <Link href={`/duyurular/${announcement.slug}`}>
+                    <Button
+                      style={{ marginBottom: 20 }}
+                      size="sm"
+                      className="p-2 h-auto font-medium bg-[#001f4d] text-white hover:bg-[#001f4d] hover:opacity-90"
+                    >
+                      {language === "tr" ? "Detayları Gör" : "View Details"}
+                      <ArrowRight className="w-3 h-3 ml-1" />
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
 
-            <Button variant="outline" className="w-full bg-transparent">
-              Tüm Duyuruları Görüntüle
-            </Button>
+            <Link href="/duyurular">
+              <Button className="w-full bg-[#001f4d] text-white hover:bg-[#001f4d] hover:opacity-90">
+                {language === "tr" ? "Tüm Duyuruları Görüntüle" : "View All Announcements"}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

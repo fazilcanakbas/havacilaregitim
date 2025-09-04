@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,9 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Send, CheckCircle } from "lucide-react"
+import { useLanguage } from "@/lib/language-context"
+import { listServices, type ServiceItem } from "@/lib/api/serviceService"
 
 export function ContactForm() {
+  const { language, t } = useLanguage()
+
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [services, setServices] = useState<ServiceItem[]>([])
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -25,13 +29,23 @@ export function ContactForm() {
     newsletter: false,
   })
 
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        const data = await listServices({ status: "active" })
+        setServices(data)
+      } catch (err) {
+        console.error("Servisler alınamadı:", err)
+      }
+    }
+    fetchServices()
+  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
     console.log("Form submitted:", formData)
     setIsSubmitted(true)
 
-    // Reset form after 3 seconds
     setTimeout(() => {
       setIsSubmitted(false)
       setFormData({
@@ -56,9 +70,13 @@ export function ContactForm() {
       <Card className="border-0 shadow-lg">
         <CardContent className="p-12 text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
-          <h3 className="text-2xl font-bold text-foreground font-inter mb-4">Mesajınız Gönderildi!</h3>
+          <h3 className="text-2xl font-bold text-foreground font-inter mb-4">
+            {language === "tr" ? "Mesajınız Gönderildi!" : "Your message has been sent!"}
+          </h3>
           <p className="text-muted-foreground font-dm-sans">
-            Mesajınız için teşekkür ederiz. En kısa sürede size geri dönüş yapacağız.
+            {language === "tr"
+              ? "Mesajınız için teşekkür ederiz. En kısa sürede size geri dönüş yapacağız."
+              : "Thank you for your message. We will get back to you as soon as possible."}
           </p>
         </CardContent>
       </Card>
@@ -68,9 +86,13 @@ export function ContactForm() {
   return (
     <Card className="border-0 shadow-lg">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-foreground font-inter">İletişim Formu</CardTitle>
+        <CardTitle className="text-2xl font-bold text-foreground font-inter">
+          {language === "tr" ? "İletişim Formu" : "Contact Form"}
+        </CardTitle>
         <CardDescription className="text-muted-foreground font-dm-sans">
-          Aşağıdaki formu doldurarak bizimle iletişime geçebilirsiniz. Tüm alanları eksiksiz doldurunuz.
+          {language === "tr"
+            ? "Aşağıdaki formu doldurarak bizimle iletişime geçebilirsiniz."
+            : "Fill out the form below to get in touch with us."}
         </CardDescription>
       </CardHeader>
 
@@ -79,30 +101,23 @@ export function ContactForm() {
           {/* Name Fields */}
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName" className="font-dm-sans">
-                Ad *
-              </Label>
+              <Label htmlFor="firstName">{language === "tr" ? "Ad *" : "First Name *"}</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange("firstName", e.target.value)}
-                placeholder="Adınız"
+                placeholder={language === "tr" ? "Adınız" : "Your first name"}
                 required
-                className="font-dm-sans"
               />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="lastName" className="font-dm-sans">
-                Soyad *
-              </Label>
+              <Label htmlFor="lastName">{language === "tr" ? "Soyad *" : "Last Name *"}</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange("lastName", e.target.value)}
-                placeholder="Soyadınız"
+                placeholder={language === "tr" ? "Soyadınız" : "Your last name"}
                 required
-                className="font-dm-sans"
               />
             </div>
           </div>
@@ -110,31 +125,24 @@ export function ContactForm() {
           {/* Contact Fields */}
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="font-dm-sans">
-                E-posta *
-              </Label>
+              <Label htmlFor="email">{language === "tr" ? "E-posta *" : "Email *"}</Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                placeholder="ornek@email.com"
+                placeholder={language === "tr" ? "ornek@email.com" : "example@email.com"}
                 required
-                className="font-dm-sans"
               />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="phone" className="font-dm-sans">
-                Telefon
-              </Label>
+              <Label htmlFor="phone">{language === "tr" ? "Telefon" : "Phone"}</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
-                placeholder="+90 5XX XXX XX XX"
-                className="font-dm-sans"
+                placeholder={language === "tr" ? "+90 5XX XXX XX XX" : "+1 555 000 0000"}
               />
             </div>
           </div>
@@ -142,38 +150,33 @@ export function ContactForm() {
           {/* Subject and Program */}
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="subject" className="font-dm-sans">
-                Konu *
-              </Label>
+              <Label>{language === "tr" ? "Konu *" : "Subject *"}</Label>
               <Select value={formData.subject} onValueChange={(value) => handleInputChange("subject", value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Konu seçiniz" />
+                  <SelectValue placeholder={language === "tr" ? "Konu seçiniz" : "Select subject"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="info">Genel Bilgi</SelectItem>
-                  <SelectItem value="enrollment">Kayıt İşlemleri</SelectItem>
-                  <SelectItem value="programs">Eğitim Programları</SelectItem>
-                  <SelectItem value="career">Kariyer Danışmanlığı</SelectItem>
-                  <SelectItem value="other">Diğer</SelectItem>
+                  <SelectItem value="info">{language === "tr" ? "Genel Bilgi" : "General Info"}</SelectItem>
+                  <SelectItem value="enrollment">{language === "tr" ? "Kayıt İşlemleri" : "Enrollment"}</SelectItem>
+                  <SelectItem value="programs">{language === "tr" ? "Eğitim Programları" : "Programs"}</SelectItem>
+                  <SelectItem value="career">{language === "tr" ? "Kariyer Danışmanlığı" : "Career Consulting"}</SelectItem>
+                  <SelectItem value="other">{language === "tr" ? "Diğer" : "Other"}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="program" className="font-dm-sans">
-                İlgilendiğiniz Program
-              </Label>
+              <Label>{language === "tr" ? "İlgilendiğiniz Program" : "Interested Program"}</Label>
               <Select value={formData.program} onValueChange={(value) => handleInputChange("program", value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Program seçiniz" />
+                  <SelectValue placeholder={language === "tr" ? "Program seçiniz" : "Select program"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ppl">Özel Pilot Lisansı (PPL)</SelectItem>
-                  <SelectItem value="cpl">Ticari Pilot Lisansı (CPL)</SelectItem>
-                  <SelectItem value="atpl">Havayolu Pilot Eğitimi (ATPL)</SelectItem>
-                  <SelectItem value="ifr">Enstrüman Uçuş Eğitimi (IFR)</SelectItem>
-                  <SelectItem value="type-rating">Tip Rating Eğitimi</SelectItem>
-                  <SelectItem value="cfi">Eğitmen Pilot Eğitimi (CFI)</SelectItem>
+                  {services.map((service) => (
+                    <SelectItem key={service._id} value={service._id ?? ""}>
+                      {language === "tr" ? service.title : service.titleEn || service.title}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -181,45 +184,38 @@ export function ContactForm() {
 
           {/* Message */}
           <div className="space-y-2">
-            <Label htmlFor="message" className="font-dm-sans">
-              Mesajınız *
-            </Label>
+            <Label>{language === "tr" ? "Mesajınız *" : "Message *"}</Label>
             <Textarea
-              id="message"
               value={formData.message}
               onChange={(e) => handleInputChange("message", e.target.value)}
-              placeholder="Mesajınızı buraya yazınız..."
+              placeholder={language === "tr" ? "Mesajınızı buraya yazınız..." : "Write your message here..."}
               rows={5}
               required
-              className="font-dm-sans resize-none"
             />
           </div>
 
           {/* Newsletter Checkbox */}
           <div className="flex items-center space-x-2">
             <Checkbox
+            style={{
+              borderColor: "var(--muted-foreground)",
+            }}
               id="newsletter"
               checked={formData.newsletter}
               onCheckedChange={(checked) => handleInputChange("newsletter", checked as boolean)}
             />
-            <Label htmlFor="newsletter" className="text-sm font-dm-sans cursor-pointer">
-              Havacılık eğitimi ve etkinlikler hakkında e-posta bülteni almak istiyorum
+            <Label htmlFor="newsletter" className="text-sm cursor-pointer">
+              {language === "tr"
+                ? "Havacılık eğitimi ve etkinlikler hakkında e-posta bülteni almak istiyorum"
+                : "I want to receive newsletter about aviation training and events"}
             </Label>
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" size="lg" className="w-full group font-dm-sans">
+          <Button type="submit" size="lg" className="w-full group">
             <Send className="w-4 h-4 mr-2 transition-transform group-hover:translate-x-1" />
-            Mesajı Gönder
+            {language === "tr" ? "Mesajı Gönder" : "Send Message"}
           </Button>
-
-          <p className="text-xs text-muted-foreground font-dm-sans text-center">
-            * işaretli alanlar zorunludur. Kişisel verileriniz{" "}
-            <a href="/gizlilik" className="text-primary hover:underline">
-              Gizlilik Politikamız
-            </a>{" "}
-            kapsamında korunmaktadır.
-          </p>
         </form>
       </CardContent>
     </Card>

@@ -3,42 +3,69 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Phone, Mail, MapPin, Clock, Users, Award, ExternalLink } from "lucide-react"
+import { useLanguage } from "@/lib/language-context"
 
 export function ContactInfo() {
+  const { language } = useLanguage()
+
   const contactMethods = [
     {
       icon: Phone,
-      title: "Telefon",
-      description: "Pazartesi - Cuma: 09:00 - 18:00",
+      title: language === "tr" ? "Telefon" : "Phone",
+      description: language === "tr" ? "Pazartesi - Cuma: 09:00 - 18:00" : "Monday - Friday: 09:00 - 18:00",
       value: "+90 212 XXX XX XX",
-      action: "Ara",
+      action: language === "tr" ? "Ara" : "Call",
     },
     {
       icon: Mail,
-      title: "E-posta",
-      description: "24 saat içinde yanıt veriyoruz",
+      title: language === "tr" ? "E-posta" : "Email",
+      description: language === "tr" ? "24 saat içinde yanıt veriyoruz" : "We reply within 24 hours",
       value: "info@havacilaregitim.com",
-      action: "E-posta Gönder",
+      action: language === "tr" ? "E-posta Gönder" : "Send Email",
     },
     {
       icon: MapPin,
-      title: "Adres",
-      description: "Eğitim merkezimizi ziyaret edin",
-      value: "Atatürk Havalimanı Yakını\nİstanbul, Türkiye",
-      action: "Haritada Gör",
+      title: language === "tr" ? "Adres" : "Address",
+      description: language === "tr" ? "Eğitim merkezimizi ziyaret edin" : "Visit our training center",
+      value:
+        language === "tr"
+          ? "Atatürk Havalimanı Yakını\nİstanbul, Türkiye"
+          : "Near Atatürk Airport\nIstanbul, Türkiye",
+      action: language === "tr" ? "Haritada Gör" : "View on Map",
     },
   ]
 
   const officeHours = [
-    { day: "Pazartesi - Cuma", hours: "09:00 - 18:00" },
-    { day: "Cumartesi", hours: "09:00 - 15:00" },
-    { day: "Pazar", hours: "Kapalı" },
+    {
+      day: language === "tr" ? "Pazartesi - Cuma" : "Monday - Friday",
+      hours: "09:00 - 18:00",
+    },
+    {
+      day: language === "tr" ? "Cumartesi" : "Saturday",
+      hours: "09:00 - 15:00",
+    },
+    {
+      day: language === "tr" ? "Pazar" : "Sunday",
+      hours: language === "tr" ? "Kapalı" : "Closed",
+    },
   ]
 
   const quickStats = [
-    { icon: Users, label: "Aktif Öğrenci", value: "150+" },
-    { icon: Award, label: "Mezun Pilot", value: "500+" },
-    { icon: Clock, label: "Deneyim", value: "15+ Yıl" },
+    {
+      icon: Users,
+      label: language === "tr" ? "Aktif Öğrenci" : "Active Students",
+      value: "150+",
+    },
+    {
+      icon: Award,
+      label: language === "tr" ? "Mezun Pilot" : "Graduate Pilots",
+      value: "500+",
+    },
+    {
+      icon: Clock,
+      label: language === "tr" ? "Deneyim" : "Experience",
+      value: language === "tr" ? "15+ Yıl" : "15+ Years",
+    },
   ]
 
   return (
@@ -46,15 +73,22 @@ export function ContactInfo() {
       {/* Contact Methods */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-foreground font-inter">İletişim Bilgileri</CardTitle>
+          <CardTitle className="text-2xl font-bold text-foreground font-inter">
+            {language === "tr" ? "İletişim Bilgileri" : "Contact Information"}
+          </CardTitle>
           <CardDescription className="text-muted-foreground font-dm-sans">
-            Size en uygun iletişim yöntemini seçin
+            {language === "tr"
+              ? "Size en uygun iletişim yöntemini seçin"
+              : "Choose the contact method that suits you best"}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
           {contactMethods.map((method, index) => (
-            <div key={index} className="flex items-start space-x-4 p-4 rounded-lg hover:bg-muted/50 transition-colors">
+            <div
+              key={index}
+              className="flex items-start space-x-4 p-4 rounded-lg hover:bg-muted/50 transition-colors"
+            >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <method.icon className="w-6 h-6 text-primary" />
               </div>
@@ -77,7 +111,9 @@ export function ContactInfo() {
       {/* Office Hours */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-xl font-bold text-foreground font-inter">Çalışma Saatleri</CardTitle>
+          <CardTitle className="text-xl font-bold text-foreground font-inter">
+            {language === "tr" ? "Çalışma Saatleri" : "Office Hours"}
+          </CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -92,12 +128,14 @@ export function ContactInfo() {
         </CardContent>
       </Card>
 
-      {/* Quick Stats */}
-      {/* <Card className="border-0 shadow-lg">
+      {/* Quick Stats (opsiyonel açılabilir) */}
+      {/* 
+      <Card className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-xl font-bold text-foreground font-inter">Hızlı Bilgiler</CardTitle>
+          <CardTitle className="text-xl font-bold text-foreground font-inter">
+            {language === "tr" ? "Hızlı Bilgiler" : "Quick Stats"}
+          </CardTitle>
         </CardHeader>
-
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
             {quickStats.map((stat, index) => (
@@ -111,27 +149,8 @@ export function ContactInfo() {
             ))}
           </div>
         </CardContent>
-      </Card> */}
-
-      {/* Emergency Contact
-      <Card className="border-0 shadow-lg bg-accent/5">
-        <CardContent className="p-6">
-          <div className="flex items-center space-x-3 mb-3">
-            <Phone className="w-5 h-5 text-accent" />
-            <h4 className="font-semibold text-foreground font-inter">Acil Durum İletişim</h4>
-          </div>
-          <p className="text-sm text-muted-foreground font-dm-sans mb-3">
-            Eğitim sırasında acil durumlar için 7/24 ulaşabileceğiniz hat
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-transparent border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-          >
-            +90 5XX XXX XX XX
-          </Button>
-        </CardContent>
-      </Card> */}
+      </Card> 
+      */}
     </div>
   )
 }

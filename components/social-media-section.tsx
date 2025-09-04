@@ -21,7 +21,7 @@ export function SocialMediaSection() {
       date: "4 gün önce",
     },
     {
-      platform: "linkedin",
+      platform: "instagram",
       content: "Havacılık sektöründe kariyer fırsatları ve eğitim programlarımız hakkında detaylı bilgi...",
       image: "/placeholder.svg?height=300&width=300&text=LinkedIn+Post+1",
       likes: 67,

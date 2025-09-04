@@ -246,113 +246,139 @@ export default function AdminAnnouncementsPage() {
 
       {/* List */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        <table className="w-full whitespace-nowrap">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="px-6 py-3">Duyuru</th>
-              <th className="px-6 py-3">Kategori</th>
-              <th className="px-6 py-3">Yazar</th>
-              <th className="px-6 py-3">Tarih</th>
-              <th className="px-6 py-3">Durum</th>
-              <th className="px-6 py-3">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {filteredAnnouncements.length > 0 ? (
-              filteredAnnouncements.map((a) => (
-                <tr key={a._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 flex items-center gap-3">
-                    {a.images && a.images.length > 0 ? (
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_API_URL}${a.images[0]}`}
-                        alt={a.title}
-                        width={64}
-                        height={48}
-                        className="rounded-md object-cover"
-                      />
-                    ) : (
-                      <div className="w-16 h-12 rounded-md bg-gray-100 flex items-center justify-center text-gray-400">
-                        <BookOpen className="h-5 w-5" />
+        {/* wrapper: vertical scroll, sticky header; table-auto so fixed px widths on last columns are respected */}
+        <div className="relative overflow-auto max-h-[60vh]">
+          <table className="w-full table-auto">
+            <colgroup>
+              <col /> {/* Duyuru: auto */}
+              <col style={{ width: '14%' }} /> {/* Kategori */}
+              <col style={{ width: '14%' }} /> {/* Yazar */}
+              <col style={{ width: '10%' }} /> {/* Tarih */}
+              <col style={{ width: '120px' }} /> {/* Durum (sabit) */}
+              <col style={{ width: '200px' }} /> {/* İşlemler (sabit genişlik) */}
+            </colgroup>
+
+            <thead className="bg-gray-50 border-b sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-3 text-left">Duyuru</th>
+                <th className="px-6 py-3 text-left">Kategori</th>
+                <th className="px-6 py-3 text-left">Yazar</th>
+                <th className="px-6 py-3 text-left">Tarih</th>
+                <th className="px-6 py-3 text-left">Durum</th>
+                <th className="px-6 py-3 text-right">İşlemler</th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-200">
+              {filteredAnnouncements.length > 0 ? (
+                filteredAnnouncements.map((a) => (
+                  <tr key={a._id} className="hover:bg-gray-50 align-top">
+                    <td className="px-6 py-4 align-top">
+                      <div className="flex items-start gap-3">
+                        {a.images && a.images.length > 0 ? (
+                          <div className="w-16 h-12 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_API_URL}${a.images[0]}`}
+                              alt={a.title}
+                              width={64}
+                              height={48}
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-16 h-12 rounded-md bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+                            <BookOpen className="h-5 w-5" />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">{a.title}</p>
+                          <p className="text-xs text-gray-500 mt-1 line-clamp-2 break-words">{a.description}</p>
+                        </div>
                       </div>
-                    )}
-                    <div>
-                      <p className="text-sm font-medium">{a.title}</p>
-                      <p className="text-xs text-gray-500">{a.description}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm">{a.category}</td>
-                  <td className="px-6 py-4 text-sm">{a.author}</td>
-                  <td className="px-6 py-4 text-sm">
-                    {a.date ? new Date(a.date).toLocaleDateString('tr-TR') : '-'}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        a.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {a.isActive ? 'Aktif' : 'Pasif'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedAnnouncement(a);
-                          setIsDetailModalOpen(true);
-                        }}
-                        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <Link href={`/admin/announcements/edit/${a._id}`}>
-                        <button className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg">
-                          <Edit className="h-4 w-4" />
-                        </button>
-                      </Link>
-                      <button
-                        onClick={() => handleToggleStatus(a)}
-                        className={`p-2 ${
+                    </td>
+
+                    <td className="px-6 py-4 text-sm align-top break-words">{a.category}</td>
+                    <td className="px-6 py-4 text-sm align-top break-words">{a.author}</td>
+                    <td className="px-6 py-4 text-sm align-top">{a.date ? new Date(a.date).toLocaleDateString('tr-TR') : '-'}</td>
+                    <td className="px-6 py-4 align-top">
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           a.isActive
-                            ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100'
-                            : 'text-green-600 hover:text-green-800 hover:bg-green-100'
-                        } rounded-lg`}
-                      >
-                        <ToggleRight className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleToggleFeatured(a)}
-                        className={`p-2 ${
-                          a.featured
-                            ? 'text-yellow-500 hover:text-yellow-600'
-                            : 'text-gray-400 hover:text-gray-600'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
                         }`}
                       >
-                        <Star className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(a)}
-                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+                        {a.isActive ? 'Aktif' : 'Pasif'}
+                      </span>
+                    </td>
+
+                    {/* Actions: fixed width column, nowrap, buttons are square and spaced */}
+                    <td className="px-6 py-4 text-right align-top whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-3">
+                        <button
+                          onClick={() => {
+                            setSelectedAnnouncement(a);
+                            setIsDetailModalOpen(true);
+                          }}
+                          className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg flex items-center justify-center w-9 h-9"
+                          aria-label="Görüntüle"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+
+                        <Link href={`/admin/announcements/edit/${a._id}`}>
+                          <button className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg flex items-center justify-center w-9 h-9" aria-label="Düzenle">
+                            <Edit className="h-4 w-4" />
+                          </button>
+                        </Link>
+
+                        <button
+                          onClick={() => handleToggleStatus(a)}
+                          className={`p-2 rounded-lg flex items-center justify-center w-9 h-9 ${
+                            a.isActive
+                              ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100'
+                              : 'text-green-600 hover:text-green-800 hover:bg-green-100'
+                          }`}
+                          aria-label="Durum değiştir"
+                        >
+                          <ToggleRight className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          onClick={() => handleToggleFeatured(a)}
+                          className={`p-2 rounded-lg flex items-center justify-center w-9 h-9 ${
+                            a.featured
+                              ? 'text-yellow-500 hover:text-yellow-600'
+                              : 'text-gray-400 hover:text-gray-600'
+                          }`}
+                          aria-label="Öne çıkar"
+                        >
+                          <Star className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          onClick={() => handleDelete(a)}
+                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg flex items-center justify-center w-9 h-9"
+                          aria-label="Sil"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                    <BookOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <p className="text-lg font-medium">Duyuru bulunamadı</p>
+                    <p className="text-sm">Filtreleri değiştirin veya yeni duyuru ekleyin.</p>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
-                  <BookOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-lg font-medium">Duyuru bulunamadı</p>
-                  <p className="text-sm">Filtreleri değiştirin veya yeni duyuru ekleyin.</p>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Delete Modal */}
