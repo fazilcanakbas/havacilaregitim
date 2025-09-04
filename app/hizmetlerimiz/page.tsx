@@ -63,21 +63,23 @@ function ServicesList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        setLoading(true)
-        const data = await listServices({ status: "active" })
-        setServices(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch services")
-      } finally {
-        setLoading(false)
-      }
+useEffect(() => {
+  const fetchServices = async () => {
+    try {
+      setLoading(true)
+      const data = await listServices({ status: "active" })
+      // gelen servisleri number’a göre sırala (emniyet için)
+      const sortedData = [...data].sort((a, b) => (a.number ?? 0) - (b.number ?? 0))
+      setServices(sortedData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch services")
+    } finally {
+      setLoading(false)
     }
+  }
 
-    fetchServices()
-  }, [])
+  fetchServices()
+}, [])
 
   if (loading) {
     return (

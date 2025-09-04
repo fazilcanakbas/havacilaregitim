@@ -4,9 +4,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import { Instagram, Linkedin, Mail, Phone, MapPin, Youtube } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { useEffect, useState } from "react"
+import { getContact, type ContactInfo } from "@/lib/api/contactService"
 import { apiFetch } from "@/lib/api/client"
 
 export function Footer() {
@@ -28,9 +29,11 @@ export function Footer() {
   }
 
   const [services, setServices] = useState<ServiceItem[]>([])
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
 
   useEffect(() => {
     let mounted = true
+
     async function fetchServices() {
       try {
         const res = (await apiFetch(`/api/services?limit=4&isActive=true`, { method: "GET" })) as ServiceItem[] | null
@@ -42,7 +45,17 @@ export function Footer() {
       }
     }
 
+    async function fetchContact() {
+      try {
+        const data = await getContact()
+        if (mounted) setContactInfo(data)
+      } catch (err) {
+        console.error("Failed to fetch contact info:", err)
+      }
+    }
+
     fetchServices()
+    fetchContact()
 
     return () => {
       mounted = false
@@ -64,12 +77,12 @@ export function Footer() {
         borderTopColor: "rgba(255,255,255,0.06)",
       }}
     >
-     
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-4 gap-8">
+          {/* Logo & Sosyal */}
           <div className="lg:col-span-1 space-y-6">
             <Link href="/" className="flex items-center">
-              <div className="relative w-70 h-20"> 
+              <div className="relative w-70 h-20">
                 <Image
                   src="/havacilaregitimtextwhite.png"
                   alt="HAVACILAR EĞİTİM A.Ş."
@@ -80,18 +93,30 @@ export function Footer() {
               </div>
             </Link>
 
-            {/* Açıklamayı korumak isterseniz burayı bırakabilirsiniz; isterseniz kaldırırım */}
-            <p className="text-white/70 font-dm-sans">
-              {t("footer.description")}
-            </p>
+            <p className="text-white/70 font-dm-sans">{t("footer.description")}</p>
 
             <div className="flex space-x-4">
-              <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
-                <Instagram className="w-4 h-4" />
-              </Button>
-              <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
-                <Linkedin className="w-4 h-4" />
-              </Button>
+              {contactInfo?.socialMedia?.instagram && (
+                <Link href={`https://instagram.com/${contactInfo.socialMedia.instagram}`} target="_blank">
+                  <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
+                    <Instagram className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
+              {contactInfo?.socialMedia?.linkedin && (
+                <Link href={`https://linkedin.com/company/${contactInfo.socialMedia.linkedin}`} target="_blank">
+                  <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
+                    <Linkedin className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
+              {contactInfo?.socialMedia?.youtube && (
+                <Link href={`https://youtube.com/${contactInfo.socialMedia.youtube}`} target="_blank">
+                  <Button size="sm" variant="outline" className="p-2 bg-transparent border-white/20 text-white">
+                    <Youtube className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -111,9 +136,8 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Services (daha önce Programs idi) */}
+          {/* Services */}
           <div className="space-y-6">
-            {/* Burayı sabit metin yaptım; çeviri anahtarınız yoksa bu en güvenilir yol */}
             <h4 className="font-semibold text-white font-inter">
               {language === "tr" ? "Hizmetlerimiz" : "Services"}
             </h4>
@@ -150,30 +174,39 @@ export function Footer() {
             <h4 className="font-semibold text-white font-inter">{t("footer.contact")}</h4>
 
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-white/75">
-                <Phone className="w-4 h-4" />
-                <span className="font-dm-sans">+90 212 XXX XX XX</span>
-              </div>
-              <div className="flex items-center space-x-3 text-white/75">
-                <Mail className="w-4 h-4" />
-                <span className="font-dm-sans">info@havacilaregitim.com</span>
-              </div>
-              <div className="flex items-start space-x-3 text-white/75">
-                <MapPin className="w-4 h-4 mt-1" />
-                <span className="font-dm-sans">İstanbul, Türkiye</span>
-              </div>
+              {contactInfo?.phone && (
+                <div className="flex items-center space-x-3 text-white/75">
+                  <Phone className="w-4 h-4" />
+                  <span className="font-dm-sans">{contactInfo.phone}</span>
+                </div>
+              )}
+              {contactInfo?.email && (
+                <div className="flex items-center space-x-3 text-white/75">
+                  <Mail className="w-4 h-4" />
+                  <span className="font-dm-sans">{contactInfo.email}</span>
+                </div>
+              )}
+              {contactInfo?.address && (
+  <div className="flex items-start space-x-3 text-white/75">
+    <MapPin className="w-4 h-4 mt-1" />
+    <span className="font-dm-sans">
+      {language === "tr"
+        ? contactInfo.address
+        : contactInfo.addressEn || contactInfo.address}
+    </span>
+  </div>
+)}
+
             </div>
 
-            {/* Bülten alanı: placeholder rengi beyaz olacak şekilde güncellendi */}
             <div className="space-y-3 mb-8">
               <h5 className="font-medium text-white font-inter">{t("footer.newsletter")}</h5>
               <div className="flex items-center space-x-2">
                 <Input
-                     style={{ color: "white" }}
+                  style={{ color: "white" }}
                   placeholder={t("footer.newsletterPlaceholder")}
                   className="flex-1 bg-white/5 placeholder-white border border-white/10 h-12"
                   aria-label={t("footer.newsletterPlaceholder")}
-             
                 />
                 <Button
                   size="sm"
@@ -187,19 +220,9 @@ export function Footer() {
           </div>
         </div>
 
-        {/* alt bölüm: alt çizgi rengi hafif beyaz bırakıldı, logo yazısı kaldırıldığı için boşluk dengesi sağlandı */}
         <div className="border-t" style={{ borderTopColor: "rgba(255,255,255,0.06)" }}>
           <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-white/70 font-dm-sans text-sm">{t("footer.copyright")}</p>
-
-            {/* <div className="flex items-center space-x-6 mt-4 md:mt-0">
-              <Link href="/gizlilik" className="text-white/75 hover:text-primary text-sm font-dm-sans">
-                {language === "tr" ? "Gizlilik Politikası" : "Privacy Policy"}
-              </Link>
-              <Link href="/kullanim" className="text-white/75 hover:text-primary text-sm font-dm-sans">
-                {language === "tr" ? "Kullanım Şartları" : "Terms of Use"}
-              </Link>
-            </div> */}
           </div>
         </div>
       </div>

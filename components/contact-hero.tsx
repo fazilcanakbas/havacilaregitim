@@ -2,14 +2,22 @@
 
 import { Mail, Phone, MapPin } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { getContact, type ContactInfo } from "@/lib/api/contactService"
 
 export function ContactHero() {
   const { language, t } = useLanguage()
+  const [contact, setContact] = useState<ContactInfo | null>(null)
 
   const NAVY = "#0b2a4a"
   const NAVY_BG = "rgba(11,42,74,0.08)"
   const NAVY_BORDER = "rgba(11,42,74,0.12)"
+
+  useEffect(() => {
+    getContact()
+      .then(setContact)
+      .catch((err) => console.error("Contact fetch error:", err))
+  }, [])
 
   return (
     <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10">
@@ -29,42 +37,43 @@ export function ContactHero() {
             {t("contact.title")}
           </h1>
 
-          <p className="text-lg text-muted-foreground font-dm-sans mb-12 max-w-2xl mx-auto">{t("contact.subtitle")}</p>
+          <p className="text-lg text-muted-foreground font-dm-sans mb-12 max-w-2xl mx-auto">
+            {t("contact.subtitle")}
+          </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center group">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
-                aria-hidden
-              >
-                <Phone className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+          {contact && (
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center group">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
+                >
+                  <Phone className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.phone")}</h3>
+                <p className="text-muted-foreground font-dm-sans">{contact.phone}</p>
               </div>
-              <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.phone")}</h3>
-              <p className="text-muted-foreground font-dm-sans">+90 212 XXX XX XX</p>
-            </div>
 
-            <div className="text-center group">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
-                aria-hidden
-              >
-                <Mail className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+              <div className="text-center group">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
+                >
+                  <Mail className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.email")}</h3>
+                <p className="text-muted-foreground font-dm-sans">{contact.email}</p>
               </div>
-              <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.email")}</h3>
-              <p className="text-muted-foreground font-dm-sans">info@havacilaregitim.com</p>
-            </div>
 
-            <div className="text-center group">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
-                aria-hidden
-              >
-                <MapPin className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+              <div className="text-center group">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
+                >
+                  <MapPin className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.address")}</h3>
+                <p className="text-muted-foreground font-dm-sans">{contact.address}</p>
               </div>
-              <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.address")}</h3>
-              <p className="text-muted-foreground font-dm-sans">İstanbul, Türkiye</p>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

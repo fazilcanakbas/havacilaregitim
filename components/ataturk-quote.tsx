@@ -1,6 +1,7 @@
 "use client"
 
 import { Quote } from "lucide-react"
+import Image from "next/image"
 import { useLanguage } from "@/lib/language-context"
 
 export function AtaturkQuote() {
@@ -17,12 +18,24 @@ export function AtaturkQuote() {
               "{t("quote.text")}"
             </blockquote>
 
-            <div className="flex items-center justify-center space-x-4">
-              <div className="w-16 h-0.5 bg-primary"></div>
-              <cite className="text-lg font-semibold text-muted-foreground font-dm-sans not-italic">
+            <div className="flex flex-col items-center space-y-4">
+              {/* İmza iki çizginin arasında */}
+              <div className="flex items-center justify-center space-x-4">
+                <div className="w-16 h-0.5 bg-primary"></div>
+                <Image
+                  src="/ataturkimza.png"
+                  alt="Mustafa Kemal Atatürk İmzası"
+                  width={180}
+                  height={60}
+                  className="opacity-90"
+                />
+                <div className="w-16 h-0.5 bg-primary"></div>
+              </div>
+
+              {/* Author imzanın altında */}
+              <cite className="text-lg font-semibold text-muted-foreground font-dm-sans not-italic mt-2">
                 {t("quote.author")}
               </cite>
-              <div className="w-16 h-0.5 bg-primary"></div>
             </div>
           </div>
         </div>

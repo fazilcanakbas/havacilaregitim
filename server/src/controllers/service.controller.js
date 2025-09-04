@@ -44,10 +44,10 @@ exports.listServices = async function (req, res) {
     if (category) filter.category = category;
     if (status) filter.status = status;
 
-    const services = await Service.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(parseInt(skip, 10))
-      .limit(Math.min(parseInt(limit, 10), 500));
+const services = await Service.find(filter)
+  .sort({ number: 1 })   // önce number’a göre sırala
+  .skip(parseInt(skip, 10))
+  .limit(Math.min(parseInt(limit, 10), 500));
 
     return res.json(services);
   } catch (err) {
@@ -154,7 +154,11 @@ exports.createService = async function (req, res) {
       enrolledStudents: Number(data.enrolledStudents || 0),
       rating: Number(data.rating || 0),
       slug,
+      
     });
+    const lastService = await Service.findOne().sort({ number: -1 })
+service.number = lastService ? lastService.number + 1 : 1
+
 
     if (req.files && Array.isArray(req.files) && req.files.length > 0) {
       service.images = req.files.map(file =>
@@ -185,7 +189,7 @@ exports.updateService = async function (req, res) {
       'title', 'titleEn', 'description', 'descriptionEn',
       'details', 'detailsEn', 'duration', 'durationEn',
       'format', 'formatEn', 'price', 'category',
-      'status', 'enrolledStudents', 'rating', 'slug'
+      'status', 'enrolledStudents', 'rating', 'slug', 'number'
     ];
 
     fields.forEach((f) => {

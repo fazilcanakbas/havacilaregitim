@@ -86,6 +86,22 @@ try {
 } catch (error) {
   console.error('Error loading announcement routes:', error);
 }
+try {
+  const meesageRoutes = require('./src/routes/message.routes');
+  app.use('/api/messages', meesageRoutes);
+  console.log('Messages route çalışıyor kral')
+}catch (error) {
+  console.error('Error loading message routes:', error);
+}
+
+try {
+  const contactRoutes = require('./src/routes/contact.routes');
+  app.use('/api/contact', contactRoutes);
+  console.log('Contact routes loaded');
+} catch (error) {
+  console.error('Error loading contact routes:', error);
+}
+
 // Base route
 app.get('/', (req, res) => {
   res.send('Havacılara Eğitim API is running');

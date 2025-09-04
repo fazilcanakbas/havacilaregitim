@@ -5,6 +5,7 @@ export type ServiceItem = {
   title: string;
   titleEn?: string;
   details: string;
+    number?: number;   
   detailsEn?: string;
   description: string;
   descriptionEn?: string;

@@ -2,62 +2,56 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, Clock, Users, Award, ExternalLink } from "lucide-react"
+import { Phone, Mail, MapPin, ExternalLink } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { getContact, type ContactInfo } from "@/lib/api/contactService"
 
 export function ContactInfo() {
   const { language } = useLanguage()
+  const [contact, setContact] = useState<ContactInfo | null>(null)
 
   const NAVY = "#0b2a4a"
   const NAVY_BG = "rgba(11,42,74,0.06)"
   const NAVY_BORDER = "rgba(11,42,74,0.10)"
 
+  useEffect(() => {
+    getContact()
+      .then(setContact)
+      .catch((err) => console.error("Contact fetch error:", err))
+  }, [])
+
+  if (!contact) return null
+
   const contactMethods = [
     {
       icon: Phone,
       title: language === "tr" ? "Telefon" : "Phone",
-      description: language === "tr" ? "Pazartesi - Cuma: 09:00 - 18:00" : "Monday - Friday: 09:00 - 18:00",
-      value: "+90 212 XXX XX XX",
+      description: contact.workingHours || (language === "tr" ? "Çalışma saatleri" : "Office hours"),
+      value: contact.phone,
       action: language === "tr" ? "Ara" : "Call",
+      href: `tel:${contact.phone}`,
     },
     {
       icon: Mail,
       title: language === "tr" ? "E-posta" : "Email",
       description: language === "tr" ? "24 saat içinde yanıt veriyoruz" : "We reply within 24 hours",
-      value: "info@havacilaregitim.com",
+      value: contact.email,
       action: language === "tr" ? "E-posta Gönder" : "Send Email",
+      href: `mailto:${contact.email}`,
     },
     {
       icon: MapPin,
       title: language === "tr" ? "Adres" : "Address",
       description: language === "tr" ? "Eğitim merkezimizi ziyaret edin" : "Visit our training center",
-      value:
-        language === "tr"
-          ? "Atatürk Havalimanı Yakını\nİstanbul, Türkiye"
-          : "Near Atatürk Airport\nIstanbul, Türkiye",
+      value: language === "tr" ? contact.address : contact.addressEn || contact.address,
       action: language === "tr" ? "Haritada Gör" : "View on Map",
-    },
-  ]
-
-  const officeHours = [
-    {
-      day: language === "tr" ? "Pazartesi - Cuma" : "Monday - Friday",
-      hours: "09:00 - 18:00",
-    },
-    {
-      day: language === "tr" ? "Cumartesi" : "Saturday",
-      hours: "09:00 - 15:00",
-    },
-    {
-      day: language === "tr" ? "Pazar" : "Sunday",
-      hours: language === "tr" ? "Kapalı" : "Closed",
+      href: `https://www.google.com/maps?q=${contact.mapCoordinates.lat},${contact.mapCoordinates.lng}`,
     },
   ]
 
   return (
     <div className="space-y-8">
-      {/* Contact Methods */}
       <Card className="border-0 shadow-lg" style={{ backgroundColor: NAVY_BG, borderColor: NAVY_BORDER }}>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-foreground font-inter">
@@ -77,7 +71,10 @@ export function ContactInfo() {
               className="flex items-start space-x-4 p-4 rounded-lg hover:shadow-sm transition-all"
               style={{ borderRadius: 12 }}
             >
-              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: NAVY_BG }}>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: NAVY_BG }}
+              >
                 <method.icon className="w-6 h-6" style={{ color: NAVY }} />
               </div>
 
@@ -87,32 +84,19 @@ export function ContactInfo() {
                 <p className="text-foreground font-dm-sans whitespace-pre-line">{method.value}</p>
               </div>
 
-              <Button variant="outline" size="sm" className="bg-transparent">
-                {method.action}
-                <ExternalLink className="w-3 h-3 ml-1" />
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-[#0b2a4a] text-[#0b2a4a] hover:bg-[#0b2a4a] hover:text-white"
+              >
+                <a href={method.href} target="_blank" rel="noopener noreferrer">
+                  {method.action}
+                  <ExternalLink className="w-3 h-3 ml-1" />
+                </a>
               </Button>
             </div>
           ))}
-        </CardContent>
-      </Card>
-
-      {/* Office Hours */}
-      <Card className="border-0 shadow-lg" style={{ backgroundColor: NAVY_BG, borderColor: NAVY_BORDER }}>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-foreground font-inter">
-            {language === "tr" ? "Çalışma Saatleri" : "Office Hours"}
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          <div className="space-y-3">
-            {officeHours.map((schedule, index) => (
-              <div key={index} className="flex justify-between items-center py-2">
-                <span className="text-foreground font-dm-sans">{schedule.day}</span>
-                <span className="text-muted-foreground font-dm-sans">{schedule.hours}</span>
-              </div>
-            ))}
-          </div>
         </CardContent>
       </Card>
     </div>

@@ -1,8 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Play, Users, Award, Plane, ChevronLeft, ChevronRight, BookOpenCheck } from "lucide-react"
-import Image from "next/image"
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { useState, useEffect } from "react"
 import Link from "next/link"
@@ -11,9 +10,7 @@ export function HeroSection() {
   const { language, t } = useLanguage()
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  // Harmonized palette (derived from logo + top gradient in the screenshot)
-  const BRAND_NAVY = "#ffffffff"   // logo / deep navy
-  const BRAND_ACCENT = "rgba(11,42,87,0.85)" // CTA / teal that works with the sky background
+  const BRAND_ACCENT = "rgba(11,42,87,0.85)"
   const OVERLAY_LEFT = "rgba(11,42,87,0.85)"
   const OVERLAY_MID = "rgba(11,42,87,0.25)"
   const OVERLAY_RIGHT = "rgba(23,143,131,0.06)"
@@ -42,6 +39,7 @@ export function HeroSection() {
     },
   ]
 
+  // Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -52,26 +50,19 @@ export function HeroSection() {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
 
-  const stats = [
-    { icon: Users, number: "500+", labelKey: "hero.stats.graduates" },
-    { icon: Award, number: "15+", labelKey: "hero.stats.experience" },
-    { icon: BookOpenCheck, number: "20+", labelKey: "hero.stats.aircraft" },
-  ]
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background video */}
       <div className="absolute inset-0 z-0">
-        {/* background video / image */}
         <video
           className="w-full h-full object-cover"
           autoPlay
-          loop
+          
           muted
           playsInline
           preload="metadata"
-          src={'/egitimsitevideo.mp4'}
+          src={"/bluebackgraoundvideo.mp4"}
         />
-
         <div
           aria-hidden
           className="absolute inset-0 pointer-events-none"
@@ -80,31 +71,14 @@ export function HeroSection() {
             mixBlendMode: "overlay",
           }}
         />
-
-        {/* subtle dark veil for contrast on text */}
         <div className="absolute inset-0 bg-black/20 pointer-events-none" />
       </div>
 
+      {/* Content - solda */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
-              {/* <div
-                className="inline-flex items-center px-4 py-2 rounded-full"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.08)", 
-                  border: `1px solid rgba(255, 255, 255, 0.16)`,
-                }}
-              >
-                <Plane className="w-4 h-4 mr-2" style={{ color: BRAND_NAVY }} />
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: BRAND_NAVY }}
-                >
-                  {t("hero.badge")}
-                </span>
-              </div> */}
-
               <h1
                 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg"
                 style={{ color: "#ffffff" }}
@@ -120,76 +94,45 @@ export function HeroSection() {
               </p>
             </div>
 
-            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/hizmetlerimiz">
                 <Button
-
-                size="lg"
-                className="group"
-                style={{
-                  backgroundColor: BRAND_ACCENT,
-                  color: "#fff",
-                  border: "none",
-                  boxShadow: "0 6px 18px rgba(23,143,131,0.18)",
-                }}
-              >
-                {t("hero.cta.start")}
-                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-              </Button>
-             </Link>
-              {/* secondary action (example) */}
-              {/* <Button
-                size="lg"
-                className="group"
-                style={{
-                  backgroundColor: "transparent",
-                  color: "#fff",
-                  border: `1px solid rgba(255,255,255,0.12)`,
-                  backdropFilter: "blur(6px)",
-                }}
-             
-              >
-                <Play className="w-4 h-4 mr-2" />
-                {t("hero.cta.video")}
-              </Button> */}
+                  size="lg"
+                  className="group"
+                  style={{
+                    backgroundColor: BRAND_ACCENT,
+                    color: "#fff",
+                    border: "none",
+                    boxShadow: "0 6px 18px rgba(23,143,131,0.18)",
+                  }}
+                >
+                  {t("hero.cta.start")}
+                  <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
             </div>
-
-            {/* Optional Stats - harmonized visuals */}
-            {/* <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div
-                    className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-2"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.06)",
-                      color: BRAND_NAVY,
-                    }}
-                  >
-                    <stat.icon className="w-6 h-6" />
-                  </div>
-                  <div className="text-2xl font-bold drop-shadow-md" style={{ color: "#fff" }}>
-                    {stat.number}
-                  </div>
-                  <div className="text-sm drop-shadow-sm" style={{ color: "rgba(255,255,255,0.85)" }}>
-                    {t(stat.labelKey)}
-                  </div>
-                </div>
-              ))}
-            </div> */}
           </div>
-
-          {/* Right Column could show big logo or illustration if needed */}
-          {/* <div className="hidden lg:flex items-center justify-center">
-            
-            <div style={{ maxWidth: 520, width: "100%", opacity: 0.95 }}>
-              <Image src="/logo-large.png" alt="Logo" width={520} height={520} className="object-contain" priority />
-            </div>
-          </div> */}
         </div>
       </div>
 
-      {/* pagination / nav dots (kept commented for simplicity) */}
+      {/* Dots + small arrows below */}
+      <div className="absolute bottom-6 w-full flex justify-center items-center gap-3 z-20">
+        <button onClick={prevSlide} className="text-white hover:scale-110 transition">
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentSlide(idx)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              idx === currentSlide ? "bg-white scale-125" : "bg-white/50 hover:bg-white"
+            }`}
+          />
+        ))}
+        <button onClick={nextSlide} className="text-white hover:scale-110 transition">
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
     </section>
   )
 }

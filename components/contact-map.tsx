@@ -4,9 +4,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Navigation, ExternalLink } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import React, { useEffect, useState } from "react"
+import { getContact, type ContactInfo } from "@/lib/api/contactService"
 
 export function ContactMap() {
   const { language } = useLanguage()
+  const [contact, setContact] = useState<ContactInfo | null>(null)
+
+  const NAVY = "#0b2a4a"
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+  useEffect(() => {
+    getContact()
+      .then(setContact)
+      .catch((err) => console.error("Contact fetch error:", err))
+  }, [])
+
+  if (!contact) return null
+
+  const { lat, lng } = contact.mapCoordinates
+  const mapUrl = `https://www.google.com/maps?q=${lat},${lng}&hl=${language}`
+  const embedUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${lat},${lng}&zoom=15`
 
   return (
     <section className="py-16 bg-muted/30">
@@ -24,27 +42,36 @@ export function ContactMap() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Map Placeholder */}
+          {/* Map with Embed */}
           <div className="lg:col-span-2">
-            <Card className="border-0 shadow-lg overflow-hidden">
-              <div className="relative h-96 bg-muted flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-foreground font-inter mb-2">
-                    {language === "tr" ? "Harita Entegrasyonu" : "Map Integration"}
-                  </h3>
-                  <p className="text-muted-foreground font-dm-sans mb-4">
-                    {language === "tr"
-                      ? "Gerçek uygulamada Google Maps veya benzeri bir harita servisi entegre edilecektir"
-                      : "In the real app, Google Maps or a similar service will be integrated"}
-                  </p>
-                  <Button>
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    {language === "tr" ? "Google Maps'te Aç" : "Open in Google Maps"}
-                  </Button>
-                </div>
-              </div>
-            </Card>
+     <Card className="border-0 shadow-lg overflow-hidden rounded-lg !p-0">
+  <div className="relative h-104 w-full">
+    <iframe
+      src={embedUrl}
+      className="block w-full h-full"
+      style={{ border: 0 }}
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+
+  {/* Alt buton alanı */}
+  <div className="p-4 flex justify-center bg-white">
+    <Button
+      asChild
+      className="bg-[#0b2a4a] hover:bg-[#133b66] text-white rounded-md"
+    >
+      <a href={mapUrl} target="_blank" rel="noopener noreferrer">
+        <ExternalLink className="w-4 h-4 mr-2" />
+        {language === "tr" ? "Google Maps'te Aç" : "Open in Google Maps"}
+      </a>
+    </Button>
+  </div>
+</Card>
+
+
+
           </div>
 
           {/* Location Details */}
@@ -62,26 +89,10 @@ export function ContactMap() {
                   <MapPin className="w-5 h-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground font-inter mb-1">
-                      {language === "tr" ? "HAVACILAR EĞİTİM A.Ş." : "AVIATION EDUCATION INC."}
+                      HAVACILAR EĞİTİM A.Ş.
                     </h4>
-                    <p className="text-muted-foreground font-dm-sans">
-                      {language === "tr" ? (
-                        <>
-                          Atatürk Havalimanı Yakını
-                          <br />
-                          Bakırköy/İstanbul
-                          <br />
-                          Türkiye 34149
-                        </>
-                      ) : (
-                        <>
-                          Near Atatürk Airport
-                          <br />
-                          Bakırköy/Istanbul
-                          <br />
-                          Türkiye 34149
-                        </>
-                      )}
+                    <p className="text-muted-foreground font-dm-sans whitespace-pre-line">
+                      {language === "tr" ? contact.address : contact.addressEn || contact.address}
                     </p>
                   </div>
                 </div>
@@ -124,7 +135,10 @@ export function ContactMap() {
                     ? "Eğitim merkezimizi ziyaret etmeden önce randevu almanızı öneririz. Böylece size daha iyi hizmet verebiliriz."
                     : "We recommend booking an appointment before visiting our training center so we can serve you better."}
                 </p>
-                <Button size="sm" className="w-full">
+                <Button
+                  size="sm"
+                  className="w-full bg-[#0b2a4a] hover:bg-[#133b66] text-white"
+                >
                   {language === "tr" ? "Randevu Al" : "Book Appointment"}
                 </Button>
               </CardContent>

@@ -6,18 +6,19 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Users,
-  FileText,
   Megaphone,
   MessageSquare,
   Eye,
   Calendar,
   Activity,
+  FileText,
 } from "lucide-react"
 import Link from "next/link"
 
 import { adminListAnnouncements } from "@/lib/api/announcementService"
-import { adminListServices } from "@/lib/api/serviceService"
+import { adminListServices, type ServiceItem } from "@/lib/api/serviceService"
 import { adminListBlogs } from "@/lib/api/blogService"
+import { adminListMessages, type MessageItem } from "@/lib/api/messageService"
 
 export default function AdminDashboard() {
   const [blogCount, setBlogCount] = useState(0)
@@ -25,27 +26,30 @@ export default function AdminDashboard() {
   const [serviceCount, setServiceCount] = useState(0)
   const [activities, setActivities] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [services, setServices] = useState<ServiceItem[]>([])
 
-  // Son mesajlar şimdilik mock
-  const recentMessages = [
-    { id: 1, name: "Mehmet Özkan", email: "mehmet@example.com", subject: "Pilot Eğitimi Hakkında", time: "1 saat önce", status: "unread" },
-    { id: 2, name: "Fatma Kaya", email: "fatma@example.com", subject: "Kurs Fiyatları", time: "3 saat önce", status: "read" },
-    { id: 3, name: "Ali Veli", email: "ali@example.com", subject: "Başvuru Süreci", time: "5 saat önce", status: "unread" },
-  ]
+  const [recentMessages, setRecentMessages] = useState<MessageItem[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [blogs, announcements, services] = await Promise.all([
+        const [blogs, announcements, services, messages] = await Promise.all([
           adminListBlogs(),
           adminListAnnouncements(),
           adminListServices(),
+          adminListMessages(),
         ])
 
-        // Sadece aktif olanları say
+        // Aktif olanların sayısı
         setBlogCount((blogs || []).filter((b: any) => b.isActive).length)
         setAnnouncementCount((announcements || []).filter((a: any) => a.isActive).length)
         setServiceCount((services || []).filter((s: any) => s.status === "active").length)
+
+        // Son mesajlar (ilk 5 tane, tarihe göre sıralı)
+        const sortedMessages = (messages || [])
+          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 5)
+        setRecentMessages(sortedMessages)
 
         // Aktiviteler
         const activityData: any[] = []
@@ -98,6 +102,37 @@ export default function AdminDashboard() {
   if (loading) {
     return <div className="p-6 text-center">Yükleniyor...</div>
   }
+  const getSubjectLabel = (subject?: string) => {
+  switch (subject) {
+    case "info":
+      return "Genel Bilgi"
+    case "enrollment":
+      return "Kayıt İşlemleri"
+    case "programs":
+      return "Eğitim Programları"
+    case "career":
+      return "Kariyer Danışmanlığı"
+    case "other":
+      return "Diğer"
+    default:
+      return subject || ""
+  }
+}
+const getProgramTitle = (
+  program?: string | { _id: string; title: string; titleEn?: string }
+) => {
+  if (!program) return ""
+
+  // populate edilmiş object gelirse
+  if (typeof program === "object" && "title" in program) {
+    return program.title
+  }
+
+  // sadece id gelirse services listesinden bul
+  const found = services.find((s) => s._id === program)
+  return found ? found.title : ""
+}
+
 
   return (
     <div className="space-y-6">
@@ -182,43 +217,90 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Messages (mock) */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              Son Mesajlar
-            </CardTitle>
-            <CardDescription>İletişim formundan gelen son mesajlar</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentMessages.map((message) => (
-                <div key={message.id} className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium">{message.name}</p>
-                      {message.status === "unread" && (
-                        <Badge variant="destructive" className="text-xs">
-                          Yeni
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500">{message.email}</p>
-                    <p className="text-sm text-gray-700">{message.subject}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">{message.time}</p>
-                    <Button variant="outline" size="sm" className="mt-1 bg-transparent">
-                      <Eye className="h-3 w-3 mr-1" />
-                      Görüntüle
-                    </Button>
-                  </div>
-                </div>
-              ))}
+        {/* Recent Messages */}
+      {/* Recent Messages */}
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <MessageSquare className="h-5 w-5 text-red-600" />
+      Son Mesajlar
+    </CardTitle>
+    <CardDescription>İletişim formundan gelen son mesajlar</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div className="space-y-4">
+      {recentMessages.length === 0 && (
+        <p className="text-sm text-gray-500">Henüz mesaj yok</p>
+      )}
+
+      {recentMessages.map((message) => (
+        <div
+          key={message._id}
+          className="flex items-start justify-between p-4 border rounded-lg hover:shadow-md hover:bg-gray-50 transition cursor-pointer"
+        >
+          {/* Sol kısım */}
+          <div className="flex items-start gap-3 flex-1">
+            {/* Avatar */}
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+              {message.firstName[0]}
+              {message.lastName ? message.lastName[0] : ""}
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="flex-1">
+              {/* İsim + Durum */}
+              <div className="flex items-center gap-2">
+                <p className="font-semibold text-gray-900 text-sm">
+                  {message.firstName} {message.lastName}
+                </p>
+                {!message.isRead && (
+                  <Badge variant="destructive" className="text-xs">
+                    Yeni
+                  </Badge>
+                )}
+              </div>
+
+              {/* Konu */}
+             {/* Konu + Program */}
+<p className="text-xs text-gray-500 mb-1">
+  <strong>Konu:</strong> {getSubjectLabel(message.subject)}
+  {getProgramTitle(message.program) && (
+    <span className="ml-2 text-gray-700">
+        <strong>Program:</strong>
+      ({getProgramTitle(message.program)})
+    </span>
+  )}
+</p>
+
+
+              {/* Mesaj önizleme */}
+              <p className="text-sm text-gray-700 bg-gray-100 p-2 rounded-md line-clamp-2">
+                {message.message}
+              </p>
+            </div>
+          </div>
+
+          {/* Sağ kısım */}
+          <div className="flex flex-col items-end justify-between ml-3">
+            <span className="text-xs text-gray-400">
+              {new Date(message.createdAt).toLocaleDateString("tr-TR")}
+            </span>
+            <Link href="/admin/messages">
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2 bg-transparent hover:bg-blue-50"
+              >
+                <Eye className="h-4 w-4 mr-1" />
+                Görüntüle
+              </Button>
+            </Link>
+          </div>
+        </div>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+
       </div>
 
       {/* Quick Actions */}

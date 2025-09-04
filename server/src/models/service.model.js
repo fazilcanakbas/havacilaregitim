@@ -27,6 +27,8 @@ const ServiceSchema = new Schema(
     rating: { type: Number, default: 0 },
     images: [{ type: String, trim: true }], 
     slug: { type: String, trim: true, index: true },
+    number: { type: Number, default: 0 },
+
   },
   { timestamps: true }
 );

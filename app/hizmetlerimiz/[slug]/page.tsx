@@ -18,6 +18,7 @@ import { Footer } from '@/components/footer'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { getService, ServiceItem } from '@/lib/api/serviceService'
+import { getContact, type ContactInfo } from '@/lib/api/contactService'
 
 export default function ServiceDetailPage() {
   const { language } = useLanguage()
@@ -27,6 +28,7 @@ export default function ServiceDetailPage() {
   const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam
 
   const [svc, setSvc] = useState<ServiceItem | null>(null)
+  const [contact, setContact] = useState<ContactInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [debugInfo, setDebugInfo] = useState<any>(null)
@@ -55,19 +57,20 @@ export default function ServiceDetailPage() {
       setError(null)
       setDebugInfo(null)
       try {
-        // DEBUG: log the slug
-        console.debug('[ServiceDetail] fetching slug=', slug)
+        // Service fetch
         const data = await getService(slug)
         if (!mounted) return
         if (!data) {
-          // route to 404 page (client-side)
           router.replace('/404')
           return
         }
         setSvc(data)
+
+        // Contact fetch
+        const cdata = await getContact()
+        if (mounted) setContact(cdata)
       } catch (err: any) {
         console.error('Failed to load service', err)
-        // store debug info (status/body/url) to show in UI / console
         setDebugInfo({
           message: err?.message,
           status: err?.status,
@@ -116,10 +119,7 @@ export default function ServiceDetailPage() {
     )
   }
 
-  if (!svc) {
-    // mostly unreachable (we redirect on 404) - safeguard
-    return null
-  }
+  if (!svc) return null
 
   const title =
     language === 'tr' ? svc.title ?? svc.titleEn ?? '' : svc.titleEn ?? svc.title ?? ''
@@ -150,12 +150,9 @@ export default function ServiceDetailPage() {
             </Link>
 
             <div className="flex items-center mb-6">
-              {/* Icon wrapper: lacivert degrade */}
               <div
                 className="w-20 h-20 rounded-2xl flex items-center justify-center mr-6"
-                style={{
-                  background: 'linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)',
-                }}
+                style={{ background: 'linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)' }}
               >
                 <Icon className="w-10 h-10 text-white" />
               </div>
@@ -168,7 +165,6 @@ export default function ServiceDetailPage() {
         </div>
       </section>
 
-      {/* Content Section */}
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
@@ -211,6 +207,7 @@ export default function ServiceDetailPage() {
                 </div>
               </div>
 
+              {/* Sağdaki iletişim bilgileri backend’den */}
               <div className="lg:col-span-1">
                 <div className="bg-gradient-to-br from-background to-accent/5 rounded-2xl border border-border/50 p-8 sticky top-8">
                   <h3 className="text-xl font-bold text-foreground mb-6 font-inter">
@@ -240,12 +237,12 @@ export default function ServiceDetailPage() {
 
                     <div className="flex items-center text-muted-foreground">
                       <Phone className="w-4 h-4 text-[#0b2a4a] mr-3" />
-                      <span className="text-sm">+90 XXX XXX XX XX</span>
+                      <span className="text-sm">{contact?.phone || '+90 --- --- -- --'}</span>
                     </div>
 
                     <div className="flex items-center text-muted-foreground">
                       <Mail className="w-4 h-4 text-[#0b2a4a] mr-3" />
-                      <span className="text-sm">info@havacilaregitim.com</span>
+                      <span className="text-sm">{contact?.email || 'info@example.com'}</span>
                     </div>
 
                     <button
