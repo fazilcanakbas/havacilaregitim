@@ -21,7 +21,7 @@ export function HeroSection() {
   const slides = [
     {
       image: "/banner1.jpg",
-      titleTr: "Bireyselleştirilmiş Pilot Eğitimi",
+      titleTr: "Bireyselleştirilmiş Pilot Adayı Eğitimi",
       titleEn: "Personalized Pilot Training",
       descTr: "Uzman kaptan pilotlar ve psikologlar eşliğinde adaylara özel eğitim programları",
       descEn: "Tailored training programs for candidates guided by expert captains and psychologists",
