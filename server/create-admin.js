@@ -22,7 +22,7 @@ async function createAdmin() {
     const User = mongoose.model('User', UserSchema);
     
     // Kullanıcı var mı kontrol et
-    const username = 'newadmin';
+    const username = 'admin@havacilaregitim.com';
     const existingUser = await User.findOne({ username });
     
     if (existingUser) {
@@ -30,17 +30,17 @@ async function createAdmin() {
       await User.deleteOne({ username });
     }
     
-    // Şifreyi hash'le
-    const password = 'admin123';
+    
+    const password = 'Havacilaregitim2025';
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     
     // Yeni admin kullanıcısı oluştur
     const newAdmin = new User({
       username,
-      email: 'newadmin@example.com',
+      email: 'admin@havacilaregitim.com',
       password: hashedPassword,
-      name: 'New Admin',
+      name: 'Havacılar Eğitim',
       title: 'Site Yöneticisi',
       isAdmin: true,
       isActive: true

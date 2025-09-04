@@ -11,6 +11,8 @@ import { Footer } from "@/components/footer"
 import { listBlogs } from "@/lib/api/blogService"
 import { useLanguage } from "@/lib/language-context"
 
+
+
 type CategoryCount = { id: string; label: string; count: number }
 type BlogPost = any
 

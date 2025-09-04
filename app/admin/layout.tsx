@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -18,50 +17,58 @@ import {
   Megaphone,
   Wrench,
   FileText,
-  Users,
   MessageSquare,
   Settings,
-  Video,
   Phone,
-  BarChart3,
   Menu,
   LogOut,
-  User,
 } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { useAuthGuard } from "@/hooks/useAuthGuard"
 
 const sidebarItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/announcements", icon: Megaphone, label: "Duyurular" },
   { href: "/admin/services", icon: Wrench, label: "Hizmetler" },
   { href: "/admin/blog", icon: FileText, label: "Blog" },
-  // { href: "/admin/users", icon: Users, label: "Eğitmen Kadrosu" },
   { href: "/admin/messages", icon: MessageSquare, label: "İletişim Mesajları" },
-  // { href: "/admin/media", icon: Video, label: "Medya" },
   { href: "/admin/contact", icon: Phone, label: "İletişim" },
-  // { href: "/admin/analytics", icon: BarChart3, label: "Analitik" },
-  { href: "/admin/settings", icon: Settings, label: "Ayarlar" },
 ]
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const pathname = usePathname()
+  const router = useRouter()
+  const { loading } = useAuthGuard()
+
+  if (loading) {
+    return <div className="p-6 text-center">Yükleniyor...</div>
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    router.replace("/admin/login")
+  }
+
+  if (pathname === "/admin/login") {
+    return <>{children}</>
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
-        <div className="flex items-center justify-center h-16 px-4 bg-primary">
-          {/* <h1 className="text-xl font-bold text-white"></h1> */}
-
-          <img src="/havacilaregitimtext.png" alt="" />
+        <div
+          className="flex items-center justify-center h-16 px-4"
+          style={{ backgroundColor: "#1b1b56ff" }}
+        >
+          <img src="/havacilaregitimtextwhite.png" alt="Logo" />
         </div>
 
         <nav className="mt-8">
@@ -73,7 +80,7 @@ export default function AdminLayout({
                   key={item.href}
                   href={item.href}
                   className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                    isActive ? "bg-primary text-white" : "text-gray-700 hover:bg-gray-100"
+                    isActive ? "bg-ozel text-white" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <item.icon className="w-5 h-5 mr-3" />
@@ -81,6 +88,15 @@ export default function AdminLayout({
                 </Link>
               )
             })}
+
+            {/* 🔴 Çıkış Yap (sidebar) */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full px-4 py-3 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="w-5 h-5 mr-3 text-red-600" />
+              Çıkış Yap
+            </button>
           </div>
         </nav>
       </div>
@@ -91,7 +107,12 @@ export default function AdminLayout({
         <header className="bg-white shadow-sm border-b">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center">
-              <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(!sidebarOpen)} className="mr-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="mr-4"
+              >
                 <Menu className="w-5 h-5" />
               </Button>
               <h2 className="text-lg font-semibold text-gray-800">Yönetim Paneli</h2>
@@ -111,27 +132,27 @@ export default function AdminLayout({
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">Admin</p>
-                      <p className="text-xs leading-none text-muted-foreground">admin@havacilaregitim.com</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        admin@havacilaregitim.com
+                      </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profil</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Ayarlar</span>
-                  </DropdownMenuItem>
+                  <Link href="/admin/contact">
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Ayarlar</span>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <Link href="/admin/login" onClick={() => {
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("user");
-                    }}>
-                      <span>Çıkış Yap</span>
-                    </Link>
+
+               
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer text-white-600 focus:text-white-600"
+                  >
+                    <LogOut className="mr-2 h-4 w-4 text-white-600" />
+                    <span>Çıkış Yap</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
