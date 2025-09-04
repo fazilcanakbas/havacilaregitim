@@ -103,7 +103,7 @@ export function Footer() {
               {quickLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={`/hizmetler${link.href}`}
                   className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
                 >
                   {link.label}
@@ -176,7 +176,6 @@ export function Footer() {
                   aria-label={t("footer.newsletterPlaceholder")}
              
                 />
-                {/* Nötr beyaz/şeffaf arka planlı ikon butonu */}
                 <Button
                   size="sm"
                   className="bg-white/10 hover:bg-white/20 text-white rounded-md p-3 flex items-center justify-center"
