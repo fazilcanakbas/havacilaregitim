@@ -64,13 +64,12 @@ export function Footer() {
         borderTopColor: "rgba(255,255,255,0.06)",
       }}
     >
-      {/* arttırılmış dikey padding -> bülten alanı ile alt çizgi arasına daha fazla boşluk koyar */}
+     
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Company Info - sadece logo gösterilecek (metin kaldırıldı) */}
           <div className="lg:col-span-1 space-y-6">
             <Link href="/" className="flex items-center">
-              <div className="relative w-70 h-20"> {/* logo için uygun boyut */}
+              <div className="relative w-70 h-20"> 
                 <Image
                   src="/havacilaregitimtextwhite.png"
                   alt="HAVACILAR EĞİTİM A.Ş."
@@ -103,7 +102,7 @@ export function Footer() {
               {quickLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={`/hizmetler${link.href}`}
+                  href={link.href}
                   className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
                 >
                   {link.label}
@@ -127,7 +126,7 @@ export function Footer() {
                     return (
                       <Link
                         key={srv._id || slug || Math.random().toString(36).slice(2)}
-                        href={href}
+                        href={`/hizmetlerimiz${href}`}
                         className="block text-white/75 hover:text-primary transition-colors font-dm-sans"
                       >
                         {label}
