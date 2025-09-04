@@ -80,7 +80,7 @@ function AboutCompany() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6 font-inter">
-              {language === "tr" ? "Havacılar Eğitim A.Ş." : "Aviation Education Inc."}
+              {language === "tr" ? "Biz Kimiz?" : "Aviation Education Inc."}
             </h2>
           </motion.div>
 
@@ -94,22 +94,22 @@ function AboutCompany() {
             {language === "tr" ? (
               <div className="space-y-6">
                 <p>
-                  Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel
-                  danışmanlık ve eğitim hizmetleri sunan bir kuruluştur. Kadet pilot alım süreçlerine hazırlanan
-                  adaylara, alanında uzman kaptan pilotlar, psikologlar ve mülakat teknikleri eğitmenleri eşliğinde
-                  kapsamlı ve bireyselleştirilmiş bir eğitim süreci sunuyoruz.
+                  Havacılık tutkusu ile başlayan yolculuğumuz, yarının pilotlarına yol gösteriyor.
                 </p>
                 <p>
-                  Gerçek mülakat ortamlarını birebir simüle eden programlarımız sayesinde adayların hem teknik hem de
-                  davranışsal yeterliliklerini geliştirmeleri sağlanır. Eğitim sürecimiz, her adayın güçlü yönlerini öne
-                  çıkararak, havayolu şirketlerinin beklentilerine uygun donanımlı bireyler yetiştirmeye odaklanır.
+                 Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel danışmanlık ve uçuş simülasyon deneyimi sunan bir kuruluştur.  Kadet pilot alım süreçlerine hazırlanan adaylara, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sunmaktadır.
                 </p>
                 <p>
-                  Havacılar Eğitim A.Ş. olarak, havacılığın disiplinini ve profesyonelliğini esas alıyor; gökyüzüne
-                  sağlam adımlarla ilerlemek isteyen her adayın yanında yer alıyoruz.
+                 Bu süreçte, gerçek mülakat ortamlarını birebir simüle eden bireysel programlar ve uçuş simülasyon deneyimi ile birlikte, pilot adaylarının hem teknik hem de davranışsal yeterliliklerini en üst seviyeye çıkarıyoruz.
+                </p>
+                  <p>
+                   Danışmanlık süreci sonunda, her adayın zayıf ve güçlü yönlerini belirleyerek, havayolu şirketlerinin işe alım sürecindeki beklentilerine uygun donanımları kazandırıyoruz.
+                </p>
+                        <p>
+                  Havacılar Eğitim A.Ş. olarak, havacılığın disiplini ve profesyonelliğini esas alarak; gökyüzüne sağlam adımlarla ilerlemek isteyen her adayın yanında yer alıyoruz.
                 </p>
               </div>
-            ) : (
+            ) : ( 
               <div className="space-y-6">
                 <p>
                   Aviation Education Inc. is an organization that provides professional consultancy and training

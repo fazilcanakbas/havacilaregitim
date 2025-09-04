@@ -240,82 +240,80 @@ export function Navigation() {
               </div>
 
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                <SheetTrigger asChild className="lg:hidden">
-                  <Button
-                    size="sm"
-                    className="flex items-center justify-center rounded-md p-2 focus:outline-none focus:ring-0"
-                    style={{
-                      color: navTextColor,
-                      border: `1px solid ${isScrolled ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)"}`,
-                      backgroundColor: "white",
-                      boxShadow: "none",
-                      outline: "none",
-                      WebkitTapHighlightColor: "transparent",
-                    }}
-                  >
-                    <Menu className="w-4 h-4" style={{ color: 'black' }} />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-80">
-                  <div className="flex flex-col space-y-6 mt-6">
-                    <div className="flex items-center space-x-3 pb-4 border-b">
-                      <div className="relative w-60 h-16">
-                        <Image
-                          src="/havacilaregitimtextlaci.png"
-                          alt="HAVACILAR EĞİTİM A.Ş."
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    </div>
+              <SheetTrigger asChild className="lg:hidden">
+                <Button
+                  size="sm"
+                  className="flex items-center justify-center rounded-md p-2"
+                  style={{
+                    color: navTextColor,
+                    border: `1px solid ${
+                      isScrolled ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)"
+                    }`,
+                    backgroundColor: "white",
+                  }}
+                >
+                  <Menu className="w-4 h-4" style={{ color: "black" }} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-64">
+                <div className="flex flex-col items-center space-y-6 mt-6 text-center">
+                  <Link href="/">
+                  <div className="relative w-48 h-16">
+                    <Image
+                      src="/havacilaregitimtextlaci.png"
+                      alt="HAVACILAR EĞİTİM A.Ş."
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  </Link> 
+                  <nav className="flex flex-col space-y-3 w-full">
+                    {menuItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="py-3 text-lg font-medium text-foreground hover:text-primary transition-colors w-full text-center"
+                      >
+                        {t(item.labelKey)}
+                      </Link>
+                    ))}
+                  </nav>
 
-                    <nav className="flex flex-col space-y-2">
-                      {menuItems.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => setIsOpen(false)}
-                          className="text-foreground hover:text-primary transition-colors py-2"
-                        >
-                          {t(item.labelKey)}
-                        </Link>
-                      ))}
-                    </nav>
-
-                    <div className="mt-4 pt-4 border-t">
-                      <p className="text-sm font-medium mb-2 text-muted-foreground">Dil / Language</p>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            setLanguage("tr")
-                            setIsOpen(false)
-                          }}
-                          className={`flex-1 px-3 py-2 rounded-md border transition-colors text-sm font-medium ${
-                            language === "tr"
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-white text-foreground border-border/50"
-                          }`}
-                        >
-                          🇹🇷 Türkçe
-                        </button>
-                        <button
-                          onClick={() => {
-                            setLanguage("en")
-                            setIsOpen(false)
-                          }}
-                          className={`flex-1 px-3 py-2 rounded-md border transition-colors text-sm font-medium ${
-                            language === "en"
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-white text-foreground border-border/50"
-                          }`}
-                        >
-                          🇺🇸 English
-                        </button>
-                      </div>
+                  <div className="mt-4 pt-4 border-t w-full">
+                    <p className="text-sm font-medium mb-2 text-muted-foreground">Dil / Language</p>
+                    <div className="flex gap-2 w-full">
+                      <button
+                        onClick={() => {
+                          setLanguage("tr")
+                          setIsOpen(false)
+                        }}
+                        className={`flex-1 px-3 py-2 rounded-md border text-sm font-medium ${
+                          language === "tr"
+                            ? "bg-[#1b1b56] text-white border-[#1b1b56]"
+                            : "bg-white text-foreground border"
+                        }`}
+                      >
+                        🇹🇷 Türkçe
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLanguage("en")
+                          setIsOpen(false)
+                        }}
+                        className={`flex-1 px-3 py-2 rounded-md border text-sm font-medium ${
+                          language === "en"
+                            ? "bg-[#1b1b56] text-white border-[#1b1b56]"
+                            : "bg-white text-foreground border"
+                        }`}
+                      >
+                        🇺🇸 English
+                      </button>
                     </div>
                   </div>
-                </SheetContent>
-              </Sheet>
+                </div>
+              </SheetContent>
+            </Sheet>
             </div>
           </div>
         </nav>
