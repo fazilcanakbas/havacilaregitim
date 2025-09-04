@@ -150,8 +150,14 @@ export default function ServiceDetailPage() {
             </Link>
 
             <div className="flex items-center mb-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mr-6">
-                <Icon className="w-10 h-10 text-primary-foreground" />
+              {/* Icon wrapper: lacivert degrade */}
+              <div
+                className="w-20 h-20 rounded-2xl flex items-center justify-center mr-6"
+                style={{
+                  background: 'linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)',
+                }}
+              >
+                <Icon className="w-10 h-10 text-white" />
               </div>
               <div>
                 <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-2 font-inter">{title}</h1>
@@ -192,7 +198,10 @@ export default function ServiceDetailPage() {
                   <div className="space-y-4">
                     {process.map((step, index) => (
                       <div key={index} className="flex items-start">
-                        <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0"
+                          style={{ backgroundColor: '#0b2a4a', color: '#ffffff' }}
+                        >
                           {index + 1}
                         </div>
                         <span className="text-muted-foreground font-dm-sans pt-1">{step}</span>
@@ -210,7 +219,7 @@ export default function ServiceDetailPage() {
 
                   <div className="space-y-4 mb-8">
                     <div className="flex items-center">
-                      <Clock className="w-5 h-5 text-primary mr-3" />
+                      <Clock className="w-5 h-5 text-[#0b2a4a] mr-3" />
                       <div>
                         <p className="text-sm text-muted-foreground">{language === 'tr' ? 'Süre' : 'Duration'}</p>
                         <p className="font-medium text-foreground">{duration}</p>
@@ -218,7 +227,7 @@ export default function ServiceDetailPage() {
                     </div>
 
                     <div className="flex items-center">
-                      <Users className="w-5 h-5 text-primary mr-3" />
+                      <Users className="w-5 h-5 text-[#0b2a4a] mr-3" />
                       <div>
                         <p className="text-sm text-muted-foreground">{language === 'tr' ? 'Format' : 'Format'}</p>
                         <p className="font-medium text-foreground">{format}</p>
@@ -230,16 +239,19 @@ export default function ServiceDetailPage() {
                     <h4 className="font-bold text-foreground">{language === 'tr' ? 'İletişim' : 'Contact'}</h4>
 
                     <div className="flex items-center text-muted-foreground">
-                      <Phone className="w-4 h-4 mr-3" />
+                      <Phone className="w-4 h-4 text-[#0b2a4a] mr-3" />
                       <span className="text-sm">+90 XXX XXX XX XX</span>
                     </div>
 
                     <div className="flex items-center text-muted-foreground">
-                      <Mail className="w-4 h-4 mr-3" />
+                      <Mail className="w-4 h-4 text-[#0b2a4a] mr-3" />
                       <span className="text-sm">info@havacilaregitim.com</span>
                     </div>
 
-                    <button className="w-full bg-primary text-primary-foreground rounded-xl py-3 px-4 font-medium hover:bg-primary/90 transition-colors">
+                    <button
+                      className="w-full rounded-xl py-3 px-4 font-medium transition-transform duration-150"
+                      style={{ backgroundColor: '#0b2a4a', color: '#ffffff' }}
+                    >
                       {language === 'tr' ? 'Randevu Al' : 'Book Appointment'}
                     </button>
                   </div>

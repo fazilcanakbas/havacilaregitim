@@ -77,9 +77,19 @@ export function AnnouncementsSection() {
     <section className="py-20 bg-[#f5f5f5]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
-            <Megaphone className="w-4 h-4 text-accent mr-2" />
-            <span className="text-sm font-medium text-accent">
+          <div
+          style={{
+            backgroundColor: "#1b1b56ff",
+          }}
+          className="inline-flex items-center px-4 py-2 rounded-full  border border-accent/20 mb-6">
+            <Megaphone  style={{
+              color: "#ffffffff",
+            }} className="w-4 h-4 text-accent mr-2" />
+            <span 
+            style={{
+              color: "#ffffffff",
+            }}
+            className="text-sm font-medium text-accent">
               {language === "tr" ? "Duyurular & Haberler" : "Announcements & News"}
             </span>
           </div>

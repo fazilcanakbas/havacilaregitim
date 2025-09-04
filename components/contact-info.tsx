@@ -4,9 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Phone, Mail, MapPin, Clock, Users, Award, ExternalLink } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import React from "react"
 
 export function ContactInfo() {
   const { language } = useLanguage()
+
+  const NAVY = "#0b2a4a"
+  const NAVY_BG = "rgba(11,42,74,0.06)"
+  const NAVY_BORDER = "rgba(11,42,74,0.10)"
 
   const contactMethods = [
     {
@@ -50,28 +55,10 @@ export function ContactInfo() {
     },
   ]
 
-  const quickStats = [
-    {
-      icon: Users,
-      label: language === "tr" ? "Aktif Öğrenci" : "Active Students",
-      value: "150+",
-    },
-    {
-      icon: Award,
-      label: language === "tr" ? "Mezun Pilot" : "Graduate Pilots",
-      value: "500+",
-    },
-    {
-      icon: Clock,
-      label: language === "tr" ? "Deneyim" : "Experience",
-      value: language === "tr" ? "15+ Yıl" : "15+ Years",
-    },
-  ]
-
   return (
     <div className="space-y-8">
       {/* Contact Methods */}
-      <Card className="border-0 shadow-lg">
+      <Card className="border-0 shadow-lg" style={{ backgroundColor: NAVY_BG, borderColor: NAVY_BORDER }}>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-foreground font-inter">
             {language === "tr" ? "İletişim Bilgileri" : "Contact Information"}
@@ -87,10 +74,11 @@ export function ContactInfo() {
           {contactMethods.map((method, index) => (
             <div
               key={index}
-              className="flex items-start space-x-4 p-4 rounded-lg hover:bg-muted/50 transition-colors"
+              className="flex items-start space-x-4 p-4 rounded-lg hover:shadow-sm transition-all"
+              style={{ borderRadius: 12 }}
             >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <method.icon className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: NAVY_BG }}>
+                <method.icon className="w-6 h-6" style={{ color: NAVY }} />
               </div>
 
               <div className="flex-1 min-w-0">
@@ -109,7 +97,7 @@ export function ContactInfo() {
       </Card>
 
       {/* Office Hours */}
-      <Card className="border-0 shadow-lg">
+      <Card className="border-0 shadow-lg" style={{ backgroundColor: NAVY_BG, borderColor: NAVY_BORDER }}>
         <CardHeader>
           <CardTitle className="text-xl font-bold text-foreground font-inter">
             {language === "tr" ? "Çalışma Saatleri" : "Office Hours"}
@@ -127,30 +115,6 @@ export function ContactInfo() {
           </div>
         </CardContent>
       </Card>
-
-      {/* Quick Stats (opsiyonel açılabilir) */}
-      {/* 
-      <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-foreground font-inter">
-            {language === "tr" ? "Hızlı Bilgiler" : "Quick Stats"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            {quickStats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-2">
-                  <stat.icon className="w-5 h-5 text-accent" />
-                </div>
-                <div className="text-lg font-bold text-foreground font-inter">{stat.value}</div>
-                <div className="text-xs text-muted-foreground font-dm-sans">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card> 
-      */}
     </div>
   )
 }

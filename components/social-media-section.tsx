@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Instagram, Linkedin, ExternalLink } from "lucide-react"
+import Link from "next/link"
 
 export function SocialMediaSection() {
   const socialPosts = [
@@ -49,26 +50,41 @@ export function SocialMediaSection() {
 
           {/* Responsive buttons: stack on small screens, inline on sm+ */}
           <div className="flex flex-col sm:flex-row items-center gap-3 justify-center">
-            <Button
-              size="lg"
-              className="group w-full sm:w-auto flex items-center justify-center"
-              aria-label="Instagram'da Takip Et"
-            >
+            <Link href="https://www.instagram.com/havacilikegitim/" target="_blank">
+              <Button
+                size="lg"
+                className="group w-full sm:w-auto flex items-center justify-center"
+                aria-label="Instagram'da Takip Et"
+                style={{
+                  backgroundColor: "#1b1b56ff",
+                }}
+              >
               <Instagram className="w-5 h-5 mr-2" />
               <span>Instagram'da Takip Et</span>
               <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
             </Button>
-
-            <Button
-              size="lg"
-              variant="outline"
-              className="group w-full sm:w-auto flex items-center justify-center bg-transparent"
-              aria-label="LinkedIn'de Bağlan"
-            >
-              <Linkedin className="w-5 h-5 mr-2" />
-              <span>LinkedIn'de Bağlan</span>
-              <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </Button>
+            </Link>
+             <Link href="https://www.linkedin.com/company/havacilikegitim/" target="_blank" rel="noopener noreferrer">
+      <Button
+        size="lg"
+        variant="outline"
+        aria-label="LinkedIn'de Bağlan"
+        className={
+          // Başlangıçta lacivert metin + border; hover/focus'ta arka plan lacivert ve yazı beyaz olur
+          "group w-full sm:w-auto flex items-center justify-center bg-transparent " +
+          "text-[#0b2a4a] border-[#0b2a4a] " +
+          "hover:bg-[#0b2a4a] hover:text-white focus:bg-[#0b2a4a] focus:text-white " +
+          "transition-colors"
+        }
+        // Eğer Tailwind arbitrary renkler devre dışıysa veya Button variant stilleri override ediyorsa
+        // style ile NAVY'yi doğrudan verebilirsin:
+        // style={{ color: NAVY, borderColor: NAVY }}
+      >
+        <Linkedin className="w-5 h-5 mr-2" />
+        <span>LinkedIn'de Bağlan</span>
+        <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+      </Button>
+    </Link>
           </div>
         </div>
 

@@ -27,8 +27,8 @@ export function ServicesSection() {
   const [services, setServices] = useState<ServiceItem[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [hover, setHover] = useState(false)
 
-  // hover state to allow inline hover color changes per-card
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   useEffect(() => {
@@ -36,12 +36,10 @@ export function ServicesSection() {
     setLoading(true)
     setError(null)
 
-    // Request only active services from the API and also defensively filter client-side
-    listServices({ limit: 100, status: "active" })
+    listServices({ limit: 6, status: "active" })
       .then((data) => {
         if (!mounted) return
         const arr = Array.isArray(data) ? data : []
-        // Defensive filter: accept either status === 'active' or isActive === true if the API uses that flag
         const activeOnly = arr.filter(
           (s) => (s as any)?.status === "active" || (s as any)?.isActive === true
         )
@@ -106,7 +104,7 @@ export function ServicesSection() {
     These are applied inline (no Tailwind / globals dependency).
   */
   const headerBg = "#12213a" // header background used earlier
-  const brand = "#0f78a5" // primary accent (blue-teal) chosen to sit well with header
+  const brand = "#1b1b56ff" // primary accent (blue-teal) chosen to sit well with header
   const brandForeground = "#ffffff"
   const brandLight = "rgba(15,120,165,0.08)" // subtle icon bg
   const brandBorder = "rgba(15,120,165,0.16)"
@@ -272,18 +270,20 @@ export function ServicesSection() {
             <div className="text-center mt-12">
               <Link href={"/hizmetlerimiz"}>
                 <Button
-                  size="lg"
-                  variant="outline"
-                  className="font-dm-sans"
-                  style={{
-                    color: brand,
-                    borderColor: brand,
-                    backgroundColor: "transparent",
-                    padding: "0.75rem 1.25rem",
-                    borderRadius: 8,
-                    fontWeight: 600,
-                  }}
-                >
+      size="lg"
+      variant="outline"
+      className="font-dm-sans"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        color: hover ? "#fff" : brand,
+        borderColor: brand,
+        backgroundColor: hover ? brand : "transparent",
+        padding: "0.75rem 1.25rem",
+        borderRadius: 8,
+        fontWeight: 600,
+      }}
+    >
                   {t("services.viewAll")}
                 </Button>
               </Link>

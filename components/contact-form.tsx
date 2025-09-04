@@ -15,6 +15,9 @@ import { listServices, type ServiceItem } from "@/lib/api/serviceService"
 export function ContactForm() {
   const { language, t } = useLanguage()
 
+  const NAVY = "#0b2a4a"
+  const NAVY_BG = "rgba(11,42,74,0.04)" // biraz daha hafif for form visuals
+
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [services, setServices] = useState<ServiceItem[]>([])
 
@@ -43,7 +46,6 @@ export function ContactForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
     setIsSubmitted(true)
 
     setTimeout(() => {
@@ -67,7 +69,7 @@ export function ContactForm() {
 
   if (isSubmitted) {
     return (
-      <Card className="border-0 shadow-lg">
+      <Card className="border-0 shadow-lg" style={{ backgroundColor: NAVY_BG }}>
         <CardContent className="p-12 text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
           <h3 className="text-2xl font-bold text-foreground font-inter mb-4">
@@ -84,7 +86,7 @@ export function ContactForm() {
   }
 
   return (
-    <Card className="border-0 shadow-lg">
+    <Card className="border-0 shadow-lg" style={{ backgroundColor: NAVY_BG }}>
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-foreground font-inter">
           {language === "tr" ? "İletişim Formu" : "Contact Form"}
@@ -197,9 +199,9 @@ export function ContactForm() {
           {/* Newsletter Checkbox */}
           <div className="flex items-center space-x-2">
             <Checkbox
-            style={{
-              borderColor: "var(--muted-foreground)",
-            }}
+              style={{
+                borderColor: "var(--muted-foreground)",
+              }}
               id="newsletter"
               checked={formData.newsletter}
               onCheckedChange={(checked) => handleInputChange("newsletter", checked as boolean)}
@@ -212,7 +214,12 @@ export function ContactForm() {
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" size="lg" className="w-full group">
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full group"
+            style={{ backgroundColor: NAVY, color: "#fff" }}
+          >
             <Send className="w-4 h-4 mr-2 transition-transform group-hover:translate-x-1" />
             {language === "tr" ? "Mesajı Gönder" : "Send Message"}
           </Button>
