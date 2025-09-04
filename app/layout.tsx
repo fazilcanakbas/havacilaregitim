@@ -20,7 +20,7 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "HAVACILAR EĞİTİM A.Ş. - Havacılık Eğitimi",
   description: "Modern havacılık eğitimi ve profesyonel pilot yetiştirme programları",
-  generator: "v0.app",
+  generator: "fazilcanakbas",
 }
 
 export default function RootLayout({
