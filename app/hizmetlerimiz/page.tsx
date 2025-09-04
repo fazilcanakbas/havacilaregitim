@@ -19,7 +19,6 @@ function ServicesHero() {
         backgroundPosition: "center bottom",
         backgroundAttachment: "fixed",
         top: -40,
-      
       }}
     >
       {/* Lacivert-mavi overlay, gri değil! */}
@@ -82,10 +81,11 @@ function ServicesList() {
 
   if (loading) {
     return (
-      <section className="py-20"
-      style={{
-        backgroundColor: "#f5f5f5"
-      }}
+      <section
+        className="py-20"
+        style={{
+          backgroundColor: "#f5f5f5",
+        }}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -152,9 +152,16 @@ function ServicesList() {
                 key={service._id}
                 className="bg-gradient-to-br from-background to-accent/5 rounded-2xl border border-border/50 p-8 hover:shadow-xl transition-all duration-300 group"
               >
-                <div className="w-16 h-16 mb-6 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <IconComponent className="w-8 h-8 text-primary-foreground" />
+                {/* icon wrapper: navy gradient (lacivert) */}
+                <div
+                  className="w-16 h-16 mb-6 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                  style={{
+                    background: "linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)",
+                  }}
+                >
+                  <IconComponent className="w-8 h-8 text-white" />
                 </div>
+
                 <h3 className="text-xl font-bold text-foreground mb-4 font-inter">{title}</h3>
                 <p className="text-muted-foreground mb-6 font-dm-sans leading-relaxed">{description}</p>
                 {features && features.length > 0 && (
@@ -167,12 +174,21 @@ function ServicesList() {
                     ))}
                   </ul>
                 )}
+
+                {/* Button: lacivert background, white text; hover shows subtle white overlay (no color swap) */}
                 <Link
                   href={`/hizmetlerimiz/${service.slug || service._id}`}
-                  className="inline-flex items-center justify-center w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors duration-200 font-medium group-hover:shadow-lg"
+                  className="inline-flex items-center justify-center w-full px-4 py-3 rounded-xl font-medium transition duration-200"
+                  style={{
+                    backgroundColor: "#0b2a4a",
+                    color: "#ffffff",
+                  }}
+                  // keep hover effect as subtle white overlay using Tailwind utilities where possible
                 >
-                  {language === "tr" ? "Detayları Görüntüle" : "View Details"}
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+                  <span className="flex items-center gap-2">
+                    {language === "tr" ? "Detayları Görüntüle" : "View Details"}
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
                 </Link>
               </div>
             )

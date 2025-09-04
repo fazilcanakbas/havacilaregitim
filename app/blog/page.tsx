@@ -159,9 +159,7 @@ export default function BlogPage() {
 
   const handleHeroSearch = () => {
     setSearchTerm(heroSearch)
-    // close any selected category/tag when doing a new search if desired:
-    // setSelectedCategory(null)
-    // setSelectedTag(null)
+    
   }
 
   const clearFilters = () => {
@@ -172,26 +170,48 @@ export default function BlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero */}
-    <section className="py-30 bg-gradient-to-br from-primary/10 via-background to-accent/10" 
-    style={{
-      top:30
-    }}
-    >
+    <div className="min-h-screen pt-20 lg:pt-32 bg-[color:var(--page-bg,#fafafa)]">
+      <section  className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] overflow-hidden"
+        style={{
+          backgroundImage: "url('/egitimbanner.jpg')",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+        backgroundPosition: "center bottom", 
+        backgroundAttachment: "fixed"}}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <BookOpen className="w-4 h-4 text-primary mr-2" />
-              <span className="text-sm font-medium text-primary">Havacılık Eğitim Blog</span>
+            <div className="inline-flex items-center px-4 py-2 rounded-full  border border-primary/20 mb-6"
+            style={{
+              backgroundColor: "rgba(24, 29, 43, 1)"
+            }}
+            >
+              <BookOpen className="w-4 h-4  mr-2"
+              style={{
+                color: "rgba(255, 255, 255, 1)"
+              }}
+              />
+              <span  style={{
+                color: "rgba(255, 255, 255, 1)"
+              }} className="text-sm font-medium text-primary">Havacılık Eğitim Blog</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground font-inter mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground font-inter mb-6"
+            style={{
+                color: "rgba(255, 255, 255, 1)"
+              }}
+            >
               Havacılık Dünyasından
-              <span className="text-primary block">Güncel İçerikler</span>
+              <span style={{
+                color: "rgba(255, 255, 255, 1)"
+              }} className="text-primary block">Güncel İçerikler</span>
             </h1>
 
-            <p className="text-lg text-muted-foreground font-dm-sans mb-8 max-w-2xl mx-auto">
+            <p style={{
+                color: "rgba(255, 255, 255, 1)",
+                marginTop:40
+              }} className="text-lg text-muted-foreground font-dm-sans mb-8 max-w-2xl mx-auto" 
+              
+              >
               Pilot eğitimi, havacılık teknolojileri, sektör haberleri ve kariyer rehberleri ile havacılık dünyasını
               keşfedin.
             </p>
@@ -205,7 +225,7 @@ export default function BlogPage() {
           .primary-scope {
             /* Primary (user-provided OKLCH) + fallback hex */
             --primary-oklch: oklch(58.36% 0.08424 202.468);
-            --primary-hex: #0891b2;
+            --primary-hex: #181d3aff;
             --primary: var(--primary-oklch);
 
             /* Accent (turuncu) */

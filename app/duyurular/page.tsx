@@ -9,7 +9,19 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { Footer } from "@/components/footer"
 import { adminListAnnouncements } from "@/lib/api/announcementService"
+import { motion } from "framer-motion"
 
+// Fade-in animasyonu için temel varyantlar
+const fadeInVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+}
+
+// Kartlar için kayarak belirme animasyonu varyantları
+const cardVariants = {
+  initial: { opacity: 0, y: 50 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+}
 export default function AnnouncementsPage() {
   const { language } = useLanguage()
 
@@ -17,7 +29,7 @@ export default function AnnouncementsPage() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Filter / search state
+
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
 
@@ -48,7 +60,6 @@ export default function AnnouncementsPage() {
     }
   }, [language])
 
-  // Helpers to show localized fields
   const getTitle = (a: any) => (language === "en" && a?.titleEn ? a.titleEn : a?.title ?? "")
   const getExcerpt = (a: any) =>
     (language === "en" && a?.descriptionEn ? a.descriptionEn : a?.description ?? "") ||
@@ -60,7 +71,6 @@ export default function AnnouncementsPage() {
     return `${(process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "")}${img.startsWith("/") ? img : `/${img}`}`
   }
 
-  // Build categories from fetched data (localized)
   const categories = useMemo(() => {
     const set = new Set<string>()
     for (const a of announcements) {
@@ -71,7 +81,6 @@ export default function AnnouncementsPage() {
     return [{ id: "all", label: language === "en" ? "All" : "Tümü" }, ...arr.map((c) => ({ id: c, label: c }))]
   }, [announcements, language])
 
-  // Filtered list
   const filtered = useMemo(() => {
     const s = (searchTerm || "").trim().toLowerCase()
     return announcements.filter((a) => {
@@ -90,20 +99,47 @@ export default function AnnouncementsPage() {
   return (
     <div className="min-h-screen pt-20 lg:pt-32 bg-[color:var(--page-bg,#fafafa)]">
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-accent/10 via-background to-primary/5 py-20 lg:py-28">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 font-inter">
-              {language === "tr" ? "Duyurular" : "Announcements"}
-            </h1>
-            <p className="text-md md:text-lg text-muted-foreground font-dm-sans">
-              {language === "tr"
-                ? "En güncel haberler, etkinlikler ve önemli duyurular için takipte kalın."
-                : "Stay tuned for the latest news, events and important announcements."}
-            </p>
-          </div>
+         <section 
+      className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] overflow-hidden"
+      style={{
+        backgroundImage: "url('/egitimbanner.jpg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center bottom", 
+        backgroundAttachment: "fixed",
+        top: -40
+      }}
+    >
+      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, rgba(23,37,84,0.36) 0%, rgba(23,37,84,0.08) 100%)"
+        }}
+      ></div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl lg:text-6xl font-bold mb-6 font-inter drop-shadow-lg"
+            style={{ color:'#f5f5f5' }}
+          >
+            {language === "tr" ? "Duyurular" : "Announcements"}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl lg:text-2xl font-dm-sans drop-shadow-md"
+            style={{ color:'#f5f5f5', marginTop:40 }}
+          >
+            {language === "tr"
+              ? "En güncel haberler, etkinlikler ve önemli duyurular için takipte kalın."
+              : "Stay tuned for the latest news, events and important announcements."}
+          </motion.p>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Filter area */}
       <section className="py-8">
