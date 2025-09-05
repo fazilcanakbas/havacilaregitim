@@ -52,8 +52,8 @@ function CompanyInfo() {
               </p>
               <p className="text-lg leading-relaxed">
                 {language === "tr"
-                  ? "Misyonumuz, havacılık sektörünün gelişimine katkıda bulunmak ve dünya standartlarında eğitim hizmeti sunarak, sektörün ihtiyaç duyduğu nitelikli insan kaynağını yetiştirmektir."
-                  : "Our mission is to contribute to the development of the aviation sector and to train qualified human resources needed by the sector by providing world-class training services."}
+                  ? "Havacılık sektöründe kariyer hedefleyen pilot adaylarına danışmanlık desteği sunuyor; onları yalnızca güçlü bireyler olarak değil, sektörün geleceğine yön verecek profesyoneller olarak yetişme yolculuklarında rehberlik ediyoruz. Kaptan pilotlar, alanında uzman psikologlar ve mülakat teknikleri danışmanları ile geliştirdiğimiz bireyselleştirilmiş programlarımız sayesinde adaylarımızı, havayolu şirketlerinin beklentilerine uyum sağlamanın ötesinde, o beklentileri şekillendirebilecek bir noktaya taşıyoruz."
+                  : "Aviation industry career practices offer consulting support to aspiring pilots; we hope they will grow not only as strong individuals but also as professionals who will shape the future. Through our personalized programs, developed with captain pilots, expert psychologists, and negotiation techniques consultants, we offer our candidates a solution that not only adapts to the expectations of diverse individuals but also shapes those expectations."}
               </p>
             </div>
           </div>

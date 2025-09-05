@@ -145,16 +145,16 @@ function OurValues() {
       title: language === "tr" ? "Misyonumuz" : "Our Mission",
       description:
         language === "tr"
-          ? "Havacılık sektöründe kariyer hedefleyen pilot adaylarını, uluslararası standartlarda bilgi, beceri ve profesyonellikle donatıyor; onları yalnızca güçlü bireyler olarak değil, sektörün geleceğine yön verecek profesyoneller olarak yetiştiriyoruz. Alanında uzman kaptan pilotlar, psikologlar ve mülakat teknikleri eğitmenleri eşliğinde sunduğumuz bireyselleştirilmiş eğitim programlarımızla adaylarımızı, havayolu şirketlerinin beklentilerine uyum sağlamaktan öte, o beklentileri şekillendirecek seviyeye taşıyoruz."
-          : "We equip pilot candidates aiming for a career in the aviation sector with international standard knowledge, skills and professionalism; we train them not only as strong individuals, but as professionals who will shape the future of the sector.",
+          ? "Havacılık sektöründe kariyer hedefleyen pilot adaylarına danışmanlık desteği sunuyor; onları yalnızca güçlü bireyler olarak değil, sektörün geleceğine yön verecek profesyoneller olarak yetişme yolculuklarında rehberlik ediyoruz. Kaptan pilotlar, alanında uzman psikologlar ve mülakat teknikleri danışmanları ile geliştirdiğimiz bireyselleştirilmiş programlarımız sayesinde adaylarımızı, havayolu şirketlerinin beklentilerine uyum sağlamanın ötesinde, o beklentileri şekillendirebilecek bir noktaya taşıyoruz."
+          : "We offer consulting support to aspiring pilots pursuing careers in the aviation industry, guiding them on their journey to develop not only into strong individuals but also into professionals who will shape the future of the industry. Through our personalized programs, developed with captain pilots, expert psychologists, and interview technique consultants, we move our candidates beyond simply conforming to airline expectations to a point where they can shape those expectations.",
     },
     {
       icon: Heart,
       title: language === "tr" ? "Vizyonumuz" : "Our Vision",
       description:
         language === "tr"
-          ? "Havacılık eğitiminde kalite, güven ve profesyonelliğin öncüsü olarak; yalnızca adayların potansiyelini en üst seviyeye çıkarmakla kalmıyor, aynı zamanda sektöre yön veren, gökyüzünde fark yaratan pilotlar yetiştiriyoruz. Bizim vizyonumuz, tercih edilen değil; tercih eden kurum olmaktır. Türkiye'de ve uluslararası alanda havacılık eğitimine standart belirleyen, çizgisi takip edilen öncü kurum olmak."
-          : "As a pioneer of quality, trust and professionalism in aviation education; we not only maximize candidates' potential, but also train pilots who lead the sector and make a difference in the sky.",
+          ? "Havacılık kariyerine adım atmak isteyen pilot adaylarına danışmanlık hizmetinde kalite, güven ve profesyonelliğin öncüsü olarak; yalnızca adayların potansiyelini en üst seviyeye çıkarmalarına destek olmakla kalmıyor, aynı zamanda sektöre yön veren, gökyüzünde fark yaratan profesyoneller olarak konumlanmalarına rehberlik ediyoruz. Bizim vizyonumuz, tercih edilen değil; yol gösterici olarak tercih eden bir danışmanlık kurumu olmaktır. Türkiye’de ve uluslararası alanda pilot adaylarına yönelik danışmanlıkta standart belirleyen, çizgisi takip edilen öncü bir kurum olmak."
+          : "As a pioneer of quality, trust, and professionalism in consulting services for aspiring pilots looking to embark on their aviation careers, we not only support candidates in maximizing their potential but also guide them toward becoming professionals who shape the industry and make a difference in the skies. Our vision is to be a consulting firm that is not chosen, but rather a guide. We are a leading institution that sets the standard for aspiring pilots in Turkey and internationally, and whose approach is followed.",
     },
     {
       icon: Award,
@@ -169,8 +169,8 @@ function OurValues() {
       title: language === "tr" ? "Uzman Kadromuz" : "Our Expert Team",
       description:
         language === "tr"
-          ? "Alanında uzman kaptan pilotlar, psikologlar ve mülakat teknikleri eğitmenleri ile her öğrenciye özel ilgi gösteriyoruz. Deneyimli kadromuz ile gerçek dünya perspektifi sunuyoruz."
-          : "We provide special attention to each student with expert captain pilots, psychologists and interview technique trainers. We offer real-world perspective with our experienced staff.",
+          ? "Kaptan pilotlar,alanında uzman psikologlar ve mülakat teknikleri eğitmenleri ile her öğrenciye özel ilgi gösteriyoruz. Deneyimli kadromuz ile gerçek dünya perspektifi sunuyoruz."
+          : "We provide personalized attention to each student with our captain pilots, expert psychologists, and interview techniques instructors. Our experienced staff offers a real-world perspective.",
     },
   ]
 
