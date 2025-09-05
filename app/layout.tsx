@@ -19,10 +19,13 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "HAVACILAR EĞİTİM A.Ş. - Havacılık Eğitimi",
-  description: "Modern havacılık eğitimi ve profesyonel pilot yetiştirme programları",
-  generator: "fazilcanakbas",
+  description: "Pilot adaylarına modern havacılık eğitimi, bireysel danışmanlık ve mülakat hazırlığı. Havacılar Eğitim A.Ş ile profesyonel geleceğe hazırlan.",
+  keywords: ["havacılık eğitimi", "pilot adayları", "profesyonel pilot", "CRM mülakat", "bireysel danışmanlık", "THY mülakat hazırlığı", "kurul mülakat simülasyonu"],
+  authors: [{ name: "Havacılar Eğitim A.Ş." }],
+  applicationName: "Havacılar Eğitim",
+  creator: "Havacılar Eğitim A.Ş.",
+  publisher: "Havacılar Eğitim A.Ş.",
 }
-
 export default function RootLayout({
   children,
 }: Readonly<{
