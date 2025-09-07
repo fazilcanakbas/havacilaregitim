@@ -222,47 +222,69 @@ export function ServicesSection() {
                 }
 
                 return (
-                  <Card
-                    key={service._id || slug}
-                    className="group transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg"
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                    style={{ overflow: "visible" }}
-                  >
-                    <CardHeader className="pb-4">
-                      <div style={iconContainerStyle}>
-                        <Icon style={{ width: 24, height: 24 }} />
-                      </div>
+<Card
+  key={service._id || slug}
+  className="relative group transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg overflow-hidden min-h-[440px]" // biraz daha uzun
+  onMouseEnter={() => setHoveredIndex(index)}
+  onMouseLeave={() => setHoveredIndex(null)}
+>
+  {/* Background image */}
+  <div
+    className="absolute inset-0"
+    style={{
+      backgroundImage: service.images && service.images.length > 0
+        ? `url(${process.env.NEXT_PUBLIC_API_URL}${service.images[0]})`
+        : `url("/default-service.jpg")`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+  />
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-[#0b2a4a]/60 group-hover:bg-[#0b2a4a]/70 transition-colors duration-300" />
 
-                      <CardTitle style={cardTitleStyle} className="text-xl font-bold font-inter">
-                        {title}
-                      </CardTitle>
-                      <CardDescription style={{ color: "#6b7280" }} className="font-dm-sans">
-                        {description}
-                      </CardDescription>
-                    </CardHeader>
+  {/* Content */}
+  <div className="relative z-10 flex flex-col h-full p-6">
+    {/* Icon */}
+    <div
+      className="w-14 h-14 mb-6 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      style={{
+        background: "linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)", // daha koyu arkaplan
+        color: "#fff",
+      }}
+    >
+      <Icon style={{ width: 24, height: 24 }} />
+    </div>
 
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        {features && features.length ? (
-                          features.map((feature, featureIndex) => (
-                            <div key={featureIndex} className="flex items-center text-sm">
-                              <div style={{ width: 6, height: 6, borderRadius: 9999, backgroundColor: bulletColor, marginRight: 12 }} />
-                              <span style={{ color: "#4b5563" }}>{feature}</span>
-                            </div>
-                          ))
-                        ) : (
-                          <div style={{ color: "#6b7280" }}>—</div>
-                        )}
-                      </div>
+    <CardTitle className="text-xl font-bold font-inter text-white drop-shadow mb-2">
+      {title}
+    </CardTitle>
+    <CardDescription className="font-dm-sans text-white/90 mb-4">
+      {description}
+    </CardDescription>
 
-                      <div style={{ marginTop: 16 }}>
-                        <Button asChild style={ctaStyle}>
-                          <Link href={`/hizmetlerimiz/${slug}`}>{t("services.cta")}</Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+    <CardContent className="space-y-3 flex-1 p-0">
+      {features && features.length ? (
+        features.slice(0, 4).map((feature, featureIndex) => (
+          <div key={featureIndex} className="flex items-center text-sm text-white/90">
+            <div className="w-2 h-2 rounded-full bg-white mr-3" />
+            <span>{feature}</span>
+          </div>
+        ))
+      ) : (
+        <div className="text-white/70">—</div>
+      )}
+    </CardContent>
+
+    {/* CTA */}
+    <div className="mt-6">
+      <Button asChild className="w-full bg-white/90 text-[#0b2a4a] hover:bg-white font-semibold rounded-lg">
+        <Link href={`/hizmetlerimiz/${slug}`}>{t("services.cta")}</Link>
+      </Button>
+    </div>
+  </div>
+</Card>
+
+
                 )
               })}
             </div>
