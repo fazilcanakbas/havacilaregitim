@@ -51,14 +51,14 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 ">
         <video
           className="w-full h-full object-cover"
           autoPlay
           muted
           playsInline
           preload="metadata"
-          src={"/bluebackgraoundvideo.mp4"}
+          src={"/egitimsitevideo.mp4"}
         />
         <div
           aria-hidden
