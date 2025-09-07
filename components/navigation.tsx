@@ -130,7 +130,7 @@ export function Navigation() {
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "h-16" : "h-24"} overflow-hidden`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "h-16" : "h-28"} overflow-hidden`}
         style={{
           background: isScrolled ? "#12213aff" : "transparent",
         }}

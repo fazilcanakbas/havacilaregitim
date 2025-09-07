@@ -173,13 +173,16 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen pt-20 lg:pt-32 bg-[color:var(--page-bg,#fafafa)]">
-      <section  className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] overflow-hidden"
-        style={{
-          backgroundImage: "url('/egitimbanner.jpg')",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        backgroundPosition: "center bottom", 
-        backgroundAttachment: "fixed"}}>
+      <section       className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] overflow-hidden"
+       style={{
+        backgroundImage: "url('/egitimbanner.jpg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center bottom",
+        backgroundAttachment: "fixed",
+        top: -40,
+      }}
+      >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center px-4 py-2 rounded-full  border border-primary/20 mb-6"
@@ -264,7 +267,9 @@ export default function BlogPage() {
         `}</style>
 
         {/* Blog Content */}
-        <section className="py-8 md:py-16 px-4 bg-gray-50">
+        <section className="py-8 md:py-16 px-4 bg-gray-50"
+        
+        >
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-3 gap-8 md:gap-12">
               {/* Main Content */}
