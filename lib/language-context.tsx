@@ -115,7 +115,7 @@ const translations = {
     "footer.contact": "Contact",
     "footer.newsletter": "Newsletter Subscription",
     "footer.newsletterPlaceholder": "Your email address",
-    "footer.copyright": "© 2024 AVIATION EDUCATION INC. All rights reserved.",
+    "footer.copyright": "© 2025 Developed by Bloomo Media. All rights reserved.",
   },
 }
 

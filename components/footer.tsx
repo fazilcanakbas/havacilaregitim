@@ -222,7 +222,9 @@ export function Footer() {
 
         <div className="border-t" style={{ borderTopColor: "rgba(255,255,255,0.06)" }}>
           <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-white/70 font-dm-sans text-sm">{t("footer.copyright")}</p>
+            <Link href="https://www.bloomomedya.com" target="_blank" className="mb-4 md:mb-0">
+              <p className="text-white/70 font-dm-sans text-sm">{t("footer.copyright")}</p>
+            </Link>
           </div>
         </div>
       </div>
