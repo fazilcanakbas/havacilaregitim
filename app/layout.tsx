@@ -18,8 +18,8 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "HAVACILAR EĞİTİM A.Ş. - Havacılık Eğitimi",
-  description: "Pilot adaylarına modern havacılık eğitimi, bireysel danışmanlık ve mülakat hazırlığı. Havacılar Eğitim A.Ş ile profesyonel geleceğe hazırlan.",
+  title: "HAVACILAR EĞİTİM A.Ş. - Havacılık Eğitimi ve Danışmanlık Hizmetleri",
+  description: "Pilot adaylarına mülakat hazırlığı, CRM simülasyonları ve bireysel danışmanlık hizmetleri. Havacılar A.Ş ile havacılık kariyerine hazırlan.",
   keywords: ["havacılık eğitimi", "pilot adayları", "profesyonel pilot", "CRM mülakat", "bireysel danışmanlık", "THY mülakat hazırlığı", "kurul mülakat simülasyonu"],
   authors: [{ name: "Havacılar Eğitim A.Ş." }],
   applicationName: "Havacılar Eğitim",
