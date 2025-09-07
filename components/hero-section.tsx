@@ -15,31 +15,30 @@ export function HeroSection() {
   const OVERLAY_MID = "rgba(11,42,87,0.25)"
   const OVERLAY_RIGHT = "rgba(23,143,131,0.06)"
 
-  const slides = [
-    {
-      image: "/banner1.jpg",
-      titleTr: "Bireyselleştirilmiş Pilot Adayı Eğitimi",
-      titleEn: "Personalized Pilot Training",
-      descTr: "Uzman kaptan pilotlar ve psikologlar eşliğinde adaylara özel eğitim programları",
-      descEn: "Tailored training programs for candidates guided by expert captains and psychologists",
-    },
-    {
-      image: "/banner2.jpg",
-      titleTr: "Mülakat ve CRM Simülasyonları",
-      titleEn: "Interview & CRM Simulations",
-      descTr: "Gerçek mülakat ortamlarını simüle eden programlarla teknik ve davranışsal yetkinlik geliştirme",
-      descEn: "Enhancing technical and behavioral competencies through real interview simulations",
-    },
-    {
-      image: "/banner3.jpg",
-      titleTr: "Profesyonellik ve Sektöre Yön Verme",
-      titleEn: "Professionalism & Industry Leadership",
-      descTr: "Havacılık standartlarını belirleyen eğitimlerle sektörde fark yaratan pilotlar yetiştiriyoruz",
-      descEn: "Training pilots who make a difference in the industry through aviation-standard programs",
-    },
-  ]
+    const slides = [
+      {
+        image: "/banner1.jpg",
+        titleTr: "Bireyselleştirilmiş Pilot Adayı Eğitimi",
+        titleEn: "Personalized Pilot Training",
+        descTr: "Kaptan pilotlar ve alanında uzman psikologlar eşliğinde pilot adaylarına özel danışmanlık programları.",
+        descEn: "Special counseling programs for pilot candidates, accompanied by captain pilots and expert psychologists in their fields.",
+      },
+      {
+        image: "/banner2.jpg",
+        titleTr: "Mülakat ve CRM Simülasyonları",
+        titleEn: "Interview & CRM Simulations",
+        descTr: "Gerçek mülakat ortamlarını simüle eden programlarla teknik ve davranışsal yetkinlik geliştirme",
+        descEn: "Enhancing technical and behavioral competencies through real interview simulations",
+      },
+  {
+    image: "/banner3.jpg",
+    titleTr: "Profesyonel Danışmanlık",
+    titleEn: "Professional Consultancy",
+    descTr: "Pilot adaylarının seçim süreçlerinde doğru adımlar atabilmeleri için uzman kadromuzla stratejik danışmanlık sağlıyoruz.",
+    descEn: "We provide strategic consultancy to help pilot candidates take the right steps during recruitment processes.",
+  },
+    ]
 
-  // Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -52,12 +51,10 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background video */}
       <div className="absolute inset-0 z-0">
         <video
           className="w-full h-full object-cover"
           autoPlay
-          
           muted
           playsInline
           preload="metadata"
@@ -74,7 +71,6 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-black/20 pointer-events-none" />
       </div>
 
-      {/* Content - solda */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
@@ -115,7 +111,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Dots + small arrows below */}
       <div className="absolute bottom-6 w-full flex justify-center items-center gap-3 z-20">
         <button onClick={prevSlide} className="text-white hover:scale-110 transition">
           <ChevronLeft className="w-6 h-6" />

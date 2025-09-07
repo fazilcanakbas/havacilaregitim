@@ -150,49 +150,66 @@ useEffect(() => {
             const features = language === "tr" ? service.features : service.featuresEn || service.features
 
             return (
-              <div
-                key={service._id}
-                className="bg-gradient-to-br from-background to-accent/5 rounded-2xl border border-border/50 p-8 hover:shadow-xl transition-all duration-300 group"
-              >
-                {/* icon wrapper: navy gradient (lacivert) */}
-                <div
-                  className="w-16 h-16 mb-6 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                  style={{
-                    background: "linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)",
-                  }}
-                >
-                  <IconComponent className="w-8 h-8 text-white" />
-                </div>
+<div
+  key={service._id}
+  className="relative rounded-2xl border border-border/50 overflow-hidden group"
+  style={{
+    backgroundImage: service.images && service.images.length > 0
+      ? `url(${process.env.NEXT_PUBLIC_API_URL}${service.images[0]})`
+      : `url("/default-service.jpg")`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  {/* Overlay */}
+{/* Overlay */}
+<div className="absolute inset-0 bg-[#0b2a4a]/55 group-hover:bg-[#0b2a4a]/70 transition-colors duration-300"></div>
 
-                <h3 className="text-xl font-bold text-foreground mb-4 font-inter">{title}</h3>
-                <p className="text-muted-foreground mb-6 font-dm-sans leading-relaxed">{description}</p>
-                {features && features.length > 0 && (
-                  <ul className="space-y-2 mb-6">
-                    {features.slice(0, 4).map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-sm text-muted-foreground font-dm-sans">
-                        <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                )}
 
-                {/* Button: lacivert background, white text; hover shows subtle white overlay (no color swap) */}
-                <Link
-                  href={`/hizmetlerimiz/${service.slug || service._id}`}
-                  className="inline-flex items-center justify-center w-full px-4 py-3 rounded-xl font-medium transition duration-200"
-                  style={{
-                    backgroundColor: "#0b2a4a",
-                    color: "#ffffff",
-                  }}
-                  // keep hover effect as subtle white overlay using Tailwind utilities where possible
-                >
-                  <span className="flex items-center gap-2">
-                    {language === "tr" ? "Detayları Görüntüle" : "View Details"}
-                    <ArrowRight className="w-4 h-4" />
-                  </span>
-                </Link>
-              </div>
+  <div className="relative p-8 flex flex-col h-full">
+    <div
+      className="w-16 h-16 mb-6 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+      style={{
+        background: "linear-gradient(135deg, #07243e 0%, #0b2a4a 100%)",
+      }}
+    >
+      <IconComponent className="w-8 h-8 text-white" />
+    </div>
+
+    <h3 className="text-xl font-bold text-white mb-4 font-inter drop-shadow">
+      {title}
+    </h3>
+    <p className="text-white/90 mb-6 font-dm-sans leading-relaxed">
+      {description}
+    </p>
+
+    {features && features.length > 0 && (
+      <ul className="space-y-2 mb-6">
+        {features.slice(0, 4).map((feature, featureIndex) => (
+          <li
+            key={featureIndex}
+            className="flex items-center text-sm text-white/90 font-dm-sans"
+          >
+            <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
+            {feature}
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <Link
+      href={`/hizmetlerimiz/${service.slug || service._id}`}
+      className="mt-auto inline-flex items-center justify-center w-full px-4 py-3 rounded-xl font-medium transition duration-200 bg-white/90 text-[#0b2a4a] hover:bg-white"
+    >
+      <span className="flex items-center gap-2">
+        {language === "tr" ? "Detayları Görüntüle" : "View Details"}
+        <ArrowRight className="w-4 h-4" />
+      </span>
+    </Link>
+  </div>
+</div>
+
+
             )
           })}
         </div>
