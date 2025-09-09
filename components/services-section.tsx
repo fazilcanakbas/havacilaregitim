@@ -128,7 +128,7 @@ export function ServicesSection() {
             <span className="text-sm font-medium text-primary">{t("services.badge")}</span>
           </div>
 
-          <h2
+          {/* <h2
             style={{
               fontSize: "2rem",
               lineHeight: 1.1,
@@ -139,7 +139,7 @@ export function ServicesSection() {
             className="font-inter"
           >
             {t("services.title")}
-          </h2>
+          </h2> */}
 
           <p
             style={{ fontSize: 18, color: "#6b7280", maxWidth: 768, marginLeft: "auto", marginRight: "auto" }}

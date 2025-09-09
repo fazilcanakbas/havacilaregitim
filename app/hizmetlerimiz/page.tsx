@@ -446,7 +446,7 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4 font-inter">
-              {language === "tr" ? "Mülakat Teknikleri Eğitimi" : "Interview Techniques Training"}
+              {language === "tr" ? "Hizmetlerimiz" : "Interview Techniques Training"}
             </h2>
             <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto">
               {language === "tr"

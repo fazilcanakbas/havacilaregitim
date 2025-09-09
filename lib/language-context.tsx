@@ -37,7 +37,7 @@ const translations = {
     "quote.author": "Mustafa Kemal ATATÜRK",
 
     // Services
-    "services.badge": "Eğitim Programlarımız",
+    "services.badge": "Hizmetlerimiz",
     "services.title": "Mülakat Teknikleri Eğitimi ",
     "services.subtitle":
       "Uluslararası standartlarda, deneyimli eğitmenler eşliğinde sunduğumuz kapsamlı pilot eğitimi programları ile havacılık kariyerinizi başlatın.",
@@ -89,7 +89,7 @@ const translations = {
     "quote.author": "Mustafa Kemal ATATÜRK",
 
     // Services
-    "services.badge": "Our Training Programs",
+    "services.badge": "Services",
     "services.title": "Professional Aviation Training",
     "services.subtitle":
       "Start your aviation career with our comprehensive pilot training programs offered by experienced instructors at international standards.",
