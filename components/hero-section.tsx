@@ -90,24 +90,23 @@ export function HeroSection() {
               </p>
             </div>
 
-           <div className="flex flex-col sm:flex-row gap-4 mt-50 sm:mt-0">
-  <Link href="/hizmetlerimiz">
-    <Button
-      size="lg"
-      className="group"
-      style={{
-        backgroundColor: BRAND_ACCENT,
-        color: "#fff",
-        border: "none",
-        boxShadow: "0 6px 18px rgba(23,143,131,0.18)",
-      }}
-    >
-      {t("hero.cta.start")}
-      <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-    </Button>
-  </Link>
-</div>
-
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/hizmetlerimiz">
+                <Button
+                  size="lg"
+                  className="group"
+                  style={{
+                    backgroundColor: BRAND_ACCENT,
+                    color: "#fff",
+                    border: "none",
+                    boxShadow: "0 6px 18px rgba(23,143,131,0.18)",
+                  }}
+                >
+                  {t("hero.cta.start")}
+                  <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
