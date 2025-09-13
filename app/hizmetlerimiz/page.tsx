@@ -450,8 +450,8 @@ export default function ServicesPage() {
             </h2>
             <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto">
               {language === "tr"
-                ? "Havacılık sektöründe başarılı olmak için gerekli mülakat tekniklerini öğrenin ve kendinizi en iyi şekilde ifade etmeyi keşfedin."
-                : "Learn the interview techniques necessary to succeed in the aviation industry and discover how to express yourself in the best way."}
+                ? "Uluslararası standartlarda, deneyimli eğitmenler eşliğinde sunduğumuz kapsamlı pilot eğitimi programları ile havacılık kariyerinizi başlatın."
+                : "Start your aviation career with our comprehensive pilot training programs offered under international standards and guided by experienced instructors."}
             </p>
           </div>
         </div>

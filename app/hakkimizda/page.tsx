@@ -56,8 +56,8 @@ function AboutHero() {
             style={{ color:'#f5f5f5', marginTop:40 }}
           >
             {language === "tr"
-              ? "Havacılık tutkusu ile başlayan yolculuğumuz, bugün binlerce pilotun hayallerini gerçekleştirmesine vesile oldu."
-              : "Our journey that started with aviation passion has helped thousands of pilots realize their dreams today."}
+              ? "Havacılık tutkusu ile başlayan yolculuğumuz, yarının pilotlarına yol gösteriyor."
+              : "Our journey that started with aviation passion is guiding the pilots of tomorrow."}
           </motion.p>
         </div>
       </div>
@@ -93,14 +93,12 @@ function AboutCompany() {
           >
             {language === "tr" ? (
               <div className="space-y-6">
+               
                 <p>
-                  Havacılık tutkusu ile başlayan yolculuğumuz, yarının pilotlarına yol gösteriyor.
+                 Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel danışmanlık ve uçuş simülasyon deneyimi sunan bir kuruluştur. Kadet pilot alım süreçlerine ve havayolu işe alım süreçlerine hazırlanan pilot adaylarına, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sunmaktadır.
                 </p>
                 <p>
-                 Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel danışmanlık ve uçuş simülasyon deneyimi sunan bir kuruluştur.  Kadet pilot alım süreçlerine hazırlanan adaylara, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sunmaktadır.
-                </p>
-                <p>
-                 Bu süreçte, gerçek mülakat ortamlarını birebir simüle eden bireysel programlar ve uçuş simülasyon deneyimi ile birlikte, pilot adaylarının hem teknik hem de davranışsal yeterliliklerini en üst seviyeye çıkarıyoruz.
+                 Havacılar Eğitim A.Ş. is an organization that offers professional consulting and flight simulation experience to aspiring pilots pursuing careers in the aviation industry. It offers individualized consulting services, led by captain pilots and expert psychologists, to pilot candidates preparing for the Cadet Pilot and Airlines recruitment processes.
                 </p>
                   <p>
                    Danışmanlık süreci sonunda, her adayın zayıf ve güçlü yönlerini belirleyerek, havayolu şirketlerinin işe alım sürecindeki beklentilerine uygun donanımları kazandırıyoruz.
@@ -153,16 +151,16 @@ function OurValues() {
       title: language === "tr" ? "Vizyonumuz" : "Our Vision",
       description:
         language === "tr"
-          ? "Havacılık kariyerine adım atmak isteyen pilot adaylarına danışmanlık hizmetinde kalite, güven ve profesyonelliğin öncüsü olarak; yalnızca adayların potansiyelini en üst seviyeye çıkarmalarına destek olmakla kalmıyor, aynı zamanda sektöre yön veren, gökyüzünde fark yaratan profesyoneller olarak konumlanmalarına rehberlik ediyoruz. Bizim vizyonumuz, tercih edilen değil; yol gösterici olarak tercih eden bir danışmanlık kurumu olmaktır. Türkiye’de ve uluslararası alanda pilot adaylarına yönelik danışmanlıkta standart belirleyen, çizgisi takip edilen öncü bir kurum olmak."
-          : "As a pioneer of quality, trust, and professionalism in consulting services for aspiring pilots looking to embark on their aviation careers, we not only support candidates in maximizing their potential but also guide them toward becoming professionals who shape the industry and make a difference in the skies. Our vision is to be a consulting firm that is not chosen, but rather a guide. We are a leading institution that sets the standard for aspiring pilots in Turkey and internationally, and whose approach is followed.",
+          ? "Havacılık kariyerine adım atmak isteyen pilot adaylarına danışmanlık hizmetinde kalite, güven ve profesyonelliğin öncüsü olarak; yalnızca adayların potansiyelini en üst seviyeye çıkarmalarına destek olmakla kalmıyor, aynı zamanda sektöre yön veren, gökyüzünde fark yaratan profesyoneller olarak konumlanmalarına rehberlik ediyoruz. Bizim vizyonumuz, tercih edilen değil; yol gösterici olarak tercih eden bir danışmanlık kurumu olmanın yanında uluslararası alanda pilot adaylarına yönelik danışmanlıkta standart belirleyen, çizgisi takip edilen öncü bir kurum olmaktır."
+          : "As a pioneer of quality, trust, and professionalism in service to aspiring pilots seeking to embark on their aviation careers, we not only support candidates in maximizing their potential but also guide them toward becoming professionals who shape the industry and make a difference in the skies. Our vision is not to be chosen; rather, to be a training institution that guides, setting the standard for international pilot candidate mentoring, and to be a leading institution.",
     },
     {
       icon: Award,
       title: language === "tr" ? "Değerlerimiz" : "Our Values",
       description:
         language === "tr"
-          ? "Güvenlik, kalite, sürekli gelişim ve öğrenci odaklı yaklaşım temel değerlerimizdir. Havacılığın disiplinini ve profesyonelliğini esas alarak, her adayın bireysel ihtiyaçlarına odaklanıyoruz."
-          : "Safety, quality, continuous improvement and student-focused approach are our core values. Based on the discipline and professionalism of aviation, we focus on the individual needs of each candidate.",
+          ? "Havacılık disiplini, kalite, sürekli gelişim ve kişi odaklı yaklaşım temel değerlerimizdir. Havacılığın disiplinini ve profesyonelliğini esas alarak, her adayın bireysel ihtiyaçlarına odaklanıyoruz."
+          : "Aviation discipline, quality, continuous improvement, and a person-centered approach are our core values. Building on aviation discipline and professionalism, we focus on each candidate's individual needs.",
     },
     {
       icon: Users,
@@ -187,11 +185,11 @@ function OurValues() {
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4 font-inter">
             {language === "tr" ? "Misyon, Vizyon ve Değerlerimiz" : "Our Mission, Vision and Values"}
           </h2>
-          <p className="text-lg text-muted-foreground font-dm-sans max-w-2xl mx-auto">
+          {/* <p className="text-lg text-muted-foreground font-dm-sans max-w-2xl mx-auto">
             {language === "tr"
               ? "Başarımızın temelinde yatan değerler ve ilkelerimiz"
               : "The values and principles that form the foundation of our success"}
-          </p>
+          </p> */}
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8">

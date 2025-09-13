@@ -20,57 +20,66 @@ export function ContactHero() {
   }, [])
 
   return (
-    <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] mt-0 lg:mt-18 pt-8 lg:pt-12 pb-12 overflow-hidden"
+      style={{
+        backgroundImage: "url('/egitimbanner.jpg')",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center bottom',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to top, rgba(12,25,45,0.65) 0%, rgba(12,25,45,0.35) 40%, rgba(12,25,45,0.15) 100%)'
+        }}
+      />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
           <div
-            className="inline-flex items-center px-4 py-2 rounded-full mb-6 transition-colors"
-            style={{ backgroundColor: NAVY_BG, border: `1px solid ${NAVY_BORDER}` }}
+            className="inline-flex items-center px-5 py-2.5 rounded-full mb-8 backdrop-blur-sm transition-colors border border-white/25 bg-white/10"
           >
-            <Mail className="w-4 h-4 mr-2" style={{ color: NAVY }} />
-            <span className="text-sm font-medium" style={{ color: NAVY }}>
+            <Mail className="w-4 h-4 mr-2 text-white" />
+            <span className="text-sm font-medium text-white tracking-wide">
               {t("contact.badge")}
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground font-inter mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-inter mb-6 drop-shadow-md text-white">
             {t("contact.title")}
           </h1>
 
-          <p className="text-lg text-muted-foreground font-dm-sans mb-12 max-w-2xl mx-auto">
+          <p className="text-lg lg:text-xl font-dm-sans mb-14 max-w-2xl mx-auto text-white/90 leading-relaxed">
             {t("contact.subtitle")}
           </p>
 
           {contact && (
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center group">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
-                >
-                  <Phone className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-all bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/20 group-hover:shadow-lg">
+                  <Phone className="w-8 h-8 text-white group-hover:scale-105 transition-transform" />
                 </div>
-                <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.phone")}</h3>
-                <p className="text-muted-foreground font-dm-sans">{contact.phone}</p>
+                <h3 className="font-semibold font-inter mb-2 text-white/90 group-hover:text-white transition-colors">{t("contact.phone")}</h3>
+                <p className="font-dm-sans text-white/70 group-hover:text-white/85 transition-colors">{contact.phone}</p>
               </div>
 
               <div className="text-center group">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
-                >
-                  <Mail className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-all bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/20 group-hover:shadow-lg">
+                  <Mail className="w-8 h-8 text-white group-hover:scale-105 transition-transform" />
                 </div>
-                <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.email")}</h3>
-                <p className="text-muted-foreground font-dm-sans">{contact.email}</p>
+                <h3 className="font-semibold font-inter mb-2 text-white/90 group-hover:text-white transition-colors">{t("contact.email")}</h3>
+                <p className="font-dm-sans text-white/70 group-hover:text-white/85 transition-colors">{contact.email}</p>
               </div>
 
               <div className="text-center group">
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors bg-[rgba(11,42,74,0.08)] group-hover:bg-[#0b2a4a]"
-                >
-                  <MapPin className="w-8 h-8 text-[#0b2a4a] group-hover:text-white transition-colors" />
+                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-all bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/20 group-hover:shadow-lg">
+                  <MapPin className="w-8 h-8 text-white group-hover:scale-105 transition-transform" />
                 </div>
-                <h3 className="font-semibold text-foreground font-inter mb-2">{t("contact.address")}</h3>
-                <p className="text-muted-foreground font-dm-sans">{contact.address}</p>
+                <h3 className="font-semibold font-inter mb-2 text-white/90 group-hover:text-white transition-colors">{t("contact.address")}</h3>
+                <p className="font-dm-sans text-white/70 group-hover:text-white/85 transition-colors">{contact.address}</p>
               </div>
             </div>
           )}

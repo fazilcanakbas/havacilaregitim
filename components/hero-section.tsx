@@ -42,7 +42,7 @@ export function HeroSection() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 5000)
+    }, 8000) // geçiş süresi uzatıldı
     return () => clearInterval(timer)
   }, [slides.length])
 
@@ -76,22 +76,22 @@ export function HeroSection() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg"
-                style={{ color: "#ffffff" }}
+                key={currentSlide + '-title'}
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg text-white transition-opacity duration-700"
               >
                 {language === "tr" ? slides[currentSlide].titleTr : slides[currentSlide].titleEn}
               </h1>
 
               <p
-                className="text-lg sm:text-xl max-w-2xl drop-shadow-md"
-                style={{ color: "rgba(255,255,255,0.9)" }}
+                key={currentSlide + '-desc'}
+                className="text-lg sm:text-xl max-w-2xl drop-shadow-md text-white/90 transition-opacity duration-700"
               >
                 {language === "tr" ? slides[currentSlide].descTr : slides[currentSlide].descEn}
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/hizmetlerimiz">
+              <Link href="/hizmetlerimiz" className="hidden sm:block">
                 <Button
                   size="lg"
                   className="group"

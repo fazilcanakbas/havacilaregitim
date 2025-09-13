@@ -185,7 +185,7 @@ export default function BlogPage() {
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center px-4 py-2 rounded-full  border border-primary/20 mb-6"
+            {/* <div className="inline-flex items-center px-4 py-2 rounded-full  border border-primary/20 mb-6"
             style={{
               backgroundColor: "rgba(24, 29, 43, 1)"
             }}
@@ -198,7 +198,7 @@ export default function BlogPage() {
               <span  style={{
                 color: "rgba(255, 255, 255, 1)"
               }} className="text-sm font-medium text-primary">Havacılık Eğitim Blog</span>
-            </div>
+            </div> */}
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground font-inter mb-6"
             style={{

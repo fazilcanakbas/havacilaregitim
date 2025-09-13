@@ -57,7 +57,7 @@ const translations = {
     "footer.company": "HAVACILAR EĞİTİM",
     "footer.tagline": "Aviation Education",
     "footer.description":
-      "Uzman ekip tarafından verilen bireysel danışmanlık ve gerçekçi mülakat simülasyonlarıyla pilot adaylarını profesyonellere dönüştürüyoruz.",
+      "Kaptan pilotlar ve alanında uzman psikologlar tarafından verilen bireysel danışmanlık ve gerçekçi mülakat simülasyonlarıyla pilot adaylarının işe alım süreci hazırlıklarına katkıda bulunuyoruz.",
     "footer.quickLinks": "Hızlı Bağlantılar",
     "footer.programs": "Eğitim Programları",
     "footer.contact": "İletişim",
@@ -109,7 +109,7 @@ const translations = {
     "footer.company": "AVIATION EDUCATION",
     "footer.tagline": "Havacılık Eğitimi",
     "footer.description":
-      "As Turkey's leading aviation education institution, we offer pilot training programs at international standards.",
+      "We contribute to the preparation of pilot candidates for the recruitment process with individual counseling and realistic interview simulations provided by captain pilots and expert psychologists in the field.",
     "footer.quickLinks": "Quick Links",
     "footer.programs": "Training Programs",
     "footer.contact": "Contact",

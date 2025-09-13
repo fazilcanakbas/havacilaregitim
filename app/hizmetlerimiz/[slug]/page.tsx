@@ -130,9 +130,10 @@ export default function ServiceDetailPage() {
   const fullDescription =
     language === 'tr' ? svc.details ?? svc.detailsEn ?? '' : svc.detailsEn ?? svc.details ?? ''
   const benefits = (language === 'tr' ? svc.benefits : svc.benefitsEn) ?? svc.benefits ?? []
-  const process = (language === 'tr' ? svc.processSteps : svc.processStepsEn) ?? svc.processSteps ?? []
+  const processSteps = (language === 'tr' ? svc.processSteps : svc.processStepsEn) ?? svc.processSteps ?? []
   const duration = language === 'tr' ? svc.duration ?? svc.durationEn ?? '' : svc.durationEn ?? svc.duration ?? ''
   const format = language === 'tr' ? svc.format ?? svc.formatEn ?? '' : svc.formatEn ?? svc.format ?? ''
+  const images = svc.images ?? []
 
   const Icon = ICON_MAP[svc.slug ?? slug] || BookOpen
 
@@ -192,7 +193,7 @@ export default function ServiceDetailPage() {
                     {language === 'tr' ? 'Süreç' : 'Process'}
                   </h3>
                   <div className="space-y-4">
-                    {process.map((step, index) => (
+                    {processSteps.map((step, index) => (
                       <div key={index} className="flex items-start">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0"

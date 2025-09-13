@@ -258,12 +258,12 @@ export function Navigation() {
               <SheetContent side="right" className="w-64">
                 <div className="flex flex-col items-center space-y-6 mt-6 text-center">
                   <Link href="/">
-                  <div className="relative w-48 h-16">
+                  <div className="relative w-65 h-18">
                     <Image
                       src="/havacilaregitimtextlaci.png"
                       alt="HAVACILAR EĞİTİM A.Ş."
                       fill
-                      className="object-contain"
+                      className="width-78 height-48"
                     />
                   </div>
                   </Link> 
