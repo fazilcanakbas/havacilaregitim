@@ -75,10 +75,10 @@ function AboutCompany() {
         <img
           src="/bröve.png"
           alt="Pilot wings watermark"
-      className="select-none object-contain w-[900px] max-w-none opacity-[0.15] md:opacity-[0.18] mix-blend-screen saturate-125 contrast-110"
+          className="select-none object-contain w-full md:w-[900px] max-w-none opacity-[0.15] md:opacity-[0.18] mix-blend-screen saturate-125 contrast-110"
           loading="lazy"
           draggable={false}
-      style={{ filter: 'brightness(1.18)' }}
+          style={{ filter: 'brightness(1.18)' }}
         />
       </div>
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
