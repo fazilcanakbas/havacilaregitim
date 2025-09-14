@@ -133,18 +133,28 @@ export default function ServiceDetailPage() {
   const processSteps = (language === 'tr' ? svc.processSteps : svc.processStepsEn) ?? svc.processSteps ?? []
   const duration = language === 'tr' ? svc.duration ?? svc.durationEn ?? '' : svc.durationEn ?? svc.duration ?? ''
   const format = language === 'tr' ? svc.format ?? svc.formatEn ?? '' : svc.formatEn ?? svc.format ?? ''
-  const images = svc.images ?? []
+  // Sabit hero arka planı için slug görselleri kullanılmıyor
 
-  const Icon = ICON_MAP[svc.slug ?? slug] || BookOpen
+  const iconKey = (svc.slug || slug || '') as string
+  const Icon = ICON_MAP[iconKey] || BookOpen
 
   return (
     <div className="min-h-screen pt-20 lg:pt-32">
-      <section className="relative py-20 bg-gradient-to-br from-primary/5 to-accent/5">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        className="relative pt-20 lg:pt-32 pb-20"
+        style={{
+          backgroundImage: "url('/servicebanner.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-black/30" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto">
             <Link
               href="/hizmetlerimiz"
-              className="inline-flex items-center text-primary hover:text-primary/80 transition-colors mb-8"
+              className="inline-flex items-center text-white hover:text-white/80 transition-colors mb-8"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               {language === 'tr' ? 'Hizmetlere Dön' : 'Back to Services'}
@@ -158,8 +168,8 @@ export default function ServiceDetailPage() {
                 <Icon className="w-10 h-10 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-2 font-inter">{title}</h1>
-                <p className="text-xl text-muted-foreground font-dm-sans">{shortDescription}</p>
+                <h1 className="text-4xl lg:text-5xl font-bold mb-2 font-inter text-white drop-shadow-md">{title}</h1>
+                <p className="text-xl font-dm-sans text-white/85 drop-shadow">{shortDescription}</p>
               </div>
             </div>
           </div>

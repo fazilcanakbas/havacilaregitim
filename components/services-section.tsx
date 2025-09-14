@@ -123,9 +123,22 @@ export function ServicesSection() {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-            <BookOpen className="w-4 h-4 text-primary mr-2" />
-            <span className="text-sm font-medium text-primary">{t("services.badge")}</span>
+          <div
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full mb-8 shadow-lg shadow-[#0b2a4a]/20"
+            style={{
+              background: 'linear-gradient(135deg, #07243e 0%, #0b2a4a 70%, #11406d 100%)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          >
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(255,255,255,0.12)' }}
+            >
+              <BookOpen className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-base sm:text-lg font-semibold font-inter tracking-wide text-white">
+              {t('services.badge')}
+            </span>
           </div>
 
           {/* <h2
