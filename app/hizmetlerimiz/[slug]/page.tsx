@@ -15,6 +15,7 @@ import {
   Mail,
 } from 'lucide-react'
 import { Footer } from '@/components/footer'
+import { ApplicationModal } from '@/components/application-modal'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { getService, ServiceItem } from '@/lib/api/serviceService'
@@ -143,7 +144,7 @@ export default function ServiceDetailPage() {
       <section
         className="relative pt-20 lg:pt-32 pb-20"
         style={{
-          backgroundImage: "url('/servicebanner.jpg')",
+          backgroundImage: "url('/hizmetbg.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
@@ -256,12 +257,15 @@ export default function ServiceDetailPage() {
                       <span className="text-sm">{contact?.email || 'info@example.com'}</span>
                     </div>
 
-                    <button
-                      className="w-full rounded-xl py-3 px-4 font-medium transition-transform duration-150"
-                      style={{ backgroundColor: '#0b2a4a', color: '#ffffff' }}
-                    >
-                      {language === 'tr' ? 'Randevu Al' : 'Book Appointment'}
-                    </button>
+                    <div className="space-y-3">
+                      <button
+                        className="w-full h-[52px] rounded-xl px-4 font-medium transition-transform duration-150 flex items-center justify-center"
+                        style={{ backgroundColor: '#0b2a4a', color: '#ffffff' }}
+                      >
+                        {language === 'tr' ? 'Randevu Al' : 'Book Appointment'}
+                      </button>
+                      <ApplicationModal serviceSlug={svc.slug} triggerClassName="w-full h-[52px] rounded-xl px-4 font-medium flex items-center justify-center" />
+                    </div>
                   </div>
                 </div>
               </div>

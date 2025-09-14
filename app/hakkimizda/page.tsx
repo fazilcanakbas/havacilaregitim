@@ -69,62 +69,53 @@ function AboutCompany() {
   const { language } = useLanguage()
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+  <section className="relative pt-18 pb-24 mt-20 overflow-hidden" style={{ background: 'linear-gradient(135deg,#061a2c 0%,#0b2a4a 55%,#123d6b 100%)' }}>
+      {/* Pilot wings watermark image */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+        <img
+          src="/bröve.png"
+          alt="Pilot wings watermark"
+      className="select-none object-contain w-[900px] max-w-none opacity-[0.15] md:opacity-[0.18] mix-blend-screen saturate-125 contrast-110"
+          loading="lazy"
+          draggable={false}
+      style={{ filter: 'brightness(1.18)' }}
+        />
+      </div>
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             viewport={{ once: true, amount: 0.3 }}
-            className="text-center mb-12"
+            className="text-center mb-14"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6 font-inter">
-              {language === "tr" ? "Biz Kimiz?" : "Aviation Education Inc."}
+            <h2 className="text-3xl lg:text-5xl font-bold font-inter tracking-tight mb-6 bg-clip-text text-transparent"
+              style={{ backgroundImage: 'linear-gradient(90deg,#f0f4f8 0%,#ffffff 40%,#dbe5ef 100%)' }}>
+              {language === 'tr' ? 'Biz Kimiz?' : 'Aviation Education Inc.'}
             </h2>
+            <div className="mx-auto h-1 w-24 rounded-full" style={{ background: 'linear-gradient(90deg,#ffffff 0%,#6fa6d6 100%)', opacity:0.5 }} />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true, amount: 0.5 }}
-            className="prose prose-lg max-w-none text-muted-foreground font-dm-sans leading-relaxed"
+            transition={{ duration: 0.8, delay: 0.25 }}
+            viewport={{ once: true, amount: 0.4 }}
+            className="relative prose prose-lg max-w-none font-dm-sans leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.78)' }}
           >
-            {language === "tr" ? (
+            {language === 'tr' ? (
               <div className="space-y-6">
-               
-                <p>
-                 Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel danışmanlık ve uçuş simülasyon deneyimi sunan bir kuruluştur. Kadet pilot alım süreçlerine ve havayolu işe alım süreçlerine hazırlanan pilot adaylarına, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sunmaktadır.
-                </p>
-                <p>
-                 Havacılar Eğitim A.Ş. is an organization that offers professional consulting and flight simulation experience to aspiring pilots pursuing careers in the aviation industry. It offers individualized consulting services, led by captain pilots and expert psychologists, to pilot candidates preparing for the Cadet Pilot and Airlines recruitment processes.
-                </p>
-                  <p>
-                   Danışmanlık süreci sonunda, her adayın zayıf ve güçlü yönlerini belirleyerek, havayolu şirketlerinin işe alım sürecindeki beklentilerine uygun donanımları kazandırıyoruz.
-                </p>
-                        <p>
-                  Havacılar Eğitim A.Ş. olarak, havacılığın disiplini ve profesyonelliğini esas alarak; gökyüzüne sağlam adımlarla ilerlemek isteyen her adayın yanında yer alıyoruz.
-                </p>
+                <p className="text-white/80">Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel danışmanlık ve uçuş simülasyon deneyimi sunan bir kuruluştur. Kadet pilot alım süreçlerine ve havayolu işe alım süreçlerine hazırlanan pilot adaylarına, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sunmaktadır.</p>
+                <p className="text-white/70">Danışmanlık süreci sonunda, her adayın zayıf ve güçlü yönlerini belirleyerek, havayolu şirketlerinin işe alım sürecindeki beklentilerine uygun donanımları kazandırıyoruz.</p>
+                <p className="text-white/70">Havacılar Eğitim A.Ş. olarak, havacılığın disiplini ve profesyonelliğini esas alarak; gökyüzüne sağlam adımlarla ilerlemek isteyen her adayın yanında yer alıyoruz.</p>
               </div>
-            ) : ( 
+            ) : (
               <div className="space-y-6">
-                <p>
-                  Aviation Education Inc. is an organization that provides professional consultancy and training
-                  services for pilot candidates aiming for a career in the aviation sector. We offer a comprehensive and
-                  personalized training process to candidates preparing for cadet pilot recruitment processes,
-                  accompanied by expert captain pilots, psychologists and interview technique trainers.
-                </p>
-                <p>
-                  Through our programs that simulate real interview environments one-to-one, candidates are enabled to
-                  develop both their technical and behavioral competencies. Our training process focuses on highlighting
-                  each candidate's strengths and training equipped individuals suitable for airline companies'
-                  expectations.
-                </p>
-                <p>
-                  As Aviation Education Inc., we base ourselves on the discipline and professionalism of aviation; we
-                  stand by every candidate who wants to progress to the skies with solid steps.
-                </p>
+                <p className="text-white/80">Aviation Education Inc. is an organization that provides professional consultancy and training services for pilot candidates aiming for a career in the aviation sector. We offer a comprehensive and personalized training process to candidates preparing for cadet pilot recruitment processes, accompanied by expert captain pilots, psychologists and interview technique trainers.</p>
+                <p className="text-white/70">Through our programs that simulate real interview environments one-to-one, candidates develop both their technical and behavioral competencies. Our training process focuses on highlighting each candidate's strengths and shaping professionals aligned with airline expectations.</p>
+                <p className="text-white/70">As Aviation Education Inc., we base ourselves on the discipline and professionalism of aviation; we stand by every candidate who wants to progress to the skies with solid steps.</p>
               </div>
             )}
           </motion.div>
