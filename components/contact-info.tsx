@@ -68,11 +68,11 @@ export function ContactInfo() {
           {contactMethods.map((method, index) => (
             <div
               key={index}
-              className="flex items-start space-x-4 p-4 rounded-lg hover:shadow-sm transition-all"
+              className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4 p-4 rounded-lg hover:shadow-sm transition-all"
               style={{ borderRadius: 12 }}
             >
               <div
-                className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 self-start"
                 style={{ backgroundColor: NAVY_BG }}
               >
                 <method.icon className="w-6 h-6" style={{ color: NAVY }} />
@@ -81,14 +81,14 @@ export function ContactInfo() {
               <div className="flex-1 min-w-0">
                 <h4 className="font-semibold text-foreground font-inter mb-1">{method.title}</h4>
                 <p className="text-sm text-muted-foreground font-dm-sans mb-2">{method.description}</p>
-                <p className="text-foreground font-dm-sans whitespace-pre-line">{method.value}</p>
+                <p className="text-foreground font-dm-sans whitespace-pre-line break-words">{method.value}</p>
               </div>
 
               <Button
                 asChild
                 variant="outline"
                 size="sm"
-                className="bg-transparent border-[#0b2a4a] text-[#0b2a4a] hover:bg-[#0b2a4a] hover:text-white"
+                className="bg-transparent border-[#0b2a4a] text-[#0b2a4a] hover:bg-[#0b2a4a] hover:text-white self-start sm:self-auto w-full sm:w-auto"
               >
                 <a href={method.href} target="_blank" rel="noopener noreferrer">
                   {method.action}
