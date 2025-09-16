@@ -38,7 +38,7 @@ export function AtaturkQuote() {
                   alt="Mustafa Kemal Atatürk İmzası"
                   width={180}
                   height={60}
-                  className="opacity-90"
+                  className="opacity-90 brightness-0 invert"
                 />
                 <div className="w-16 h-0.5 bg-white/70"></div>
               </div>

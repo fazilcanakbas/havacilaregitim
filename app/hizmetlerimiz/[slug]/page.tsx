@@ -258,13 +258,27 @@ export default function ServiceDetailPage() {
                     </div>
 
                     <div className="space-y-3">
-                      <button
-                        className="w-full h-[52px] rounded-xl px-4 font-medium transition-transform duration-150 flex items-center justify-center"
-                        style={{ backgroundColor: '#0b2a4a', color: '#ffffff' }}
-                      >
-                        {language === 'tr' ? 'Randevu Al' : 'Book Appointment'}
-                      </button>
-                      <ApplicationModal serviceSlug={svc.slug} triggerClassName="w-full h-[52px] rounded-xl px-4 font-medium flex items-center justify-center" />
+                      {slug === 'ucus-simulasyonu' ? (
+                        <>
+                          <button
+                            className="w-full h-[52px] rounded-xl px-4 font-medium transition-transform duration-150 flex items-center justify-center"
+                            style={{ backgroundColor: '#0b2a4a', color: '#ffffff' }}
+                          >
+                            {language === 'tr' ? 'Randevu Al' : 'Book Appointment'}
+                          </button>
+                          <ApplicationModal 
+                            serviceSlug={svc.slug} 
+                            triggerClassName="w-full h-[52px] rounded-xl px-4 font-medium flex items-center justify-center"
+                            label={language === 'tr' ? 'Bize Ulaş' : 'Contact Us'}
+                          />
+                        </>
+                      ) : (
+                        <ApplicationModal 
+                          serviceSlug={svc.slug} 
+                          triggerClassName="w-full h-[52px] rounded-xl px-4 font-medium flex items-center justify-center"
+                          label={language === 'tr' ? 'Bize Ulaş' : 'Contact Us'}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
