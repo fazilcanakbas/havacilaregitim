@@ -205,10 +205,12 @@ export default function BlogPage() {
                 color: "rgba(255, 255, 255, 1)"
               }}
             >
-              Havacılık Dünyasından
+              {language === "tr" ? "Havacılık Dünyasından" : "From the Aviation World"}
               <span style={{
                 color: "rgba(255, 255, 255, 1)"
-              }} className="text-primary block">Güncel İçerikler</span>
+              }} className="text-primary block">
+                {language === "tr" ? "Güncel İçerikler" : "Latest Content"}
+              </span>
             </h1>
 
             <p style={{
@@ -217,8 +219,10 @@ export default function BlogPage() {
               }} className="text-lg text-muted-foreground font-dm-sans mb-8 max-w-2xl mx-auto" 
               
               >
-              Pilot eğitimi, havacılık teknolojileri, sektör haberleri ve kariyer rehberleri ile havacılık dünyasını
-              keşfedin.
+              {language === "tr" 
+                ? "Pilot eğitimi, havacılık teknolojileri, sektör haberleri ve kariyer rehberleri ile havacılık dünyasını keşfedin."
+                : "Explore the aviation world with pilot training, aviation technologies, industry news and career guides."
+              }
             </p>
           </div>
         </div>

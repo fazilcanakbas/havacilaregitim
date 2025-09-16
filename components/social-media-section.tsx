@@ -4,29 +4,37 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Instagram, Linkedin, ExternalLink, Youtube } from "lucide-react"
 import Link from "next/link"
+import { useLanguage } from "@/lib/language-context"
 
 export function SocialMediaSection() {
+  const { language } = useLanguage()
   const socialPosts = [
     {
       platform: "instagram",
-      content: "Yeni mezunlarımızla gurur duyuyoruz! ✈️ #HavacılıkEğitimi #PilotMezuniyet",
+      contentTr: "Yeni mezunlarımızla gurur duyuyoruz! ✈️ #HavacılıkEğitimi #PilotMezuniyet",
+      contentEn: "We are proud of our new graduates! ✈️ #AviationTraining #PilotGraduation",
       image: "https://karatay.aero/images/icerik/20201214110417-cpl-jpg.jpg",
       likes: 245,
-      date: "2 gün önce",
+      dateTr: "2 gün önce",
+      dateEn: "2 days ago",
     },
     {
       platform: "instagram",
-      content: "Boeing 737 simülatöründe eğitim anları 🎯 #Simülatör #PilotEğitimi",
+      contentTr: "Boeing 737 simülatöründe eğitim anları 🎯 #Simülatör #PilotEğitimi",
+      contentEn: "Training moments in Boeing 737 simulator 🎯 #Simulator #PilotTraining",
       image: "/instagram.png",
       likes: 189,
-      date: "4 gün önce",
+      dateTr: "4 gün önce",
+      dateEn: "4 days ago",
     },
     {
       platform: "instagram",
-      content: "Havacılık sektöründe kariyer fırsatları ve eğitim programlarımız hakkında detaylı bilgi...",
+      contentTr: "Havacılık sektöründe kariyer fırsatları ve eğitim programlarımız hakkında detaylı bilgi...",
+      contentEn: "Detailed information about career opportunities and our training programs in the aviation sector...",
       image: "https://northfly.aero/wp-content/uploads/2024/01/Bir-Pilot-Lisansi-Neden-Iptal-Edilir.jpg",
       likes: 67,
-      date: "1 hafta önce",
+      dateTr: "1 hafta önce",
+      dateEn: "1 week ago",
     },
   ]
 
@@ -41,11 +49,14 @@ export function SocialMediaSection() {
 
         <div className="text-center mb-10 sm:mb-16 flex flex-col items-center gap-5">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-6">
-            Sosyal Medyada Biz
+            {language === "tr" ? "Sosyal Medyada Biz" : "Follow Us on Social Media"}
           </h2>
 
           <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto mb-6">
-            Günlük eğitim aktivitelerimizi, mezun başarı hikayelerini ve havacılık dünyasından gelişmeleri sosyal medya hesaplarımızdan takip edebilirsiniz.
+            {language === "tr" 
+              ? "Günlük eğitim aktivitelerimizi, mezun başarı hikayelerini ve havacılık dünyasından gelişmeleri sosyal medya hesaplarımızdan takip edebilirsiniz."
+              : "Follow our daily training activities, graduate success stories, and developments from the aviation world on our social media accounts."
+            }
           </p>
 
           {/* Responsive buttons: stack on small screens, inline on sm+ */}
@@ -54,13 +65,13 @@ export function SocialMediaSection() {
               <Button
                 size="lg"
                 className="group w-full sm:w-auto flex items-center justify-center"
-                aria-label="Instagram'da Takip Et"
+                aria-label={language === "tr" ? "Instagram'da Takip Et" : "Follow on Instagram"}
                 style={{
                   backgroundColor: "#1b1b56ff",
                 }}
               >
                 <Instagram className="w-5 h-5 mr-2" />
-                <span>Instagram'da Takip Et</span>
+                <span>{language === "tr" ? "Instagram'da Takip Et" : "Follow on Instagram"}</span>
                 <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -68,7 +79,7 @@ export function SocialMediaSection() {
               <Button
                 size="lg"
                 variant="outline"
-                aria-label="LinkedIn'de Bağlan"
+                aria-label={language === "tr" ? "LinkedIn'de Bağlan" : "Connect on LinkedIn"}
                 className={
                   "group w-full sm:w-auto flex items-center justify-center bg-transparent " +
                   "text-[#0b2a4a] border-[#0b2a4a] " +
@@ -77,7 +88,7 @@ export function SocialMediaSection() {
                 }
               >
                 <Linkedin className="w-5 h-5 mr-2" />
-                <span>LinkedIn'de Bağlan</span>
+                <span>{language === "tr" ? "LinkedIn'de Bağlan" : "Connect on LinkedIn"}</span>
                 <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -85,7 +96,7 @@ export function SocialMediaSection() {
               <Button
                 size="lg"
                 variant="outline"
-                aria-label="YouTube'da İzle"
+                aria-label={language === "tr" ? "YouTube'da İzle" : "Watch on YouTube"}
                 className={
                   "group w-full sm:w-auto flex items-center justify-center bg-transparent " +
                   "text-[#ff0000] border-[#ff0000] " +
@@ -94,7 +105,7 @@ export function SocialMediaSection() {
                 }
               >
                 <Youtube className="w-5 h-5 mr-2" />
-                <span>YouTube'da İzle</span>
+                <span>{language === "tr" ? "YouTube'da İzle" : "Watch on YouTube"}</span>
                 <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -127,13 +138,15 @@ export function SocialMediaSection() {
               </div>
 
               <CardHeader className="pb-3">
-                <CardTitle className="text-base font-semibold font-dm-sans line-clamp-3">{post.content}</CardTitle>
+                <CardTitle className="text-base font-semibold font-dm-sans line-clamp-3">
+                  {language === "tr" ? post.contentTr : post.contentEn}
+                </CardTitle>
               </CardHeader>
 
               <CardContent className="pt-0">
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <span>{post.likes} beğeni</span>
-                  <span>{post.date}</span>
+                  <span>{post.likes} {language === "tr" ? "beğeni" : "likes"}</span>
+                  <span>{language === "tr" ? post.dateTr : post.dateEn}</span>
                 </div>
               </CardContent>
             </Card>
