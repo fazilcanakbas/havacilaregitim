@@ -75,7 +75,7 @@ export function SocialMediaSection() {
                 <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link href="https://www.linkedin.com/company/havacilikegitim/" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.linkedin.com/company/havacilar/" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
                 variant="outline"
