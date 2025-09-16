@@ -9,18 +9,19 @@ export function AtaturkQuote() {
 
   return (
     <section 
-      className="py-16 relative"
+      className="py-16 relative overflow-hidden flex items-center"
       style={{
         backgroundImage: "url('/ataturk.jpg')",
         backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
+        backgroundPosition: "center top",
+        backgroundRepeat: "no-repeat",
+        minHeight: "800px"
       }}
     >
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40"></div>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="max-w-4xl mx-auto text-center">
           <div className="relative">
             <Quote className="w-12 h-12 text-white/70 mx-auto mb-6" />
