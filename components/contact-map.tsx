@@ -86,7 +86,7 @@ export function ContactMap() {
               <CardContent className="space-y-4">
                 {/* Address */}
                 <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-primary mt-1" />
+                  <MapPin className="w-10 h-10 text-primary mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground font-inter mb-1">
                       HAVACILAR EĞİTİM A.Ş.
@@ -98,7 +98,7 @@ export function ContactMap() {
                 </div>
 
                 {/* Transport */}
-                <div className="flex items-start space-x-3">
+                {/* <div className="flex items-start space-x-3">
                   <Navigation className="w-5 h-5 text-accent mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground font-inter mb-1">
@@ -120,12 +120,12 @@ export function ContactMap() {
                       )}
                     </p>
                   </div>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
 
             {/* Visit Notice */}
-            <Card className="border-0 shadow-lg bg-primary/5">
+            {/* <Card className="border-0 shadow-lg bg-primary/5">
               <CardContent className="p-6">
                 <h4 className="font-semibold text-foreground font-inter mb-3">
                   {language === "tr" ? "Ziyaret Öncesi" : "Before Visiting"}
@@ -142,7 +142,7 @@ export function ContactMap() {
                   {language === "tr" ? "Randevu Al" : "Book Appointment"}
                 </Button>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </div>

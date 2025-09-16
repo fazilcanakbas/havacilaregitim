@@ -36,9 +36,9 @@ export function Footer() {
 
     async function fetchServices() {
       try {
-        const res = (await apiFetch(`/api/services?limit=4&isActive=true`, { method: "GET" })) as ServiceItem[] | null
+        const res = (await apiFetch(`/api/services?limit=8&isActive=true`, { method: "GET" })) as ServiceItem[] | null
         if (mounted && Array.isArray(res)) {
-          setServices(res.slice(0, 4))
+          setServices(res.slice(0, 8))
         }
       } catch (err) {
         console.error("Failed to fetch services for footer:", err)
@@ -78,7 +78,7 @@ export function Footer() {
       }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-4 gap-4">
           {/* Logo & Sosyal */}
           <div className="lg:col-span-1 space-y-6">
             <Link href="/" className="flex items-center">
@@ -121,7 +121,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:ml-28">
             <h4 className="font-semibold text-white font-inter">{t("footer.quickLinks")}</h4>
             <nav className="space-y-3">
               {quickLinks.map((link) => (
@@ -188,7 +188,7 @@ export function Footer() {
               )}
               {contactInfo?.address && (
   <div className="flex items-start space-x-3 text-white/75">
-    <MapPin className="w-4 h-4 mt-1" />
+    <MapPin className="w-12 h-12 mt-0" />
     <span className="font-dm-sans">
       {language === "tr"
         ? contactInfo.address

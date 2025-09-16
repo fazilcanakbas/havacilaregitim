@@ -27,7 +27,7 @@ export function ContactInfo() {
     {
       icon: Phone,
       title: language === "tr" ? "Telefon" : "Phone",
-      description: contact.workingHours || (language === "tr" ? "Çalışma saatleri" : "Office hours"),
+      // description: contact.workingHours || (language === "tr" ? "Çalışma saatleri" : "Office hours"),
       value: contact.phone,
       action: language === "tr" ? "Ara" : "Call",
       href: `tel:${contact.phone}`,
@@ -35,7 +35,7 @@ export function ContactInfo() {
     {
       icon: Mail,
       title: language === "tr" ? "E-posta" : "Email",
-      description: language === "tr" ? "24 saat içinde yanıt veriyoruz" : "We reply within 24 hours",
+      // description: language === "tr" ? "24 saat içinde yanıt veriyoruz" : "We reply within 24 hours",
       value: contact.email,
       action: language === "tr" ? "E-posta Gönder" : "Send Email",
       href: `mailto:${contact.email}`,

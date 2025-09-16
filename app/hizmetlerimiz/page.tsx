@@ -13,7 +13,7 @@ function ServicesHero() {
     <section
       className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px] overflow-hidden"
       style={{
-        backgroundImage: "url('/bannerv2.jpg')",
+        backgroundImage: "url('/egitimbanner.jpg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center bottom",
@@ -445,14 +445,14 @@ export default function ServicesPage() {
       <section className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4 font-inter">
+            <h2 className="text-3xl lg:text-5xl font-bold text-foreground -mb-4 font-inter">
               {language === "tr" ? "Hizmetlerimiz" : "Interview Techniques Training"}
             </h2>
-            <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto">
+            {/* <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto">
               {language === "tr"
                 ? "Uluslararası standartlarda, deneyimli eğitmenler eşliğinde sunduğumuz kapsamlı pilot eğitimi programları ile havacılık kariyerinizi başlatın."
                 : "Start your aviation career with our comprehensive pilot training programs offered under international standards and guided by experienced instructors."}
-            </p>
+            </p> */}
           </div>
         </div>
       </section>

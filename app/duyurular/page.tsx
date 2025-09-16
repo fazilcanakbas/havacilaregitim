@@ -124,7 +124,7 @@ export default function AnnouncementsPage() {
             className="text-4xl lg:text-6xl font-bold mb-6 font-inter drop-shadow-lg"
             style={{ color:'#f5f5f5' }}
           >
-            {language === "tr" ? "Duyurular" : "Announcements"}
+            {language === "tr" ? "Duyurular & Haberler " : "Announcements & News"}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

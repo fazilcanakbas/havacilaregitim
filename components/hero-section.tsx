@@ -18,7 +18,7 @@ export function HeroSection() {
     const slides = [
       {
         image: "/banner1.jpg",
-        titleTr: "Bireyselleştirilmiş Pilot Adayı Danışmanlığı",
+        titleTr: "Bireyselleştirilmiş\nPilot Adayı\nDanışmanlığı",
         titleEn: "Personalized Pilot Training",
         descTr: "Kaptan pilotlar ve alanında uzman psikologlar eşliğinde pilot adaylarına özel danışmanlık programları.",
         descEn: "Special counseling programs for pilot candidates, accompanied by captain pilots and expert psychologists in their fields.",
@@ -27,8 +27,8 @@ export function HeroSection() {
         image: "/banner2.jpg",
         titleTr: "Mülakat ve CRM Simülasyonları",
         titleEn: "Interview & CRM Simulations",
-        descTr: "Gerçek mülakat ortamlarını simüle eden programlarla teknik ve davranışsal yetkinlik geliştirme",
-        descEn: "Enhancing technical and behavioral competencies through real interview simulations",
+        descTr: "Gerçek mülakat ortamlarını simüle eden programlarla teknik ve davranışsal yetkinlik geliştirme.",
+        descEn: "Enhancing technical and behavioral competencies through real interview simulations.",
       },
   {
     image: "/banner3.jpg",
@@ -77,7 +77,7 @@ export function HeroSection() {
             <div className="space-y-4">
               <h1
                 key={currentSlide + '-title'}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg text-white transition-opacity duration-700"
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg text-white transition-opacity duration-700 whitespace-pre-line"
               >
                 {language === "tr" ? slides[currentSlide].titleTr : slides[currentSlide].titleEn}
               </h1>

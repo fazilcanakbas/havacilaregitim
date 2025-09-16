@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, ArrowRight, Megaphone, User } from "lucide-react"
+import { Calendar, ArrowRight, Megaphone, User, BookOpen } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { adminListAnnouncements, Announcement } from "@/lib/api/announcementService"
@@ -24,7 +24,7 @@ const formatDate = (dateString: string, lang: "tr" | "en") => {
 }
 
 export function AnnouncementsSection() {
-  const { language } = useLanguage() // ✅ aktif dil
+  const { language } = useLanguage() 
   const [announcements, setAnnouncements] = useState<Announcement[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -77,20 +77,22 @@ export function AnnouncementsSection() {
     <section className="py-20 bg-[#f5f5f5]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div
-          style={{
-            backgroundColor: "#1b1b56ff",
-          }}
-          className="inline-flex items-center px-4 py-2 rounded-full  border border-accent/20 mb-6">
-            <Megaphone  style={{
-              color: "#ffffffff",
-            }} className="w-4 h-4 text-accent mr-2" />
-            <span 
+          
+           <div
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full mb-8 shadow-lg shadow-[#0b2a4a]/20"
             style={{
-              color: "#ffffffff",
+              background: 'linear-gradient(135deg, #07243e 0%, #0b2a4a 70%, #11406d 100%)',
+              border: '1px solid rgba(255,255,255,0.08)',
             }}
-            className="text-sm font-medium text-accent">
-              {language === "tr" ? "Duyurular & Haberler" : "Announcements & News"}
+          >
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(255,255,255,0.12)' }}
+            >
+              <Megaphone className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-base sm:text-lg font-semibold font-inter tracking-wide text-white">
+             {language === "tr" ? "Duyurular & Haberler" : "Announcements & News"}
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-6">

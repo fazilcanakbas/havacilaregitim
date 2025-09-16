@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Instagram, Linkedin, ExternalLink } from "lucide-react"
+import { Instagram, Linkedin, ExternalLink, Youtube } from "lucide-react"
 import Link from "next/link"
 
 export function SocialMediaSection() {
@@ -38,18 +38,18 @@ export function SocialMediaSection() {
       }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-4">
+
+        <div className="text-center mb-10 sm:mb-16 flex flex-col items-center gap-5">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground font-inter mb-6">
             Sosyal Medyada Biz
           </h2>
 
           <p className="text-lg text-muted-foreground font-dm-sans max-w-3xl mx-auto mb-6">
-            Günlük eğitim aktivitelerimizi, mezun başarı hikayelerini ve havacılık dünyasından gelişmeleri sosyal medya
-            hesaplarımızdan takip edebilirsiniz.
+            Günlük eğitim aktivitelerimizi, mezun başarı hikayelerini ve havacılık dünyasından gelişmeleri sosyal medya hesaplarımızdan takip edebilirsiniz.
           </p>
 
           {/* Responsive buttons: stack on small screens, inline on sm+ */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row items-center gap-5 justify-center mt-2 mb-2">
             <Link href="https://www.instagram.com/havacilikegitim/" target="_blank">
               <Button
                 size="lg"
@@ -59,32 +59,45 @@ export function SocialMediaSection() {
                   backgroundColor: "#1b1b56ff",
                 }}
               >
-              <Instagram className="w-5 h-5 mr-2" />
-              <span>Instagram'da Takip Et</span>
-              <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </Button>
+                <Instagram className="w-5 h-5 mr-2" />
+                <span>Instagram'da Takip Et</span>
+                <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </Button>
             </Link>
-             <Link href="https://www.linkedin.com/company/havacilikegitim/" target="_blank" rel="noopener noreferrer">
-      <Button
-        size="lg"
-        variant="outline"
-        aria-label="LinkedIn'de Bağlan"
-        className={
-          // Başlangıçta lacivert metin + border; hover/focus'ta arka plan lacivert ve yazı beyaz olur
-          "group w-full sm:w-auto flex items-center justify-center bg-transparent " +
-          "text-[#0b2a4a] border-[#0b2a4a] " +
-          "hover:bg-[#0b2a4a] hover:text-white focus:bg-[#0b2a4a] focus:text-white " +
-          "transition-colors"
-        }
-        // Eğer Tailwind arbitrary renkler devre dışıysa veya Button variant stilleri override ediyorsa
-        // style ile NAVY'yi doğrudan verebilirsin:
-        // style={{ color: NAVY, borderColor: NAVY }}
-      >
-        <Linkedin className="w-5 h-5 mr-2" />
-        <span>LinkedIn'de Bağlan</span>
-        <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-      </Button>
-    </Link>
+            <Link href="https://www.linkedin.com/company/havacilikegitim/" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="outline"
+                aria-label="LinkedIn'de Bağlan"
+                className={
+                  "group w-full sm:w-auto flex items-center justify-center bg-transparent " +
+                  "text-[#0b2a4a] border-[#0b2a4a] " +
+                  "hover:bg-[#0b2a4a] hover:text-white focus:bg-[#0b2a4a] focus:text-white " +
+                  "transition-colors"
+                }
+              >
+                <Linkedin className="w-5 h-5 mr-2" />
+                <span>LinkedIn'de Bağlan</span>
+                <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <Link href="https://www.youtube.com/@havacilikegitim" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="outline"
+                aria-label="YouTube'da İzle"
+                className={
+                  "group w-full sm:w-auto flex items-center justify-center bg-transparent " +
+                  "text-[#ff0000] border-[#ff0000] " +
+                  "hover:bg-[#ff0000] hover:text-white focus:bg-[#ff0000] focus:text-white " +
+                  "transition-colors"
+                }
+              >
+                <Youtube className="w-5 h-5 mr-2" />
+                <span>YouTube'da İzle</span>
+                <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
           </div>
         </div>
 

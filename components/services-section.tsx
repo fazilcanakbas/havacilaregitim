@@ -154,12 +154,12 @@ export function ServicesSection() {
             {t("services.title")}
           </h2> */}
 
-          <p
+          {/* <p
             style={{ fontSize: 18, color: "#6b7280", maxWidth: 768, marginLeft: "auto", marginRight: "auto" }}
             className="font-dm-sans"
           >
             {t("services.subtitle")}
-          </p>
+          </p> */}
         </div>
 
         {loading && (

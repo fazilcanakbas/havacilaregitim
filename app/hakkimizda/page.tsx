@@ -107,9 +107,9 @@ function AboutCompany() {
           >
             {language === 'tr' ? (
               <div className="space-y-6">
-                <p className="text-white/80">Havacılar Eğitim A.Ş, havacılık sektöründe kariyer hedefleyen pilot adaylarına yönelik profesyonel danışmanlık ve uçuş simülasyon deneyimi sunan bir kuruluştur. Kadet pilot alım süreçlerine ve havayolu işe alım süreçlerine hazırlanan pilot adaylarına, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sunmaktadır.</p>
-                <p className="text-white/70">Danışmanlık süreci sonunda, her adayın zayıf ve güçlü yönlerini belirleyerek, havayolu şirketlerinin işe alım sürecindeki beklentilerine uygun donanımları kazandırıyoruz.</p>
-                <p className="text-white/70">Havacılar Eğitim A.Ş. olarak, havacılığın disiplini ve profesyonelliğini esas alarak; gökyüzüne sağlam adımlarla ilerlemek isteyen her adayın yanında yer alıyoruz.</p>
+                <p className="text-white/80 text-xl">Havacılar Eğitim A.Ş., havacılık sektöründe kariyer hedefleyen pilot adaylarına profesyonel danışmanlık ve uçuş simülasyonu deneyimi sunan bir kuruluştur. Kadet pilot alımları ve havayolu işe alım süreçlerine hazırlanan adaylara, kaptan pilotlar ve alanında uzman psikologlar eşliğinde bireyselleştirilmiş danışmanlık hizmeti sağlıyoruz.</p>
+                <p className="text-white/70 text-xl">Danışmanlık süreci sonunda her adayın güçlü ve gelişime açık yönlerini belirleyerek, havayolu şirketlerinin işe alım süreçlerindeki beklentilere uygun donanımları kazandırıyoruz.</p>
+                <p className="text-white/70 text-xl">Disiplin ve profesyonelliği temel ilke edinen Havacılar Eğitim A.Ş., gökyüzüne sağlam adımlarla ilerlemek isteyen her adayın yanında yer almaktadır.</p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -134,7 +134,7 @@ function OurValues() {
       title: language === "tr" ? "Misyonumuz" : "Our Mission",
       description:
         language === "tr"
-          ? "Havacılık sektöründe kariyer hedefleyen pilot adaylarına danışmanlık desteği sunuyor; onları yalnızca güçlü bireyler olarak değil, sektörün geleceğine yön verecek profesyoneller olarak yetişme yolculuklarında rehberlik ediyoruz. Kaptan pilotlar, alanında uzman psikologlar ve mülakat teknikleri danışmanları ile geliştirdiğimiz bireyselleştirilmiş programlarımız sayesinde adaylarımızı, havayolu şirketlerinin beklentilerine uyum sağlamanın ötesinde, o beklentileri şekillendirebilecek bir noktaya taşıyoruz."
+          ? "Havacılık sektöründe kariyer hedefleyen pilot adaylarına danışmanlık desteği sunarak, onları yalnızca güçlü bireyler olarak değil, sektörün geleceğine yön verecek profesyoneller olma yolculuklarında rehberlik etmektir. Kaptan pilotlar, alanında uzman psikologlar ve mülakat teknikleri danışmanları ile geliştirdiğimiz bireyselleştirilmiş programlarımız sayesinde adaylarımızı, havayolu şirketlerinin beklentilerine uyum sağlamanın ötesinde, o beklentileri şekillendirebilecek bir noktaya taşıyoruz."
           : "We offer consulting support to aspiring pilots pursuing careers in the aviation industry, guiding them on their journey to develop not only into strong individuals but also into professionals who will shape the future of the industry. Through our personalized programs, developed with captain pilots, expert psychologists, and interview technique consultants, we move our candidates beyond simply conforming to airline expectations to a point where they can shape those expectations.",
     },
     {
@@ -142,7 +142,7 @@ function OurValues() {
       title: language === "tr" ? "Vizyonumuz" : "Our Vision",
       description:
         language === "tr"
-          ? "Havacılık kariyerine adım atmak isteyen pilot adaylarına danışmanlık hizmetinde kalite, güven ve profesyonelliğin öncüsü olarak; yalnızca adayların potansiyelini en üst seviyeye çıkarmalarına destek olmakla kalmıyor, aynı zamanda sektöre yön veren, gökyüzünde fark yaratan profesyoneller olarak konumlanmalarına rehberlik ediyoruz. Bizim vizyonumuz, tercih edilen değil; yol gösterici olarak tercih eden bir danışmanlık kurumu olmanın yanında uluslararası alanda pilot adaylarına yönelik danışmanlıkta standart belirleyen, çizgisi takip edilen öncü bir kurum olmaktır."
+          ? "Havacılık kariyerine adım atmak isteyen pilot adaylarına danışmanlık hizmetinde kalite, güven ve profesyonelliğin öncüsü olarak; yalnızca adayların potansiyelini en üst seviyeye çıkarmalarına destek olmakla kalmıyor, aynı zamanda sektöre yön veren, gökyüzünde fark yaratan profesyoneller olarak konumlanmalarına rehberlik ediyoruz. Vizyonumuz, uluslararası alanda pilot adaylarına yönelik danışmanlıkta standart belirleyen, çizgisi takip edilen öncü bir kurum olmaktır."
           : "As a pioneer of quality, trust, and professionalism in service to aspiring pilots seeking to embark on their aviation careers, we not only support candidates in maximizing their potential but also guide them toward becoming professionals who shape the industry and make a difference in the skies. Our vision is not to be chosen; rather, to be a training institution that guides, setting the standard for international pilot candidate mentoring, and to be a leading institution.",
     },
     {
@@ -158,8 +158,8 @@ function OurValues() {
       title: language === "tr" ? "Uzman Kadromuz" : "Our Expert Team",
       description:
         language === "tr"
-          ? "Kaptan pilotlar,alanında uzman psikologlar ve mülakat teknikleri eğitmenleri ile her öğrenciye özel ilgi gösteriyoruz. Deneyimli kadromuz ile gerçek dünya perspektifi sunuyoruz."
-          : "We provide personalized attention to each student with our captain pilots, expert psychologists, and interview techniques instructors. Our experienced staff offers a real-world perspective.",
+          ? "Kaptan pilotlar ve uzman havacılık psikologları ile rehberlik ediyoruz."
+          : "We provide guidance with captain pilots and expert aviation psychologists.",
     },
   ]
 
