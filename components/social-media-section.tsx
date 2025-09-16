@@ -61,7 +61,7 @@ export function SocialMediaSection() {
 
           {/* Responsive buttons: stack on small screens, inline on sm+ */}
           <div className="flex flex-col sm:flex-row items-center gap-5 justify-center mt-2 mb-2">
-            <Link href="https://www.instagram.com/havacilikegitim/" target="_blank">
+            <Link href="https://www.instagram.com/havacilaregitim/" target="_blank">
               <Button
                 size="lg"
                 className="group w-full sm:w-auto flex items-center justify-center"
