@@ -13,11 +13,18 @@ export function AtaturkQuote() {
       style={{
         backgroundImage: "url('/ataturk.jpg')",
         backgroundSize: "cover",
-        backgroundPosition: "center top",
+        backgroundPosition: "right -90px top",
         backgroundRepeat: "no-repeat",
         minHeight: "800px"
       }}
     >
+      <style jsx>{`
+        @media (min-width: 768px) {
+          section {
+            background-position: center top !important;
+          }
+        }
+      `}</style>
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40"></div>
       
