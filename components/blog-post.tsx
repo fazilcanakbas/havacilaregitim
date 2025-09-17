@@ -1,13 +1,18 @@
 "use client"
+
 import React, { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, Clock, User, Share2, BookOpen, ArrowLeft, ArrowRight } from "lucide-react"
+import { Calendar, User, Share2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import type { BlogPost as BlogPostType } from "@/lib/api/blogService"
 import { getBlog, listBlogs } from "@/lib/api/blogService"
 import { useLanguage } from "@/lib/language-context"
+
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import rehypeSanitize from "rehype-sanitize"
 
 interface BlogPostProps {
   postId: string
@@ -18,13 +23,13 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
   const { language } = useLanguage()
 
   const [post, setPost] = useState<BlogPostType | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [prevPost, setPrevPost] = useState<BlogPostType | null>(null)
   const [nextPost, setNextPost] = useState<BlogPostType | null>(null)
-  const [navLoading, setNavLoading] = useState<boolean>(false)
-  const [shareCopied, setShareCopied] = useState<boolean>(false)
+  const [navLoading, setNavLoading] = useState(false)
+  const [shareCopied, setShareCopied] = useState(false)
 
   const baseUrl =
     apiBaseUrl ||
@@ -42,7 +47,6 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
     return false
   }
 
-  // localized getters: use English fields if language === "en" and English value exists, otherwise fallback to Turkish
   const getTitle = (p: any) => (language === "en" && p?.titleEn ? p.titleEn : p?.title ?? "")
   const getExcerpt = (p: any) =>
     (language === "en" && p?.excerptEn ? p.excerptEn : p?.excerpt ?? "") ||
@@ -63,12 +67,10 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
         if (!mounted) return
         if (!normalized) {
           setError(language === "en" ? "Post not found" : "Yazı bulunamadı")
-          setPost(null)
           return
         }
         if (typeof normalized.isActive !== "undefined" && normalized.isActive !== true) {
           setError(language === "en" ? "This post is not active." : "Bu yazı aktif değil.")
-          setPost(null)
           return
         }
         setPost(normalized)
@@ -77,12 +79,10 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
         if (!mounted) return
         console.error("getBlog error", err)
         setError(language === "en" ? "Failed to load post" : "Yazı yüklenirken hata oluştu")
-        setPost(null)
       })
       .finally(() => {
         if (mounted) setLoading(false)
       })
-
     return () => {
       mounted = false
     }
@@ -94,41 +94,29 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
       setNextPost(null)
       return
     }
-
     let mounted = true
     setNavLoading(true)
     setPrevPost(null)
     setNextPost(null)
-
     const fetchNav = async () => {
       try {
         const res: any = await listBlogs({ limit: 200, isActive: true })
         const list: BlogPostType[] = Array.isArray(res) ? res : res?.data ?? res?.posts ?? []
         const activeList = (list || []).filter((p) => typeof p.isActive === "undefined" || p.isActive === true)
-
         const getTime = (p: BlogPostType) => {
           const d = p.date ?? (p as any).createdAt ?? null
           const t = d ? Date.parse(String(d)) : NaN
           return Number.isNaN(t) ? 0 : t
         }
         activeList.sort((a, b) => getTime(b) - getTime(a))
-
-        const idx = activeList.findIndex((p) => {
-          return isSameId(p._id ?? p.id ?? p.slug, post._id ?? post.id ?? post.slug)
-        })
-
+        const idx = activeList.findIndex((p) =>
+          isSameId(p._id ?? p.id ?? p.slug, post._id ?? post.id ?? post.slug)
+        )
         const safeIdx = idx >= 0 ? idx : activeList.findIndex((p) => p.title === post.title)
-
         if (!mounted) return
-
         if (safeIdx >= 0) {
-          const nextCandidate = activeList[safeIdx - 1] ?? null
-          const prevCandidate = activeList[safeIdx + 1] ?? null
-          setNextPost(nextCandidate ?? null)
-          setPrevPost(prevCandidate ?? null)
-        } else {
-          setNextPost(null)
-          setPrevPost(null)
+          setNextPost(activeList[safeIdx - 1] ?? null)
+          setPrevPost(activeList[safeIdx + 1] ?? null)
         }
       } catch (err) {
         console.error("Failed to fetch nav posts", err)
@@ -136,7 +124,6 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
         if (mounted) setNavLoading(false)
       }
     }
-
     fetchNav()
     return () => {
       mounted = false
@@ -149,10 +136,11 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
     return `${baseUrl}${img}`
   }
 
-  // Paylaş fonksiyonu (localized)
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
-    const title = post ? getTitle(post) || (language === "en" ? "Blog post" : "Blog Yazısı") : (language === "en" ? "Blog post" : "Blog Yazısı")
+    const title = post
+      ? getTitle(post) || (language === "en" ? "Blog post" : "Blog Yazısı")
+      : language === "en" ? "Blog post" : "Blog Yazısı"
     try {
       if (navigator.share) {
         await navigator.share({ title, url })
@@ -161,12 +149,11 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
         setShareCopied(true)
         setTimeout(() => setShareCopied(false), 1500)
       }
-    } catch (error) {
+    } catch {
       setShareCopied(false)
     }
   }
 
-  // Önceki/Sonraki yazı için özel kart tasarımı
   function BlogNavCard({
     post,
     direction,
@@ -174,9 +161,7 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
     post: BlogPostType
     direction: "prev" | "next"
   }) {
-    // excerpt veya content'ten kısa özet (localized)
     const excerpt = getExcerpt(post)
-
     return (
       <Link href={`/blog/${post.slug ?? post._id ?? post.id}`}>
         <div
@@ -192,12 +177,18 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
             />
           </div>
           <div
-            className={`flex flex-col min-w-0 ${direction === "next" ? "text-right items-end" : "text-left items-start"}`}
+            className={`flex flex-col min-w-0 ${
+              direction === "next" ? "text-right items-end" : "text-left items-start"
+            }`}
           >
             <span className="text-[11px] text-orange-500 font-bold uppercase mb-1">
               {direction === "prev"
-                ? (language === "en" ? "Previous post" : "Önceki Yazı")
-                : (language === "en" ? "Next post" : "Sonraki Yazı")}
+                ? language === "en"
+                  ? "Previous post"
+                  : "Önceki Yazı"
+                : language === "en"
+                ? "Next post"
+                : "Sonraki Yazı"}
             </span>
             <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors text-sm line-clamp-2">
               {getTitle(post)}
@@ -215,18 +206,44 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
               )}
             </div>
           </div>
-          <span
-            className={`absolute top-1/2 -translate-y-1/2 ${direction === "prev" ? "left-2" : "right-2"}`}
-          />
         </div>
       </Link>
     )
   }
 
+  // Markdown render özelleştirmeleri
+  const markdownComponents = {
+    h1: (props: any) => <h1 className="text-3xl font-bold mt-10 mb-6" {...props} />,
+    h2: (props: any) => <h2 className="text-2xl font-semibold mt-10 mb-4" {...props} />,
+    h3: (props: any) => <h3 className="text-xl font-semibold mt-8 mb-3" {...props} />,
+    p: (props: any) => <p className="my-4 leading-relaxed" {...props} />,
+    ul: (props: any) => <ul className="list-disc pl-6 my-4 space-y-1" {...props} />,
+    ol: (props: any) => <ol className="list-decimal pl-6 my-4 space-y-1" {...props} />,
+    li: (props: any) => <li className="leading-relaxed" {...props} />,
+    strong: (props: any) => <strong className="font-semibold" {...props} />,
+    blockquote: (props: any) => (
+      <blockquote className="border-l-4 border-orange-500 pl-4 italic text-gray-600 my-6" {...props} />
+    ),
+    code: ({ inline, className, children, ...rest }: any) =>
+      inline ? (
+        <code className="px-1.5 py-0.5 rounded bg-gray-100 text-sm" {...rest}>
+          {children}
+        </code>
+      ) : (
+        <code className="block p-4 rounded bg-gray-900 text-gray-100 text-sm overflow-x-auto" {...rest}>
+          {children}
+        </code>
+      ),
+  }
+
   return (
     <article className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="max-w-4xl mx-auto">
-        {loading && <div className="text-center py-12">{language === "en" ? "Loading..." : "Yükleniyor..."}</div>}
+        {loading && (
+          <div className="text-center py-12">
+            {language === "en" ? "Loading..." : "Yükleniyor..."}
+          </div>
+        )}
 
         {error && (
           <div className="text-center text-red-600 py-6">
@@ -234,21 +251,22 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
           </div>
         )}
 
-        {!loading && !error && !post && <div className="text-center py-12">{language === "en" ? "Post not found." : "Yazı bulunamadı."}</div>}
+        {!loading && !error && !post && (
+          <div className="text-center py-12">
+            {language === "en" ? "Post not found." : "Yazı bulunamadı."}
+          </div>
+        )}
 
         {!loading && post && (
           <>
-            {/* Header */}
             <div className="mb-8">
               <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
                 {getCategory(post) && <Badge variant="outline">{getCategory(post)}</Badge>}
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-1" />
-                  <span>{new Date(post.date  || Date.now()).toLocaleDateString(getDateLocale())}</span>
-                </div>
-                <div className="flex items-center">
-                  {/* <Clock className="w-4 h-4 mr-1" />
-                  <span>{post.readTime || ""}</span> */}
+                  <span>
+                    {new Date(post.date || Date.now()).toLocaleDateString(getDateLocale())}
+                  </span>
                 </div>
               </div>
 
@@ -282,20 +300,27 @@ export function BlogPost({ postId, apiBaseUrl }: BlogPostProps) {
               </div>
             </div>
 
-            {/* Featured Image */}
             <div className="relative h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden mb-12">
-              <Image src={renderImageSrc(post.image)} alt={getTitle(post)} fill className="object-cover" />
-            </div>
-
-            {/* Content */}
-            <div className="prose prose-lg max-w-none">
-              <div
-                className="text-foreground font-dm-sans leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: getContent(post) || (language === "en" ? "<p>No content</p>" : "<p>İçerik yok</p>") }}
+              <Image
+                src={renderImageSrc(post.image)}
+                alt={getTitle(post)}
+                fill
+                className="object-cover"
               />
             </div>
 
-            {/* Reading Progress & Actions */}
+            {/* Markdown İçerik */}
+            <div className="prose prose-lg max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeSanitize]}
+                components={markdownComponents}
+              >
+                {getContent(post) || (language === "en" ? "No content" : "İçerik yok")}
+              </ReactMarkdown>
+            </div>
+
+            {/* Navigasyon */}
             <div className="mt-16 pt-8 border-t border-border">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full sm:w-auto">

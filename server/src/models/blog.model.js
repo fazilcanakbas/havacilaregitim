@@ -12,6 +12,12 @@
     isActive:     { type: Boolean, default: true },
     views:        { type: Number, default: 0 },
     slug:         { type: String, required: true, unique: true },
+    // English optional fields
+    titleEn:      { type: String },
+    excerptEn:    { type: String },
+    contentEn:    { type: String },
+    categoryEn:   { type: String },
+    tagsEn:       [{ type: String }],
     }, { timestamps: true });
 
     module.exports = mongoose.model('Blog', BlogSchema);
