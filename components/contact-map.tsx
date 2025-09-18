@@ -36,8 +36,8 @@ export function ContactMap() {
           </h2>
           <p className="text-lg text-muted-foreground font-dm-sans max-w-2xl mx-auto">
             {language === "tr"
-              ? "Atatürk Havalimanı yakınında bulunan modern eğitim merkezimizi ziyaret edin"
-              : "Visit our modern training center near Atatürk Airport"}
+              ? ""
+              : ""}
           </p>
         </div>
 

@@ -63,10 +63,12 @@ export function Footer() {
   }, [])
 
   const fallbackPrograms = [
-    { href: "/ppl", label: language === "tr" ? "Özel Pilot Lisansı (PPL)" : "Private Pilot License (PPL)" },
-    { href: "/cpl", label: language === "tr" ? "Ticari Pilot Lisansı (CPL)" : "Commercial Pilot License (CPL)" },
-    { href: "/atpl", label: language === "tr" ? "Havayolu Pilot Eğitimi (ATPL)" : "Airline Transport Pilot License (ATPL)" },
-    { href: "/ifr", label: language === "tr" ? "Enstrüman Uçuş Eğitimi" : "Instrument Flight Rules (IFR)" },
+    { href: "/hizmetlerimiz/mulakat-teknikleri-danismanligi", label: language === "tr" ? "Mülakat Teknikleri Danışmanlığı" : "Interview Techniques Consultancy" },
+    { href: "/hizmetlerimiz/bireysel-danismanlik", label: language === "tr" ? "Bireysel Danışmanlık" : "Individual Counseling" },
+    { href: "/hizmetlerimiz/crm-bireysel", label: language === "tr" ? "CRM Bireysel Mülakat Simülasyonu" : "Individual CRM Interview Simulation" },
+    { href: "/hizmetlerimiz/crm-grup-mulakati", label: language === "tr" ? "CRM Grup Mülakat Simülasyonu" : "Group CRM Interview Simulation" },
+    { href: "/hizmetlerimiz/kurul-mulakat", label: language === "tr" ? "Kurul Mülakat Simülasyonu" : "Board Interview Simulation" },
+    { href: "/hizmetlerimiz/ucus-simulasyonu", label: language === "tr" ? "Uçuş Simülasyonu" : "Flight Simulation" },
   ]
 
   return (
