@@ -11,8 +11,8 @@ export function SocialMediaSection() {
   const socialPosts = [
     {
       platform: "instagram",
-      contentTr: "Yeni mezunlarımızla gurur duyuyoruz! ✈️ #HavacılıkEğitimi #PilotMezuniyet",
-      contentEn: "We are proud of our new graduates! ✈️ #AviationTraining #PilotGraduation",
+      contentTr: "Yarının pilotlarını bugünde hazır ediyoruz! ✈️ ",
+      contentEn: "We are preparing tomorrow's pilots today! ✈️ ",
       image: "https://karatay.aero/images/icerik/20201214110417-cpl-jpg.jpg",
       likes: 245,
       dateTr: "2 gün önce",
@@ -20,8 +20,8 @@ export function SocialMediaSection() {
     },
     {
       platform: "instagram",
-      contentTr: "Boeing 737 simülatöründe eğitim anları 🎯 #Simülatör #PilotEğitimi",
-      contentEn: "Training moments in Boeing 737 simulator 🎯 #Simulator #PilotTraining",
+      contentTr: "Boeing 737 simülatöründe eğitim anları 🎯 #Simülatör ",
+      contentEn: "Training moments in Boeing 737 simulator 🎯 #Simulator",
       image: "/instagram.png",
       likes: 189,
       dateTr: "4 gün önce",
