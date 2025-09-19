@@ -11,7 +11,7 @@ export function SocialMediaSection() {
   const socialPosts = [
     {
       platform: "instagram",
-      contentTr: "Yarının pilotlarını bugünde hazır ediyoruz! ✈️ ",
+      contentTr: "Yarının pilotlarını bugünden hazır ediyoruz! ✈️ ",
       contentEn: "We are preparing tomorrow's pilots today! ✈️ ",
       image: "https://karatay.aero/images/icerik/20201214110417-cpl-jpg.jpg",
       likes: 245,
